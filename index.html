@@ -81,7 +81,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .session-label{font-size:10px;color:var(--text3);margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;}
 .session-title{font-size:15px;font-weight:600;color:var(--text);}
 
-.type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;}
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px;}
 .type-btn{background:var(--bg-card);border:1px solid var(--border);color:var(--text2);padding:10px 2px;border-radius:var(--radius-sm);font-size:11px;font-weight:500;cursor:pointer;text-align:center;transition:all 0.2s;letter-spacing:0.2px;}
 .type-btn.selected{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);font-weight:600;}
 .type-btn:active{transform:scale(0.94);}
@@ -150,6 +150,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .chart-card-label{font-size:11px;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
 
 .empty-state{text-align:center;color:var(--text3);padding:40px 20px;font-size:14px;}
+
+/* ACTIVITY MAP */
+.act-map-row{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.act-day{aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text3);transition:background 0.2s,color 0.2s;}
+.act-day.trained{background:var(--green);color:rgba(0,0,0,0.6);}
+.act-day.rest{background:rgba(255,69,58,0.7);color:rgba(255,255,255,0.75);}
+.act-day.future{background:rgba(255,255,255,0.025);color:rgba(255,255,255,0.15);}
+.act-day.empty{background:transparent;}
 
 /* AGENDA */
 .objetivo-card{background:linear-gradient(135deg,rgba(74,158,255,0.12),rgba(48,209,88,0.08));border:1px solid rgba(74,158,255,0.25);border-radius:var(--radius);padding:18px;margin-bottom:12px;text-align:center;}
@@ -238,14 +246,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
   <div class="type-grid">
     <button class="type-btn" data-type="cortas" onclick="selectType('cortas',this)">SERIES<br>CORTAS</button>
-    <button class="type-btn" data-type="largas" onclick="selectType('largas',this)">SERIES<br>LARGAS</button>
     <button class="type-btn" data-type="rodaje" onclick="selectType('rodaje',this)">RODAJE<br>CONTINUO</button>
-    <button class="type-btn" data-type="test" onclick="selectType('test',this)">TEST<br>1000 m</button>
-  </div>
-
-  <div id="test-banner" class="test-banner" style="display:none">
-    <div class="test-banner-icon">⏱</div>
-    <div class="test-banner-text" id="test-banner-text"></div>
+    <button class="type-btn" id="domingo-btn" data-type="domingo" onclick="selectDomingo(this)">SERIES<br>LARGAS</button>
   </div>
 
   <div id="entreno-content"></div>
@@ -278,6 +280,43 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="stat-pill"><div class="stat-val" id="stat-sessions">0</div><div class="stat-lbl">Sesiones</div></div>
     <div class="stat-pill"><div class="stat-val" id="stat-distance">0</div><div class="stat-lbl">Km totales</div></div>
     <div class="stat-pill"><div class="stat-val" id="stat-best-1000">—</div><div class="stat-lbl">Mejor 1000 m</div></div>
+  </div>
+
+  <div class="fisico-card" style="padding:14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="nav-arrow-btn" style="width:26px;height:26px;font-size:14px;" onclick="changeProgActMonth(-1)">‹</button>
+        <span style="font-size:13px;font-weight:600;" id="activity-map-lbl">—</span>
+        <button class="nav-arrow-btn" style="width:26px;height:26px;font-size:14px;" onclick="changeProgActMonth(1)">›</button>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <span style="font-size:9px;color:var(--text3);display:flex;align-items:center;gap:4px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--green);"></span>Entreno</span>
+        <span style="font-size:9px;color:var(--text3);display:flex;align-items:center;gap:4px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--red);"></span>Descanso</span>
+      </div>
+    </div>
+    <div class="act-map-row" style="margin-bottom:6px;">
+      <div style="font-size:9px;font-weight:700;color:var(--text3);text-align:center;">L</div>
+      <div style="font-size:9px;font-weight:700;color:var(--text3);text-align:center;">M</div>
+      <div style="font-size:9px;font-weight:700;color:var(--text3);text-align:center;">X</div>
+      <div style="font-size:9px;font-weight:700;color:var(--text3);text-align:center;">J</div>
+      <div style="font-size:9px;font-weight:700;color:var(--text3);text-align:center;">V</div>
+      <div style="font-size:9px;font-weight:700;color:var(--text3);text-align:center;">S</div>
+      <div style="font-size:9px;font-weight:700;color:var(--text3);text-align:center;">D</div>
+    </div>
+    <div class="act-map-row" id="activity-map"></div>
+  </div>
+
+  <div class="fisico-card">
+    <div class="section-header">
+      <div class="section-icon orange"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff9f0a" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg></div>
+      <div><div class="section-title-text">Marcas personales</div><div class="section-subtitle">Histórico, no depende del periodo</div></div>
+    </div>
+    <div class="section-body">
+      <div class="records-grid">
+        <div class="record-item"><div class="record-val" id="pr-1000">—</div><div class="record-lbl">1000 m</div></div>
+        <div class="record-item"><div class="record-val" id="pr-rodaje">—</div><div class="record-lbl">Ritmo rodaje</div></div>
+      </div>
+    </div>
   </div>
 
   <div class="fisico-card" style="padding:14px;">
@@ -354,20 +393,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="test-info-row"><span class="lbl">Próximo test</span><span class="val" id="next-test-date">—</span></div>
         <div class="test-info-row"><span class="lbl">Días restantes</span><span class="val" id="next-test-days">—</span></div>
         <div class="test-info-row"><span class="lbl">Último resultado</span><span class="val" id="last-test-result">—</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RECORDS -->
-  <div class="fisico-card">
-    <div class="section-header">
-      <div class="section-icon orange"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff9f0a" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg></div>
-      <div><div class="section-title-text">Marcas personales</div><div class="section-subtitle">Tus mejores tiempos</div></div>
-    </div>
-    <div class="section-body">
-      <div class="records-grid">
-        <div class="record-item"><div class="record-val" id="pr-1000">—</div><div class="record-lbl">1000 m</div></div>
-        <div class="record-item"><div class="record-val" id="pr-rodaje">—</div><div class="record-lbl">Ritmo rodaje</div></div>
       </div>
     </div>
   </div>
@@ -480,6 +505,7 @@ let historyFilter = 'all';
 let currentProgressPeriod = 'mes';
 let selectedDistance = null;
 let agendaWeekOffset = 0;
+let progActViewMonth = null;
 let charts = {};
 let tramoRowSeq = 0;
 
@@ -593,8 +619,39 @@ function selectType(type, el){
     currentSessionDate = matchDate;
     document.getElementById('entreno-date-input').value = matchDate;
     updateSessionLabel();
-    updateSuggestionBanner();
   }
+  renderEntrenoContent();
+}
+function nearestSunday(fromDate){
+  let d = fromDate;
+  for(let i=0;i<7;i++){
+    if(new Date(d+'T12:00:00').getDay()===0)return d;
+    d = addDays(d,-1);
+  }
+  return fromDate;
+}
+// El domingo comparte un solo botón entre "series largas" y "test": la primera
+// pulsación salta al domingo más cercano y usa el tipo sugerido para esa fecha;
+// pulsaciones siguientes alternan el tipo sin volver a mover la fecha.
+function selectDomingo(el){
+  let type;
+  if(currentType==='largas'||currentType==='test'){
+    type = currentType==='test' ? 'largas' : 'test';
+  } else {
+    const sunDate = nearestSunday(dateAnchor);
+    if(sunDate !== currentSessionDate){
+      currentSessionDate = sunDate;
+      document.getElementById('entreno-date-input').value = sunDate;
+      updateSessionLabel();
+    }
+    type = suggestTypeForDate(currentSessionDate);
+  }
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  el.innerHTML = type==='test' ? 'TEST<br>1000 m' : 'SERIES<br>LARGAS';
+  document.getElementById('session-title').textContent = TYPE_LABELS[type];
+  document.getElementById('save-btn').style.display='block';
   renderEntrenoContent();
 }
 function updateSessionLabel(){
@@ -604,15 +661,7 @@ function onDateChange(){
   currentSessionDate = document.getElementById('entreno-date-input').value || todayStr();
   dateAnchor = currentSessionDate;
   updateSessionLabel();
-  updateSuggestionBanner();
   if(currentType)renderEntrenoContent();
-}
-function updateSuggestionBanner(){
-  const banner = document.getElementById('test-banner');
-  const fixedType = suggestTypeForDate(currentSessionDate);
-  if(!fixedType){banner.style.display='none';return;}
-  banner.style.display='flex';
-  document.getElementById('test-banner-text').innerHTML = `Toca <strong>${TYPE_LABELS[fixedType]}</strong>.`;
 }
 
 function renderEntrenoContent(){
@@ -849,6 +898,8 @@ function renderProgreso(){
     ? dists.map(d=>`<div class="record-item"><div class="record-val" style="font-size:15px">${formatTime(distBest[d])}</div><div class="record-lbl">${d}m</div></div>`).join('')
     : '<div class="empty-state" style="padding:16px">Sin tramos en este periodo</div>';
 
+  renderRecordsInfo();
+  renderActivityMap();
   renderDistanceSelector();
   renderProgresoCharts(start);
 }
@@ -921,6 +972,36 @@ function renderProgresoCharts(start){
   renderBarChart('chart-rodaje-vol', rodajeSessions.map(s=>formatDate(s.date)), rodajeSessions.map(s=>s.distKm), '#30d158');
 }
 
+function changeProgActMonth(delta){
+  if(!progActViewMonth)progActViewMonth = todayStr().slice(0,7);
+  const[y,m] = progActViewMonth.split('-').map(Number);
+  const d = new Date(y, m-1+delta, 1);
+  progActViewMonth = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  renderActivityMap();
+}
+function renderActivityMap(){
+  const map = document.getElementById('activity-map');
+  if(!map)return;
+  const trainedDates = new Set(getData().map(s=>s.date));
+  const today = todayStr();
+  if(!progActViewMonth)progActViewMonth = today.slice(0,7);
+  const[y,m] = progActViewMonth.split('-').map(Number);
+  const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('activity-map-lbl').textContent = monthNames[m-1]+' '+y;
+  const daysInMonth = new Date(y,m,0).getDate();
+  const firstDow = new Date(y,m-1,1).getDay();
+  const offset = firstDow===0?6:firstDow-1;
+  let cells = '';
+  for(let i=0;i<offset;i++)cells += '<div class="act-day empty"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const ds = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isFuture = ds>today;
+    const cls = isFuture ? 'future' : (trainedDates.has(ds) ? 'trained' : 'rest');
+    cells += `<div class="act-day ${cls}">${d}</div>`;
+  }
+  map.innerHTML = cells;
+}
+
 function goProgSlide(idx){
   const c=document.getElementById('prog-carousel');
   c.scrollTo({left:c.offsetWidth*idx,behavior:'smooth'});
@@ -948,7 +1029,6 @@ function getWeekNumber(weekStart){return Math.round(daysBetween(WEEK1_START,week
 function renderAgendaScreen(){
   renderAgendaWeek();
   renderNextTestInfo();
-  renderRecordsInfo();
   renderBaremo();
 }
 function renderAgendaWeek(){
@@ -965,16 +1045,17 @@ function renderAgendaWeek(){
   let html = '';
   for(let i=0;i<7;i++){
     const date = addDays(targetWeekStart,i);
+    const fixedType = suggestTypeForDate(date);
+    if(!fixedType)continue; // solo interesan los 3 días con entreno fijo (miércoles/viernes/domingo)
     const dow = new Date(date+'T12:00:00').getDay();
     const entry = agenda[date] || {};
     const isToday = date===todayStr();
     const hasSession = sessionDates.has(date);
-    const fixedType = suggestTypeForDate(date);
     html += `<div class="block-card" style="${isToday?'border-color:rgba(74,158,255,0.4)':''}">
       <div class="block-header">
         <div class="block-title-group">
           <div class="block-title">${DOW_NAMES_FULL[dow]} · ${formatDate(date)}${isToday?' · HOY':''}</div>
-          ${fixedType ? `<span class="type-badge ${fixedType}" style="margin-top:5px">${TYPE_LABELS[fixedType]}</span>` : `<div style="font-size:11px;color:var(--text3);margin-top:4px">Día libre</div>`}
+          <span class="type-badge ${fixedType}" style="margin-top:5px">${TYPE_LABELS[fixedType]}</span>
         </div>
         ${hasSession?'<span class="badge-done">✓ Hecho</span>':''}
       </div>
@@ -1038,21 +1119,46 @@ function renderBaremo(){
 }
 
 // ========== BAREMO EDIT ==========
+// El input edita el umbral real (max, en segundos) de cada puntuación, no solo
+// el texto — antes el modal decía "edita el tiempo límite" pero solo tocaba la
+// etiqueta y la puntuación real nunca cambiaba. Las etiquetas se recalculan a
+// partir de los umbrales tras guardar, para que sigan describiendo el rango real.
 function openBaremoEdit(){
   const b = getBaremo();
   const html = b.map((r,i)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
     <span style="flex:1;font-size:12px;color:var(--text2)">${r.pts} pts:</span>
-    <input type="text" class="modal-input" data-baremo-idx="${i}" value="${r.label}" style="margin-bottom:0;font-size:12px">
+    <input type="text" class="modal-input" data-baremo-idx="${i}" placeholder="mm:ss" value="${r.pts>0?formatTimeForInput(r.max):''}" style="margin-bottom:0;font-size:12px" ${r.pts===0?'disabled':''}>
   </div>`).join('');
   document.getElementById('baremo-edit-list').innerHTML = html;
   document.getElementById('baremo-modal').classList.add('open');
 }
+function recomputeBaremoLabels(b){
+  const maxPts = Math.max(...b.map(r=>r.pts));
+  const byPts = {};
+  b.forEach(r=>byPts[r.pts]=r);
+  b.forEach(r=>{
+    if(r.pts===0){
+      const next = byPts[1];
+      if(next){r.max = next.max; r.label = `> ${formatTimeForInput(next.max)}`;}
+    } else if(r.pts===maxPts){
+      r.label = `≤ ${formatTimeForInput(r.max)}`;
+    } else {
+      const upper = byPts[r.pts+1];
+      const lowerBound = upper ? upper.max+1 : r.max;
+      r.label = `${formatTimeForInput(lowerBound)} - ${formatTimeForInput(r.max)}`;
+    }
+  });
+  return b;
+}
 function saveBaremo(){
-  const b = getBaremo().slice();
+  const b = getBaremo().map(r=>({...r}));
   document.querySelectorAll('[data-baremo-idx]').forEach(inp=>{
     const i = parseInt(inp.dataset.baremoIdx);
-    b[i] = {...b[i], label: inp.value};
+    if(b[i].pts===0)return;
+    const t = parseTime(inp.value);
+    if(t!=null)b[i].max = Math.round(t);
   });
+  recomputeBaremoLabels(b);
   const meta = getMeta();meta.baremo=b;saveMeta(meta);
   closeModal('baremo-modal');renderBaremo();showToast('Baremo guardado ✓','green');
 }
@@ -1113,10 +1219,9 @@ migrateData();
 document.getElementById('entreno-date-input').value = todayStr();
 currentSessionDate = todayStr();
 updateSessionLabel();
-updateSuggestionBanner();
 const suggested = suggestTypeForDate(todayStr());
 if(suggested){
-  const btn = document.querySelector(`.type-btn[data-type="${suggested}"]`);
+  const btn = (suggested==='largas'||suggested==='test') ? document.getElementById('domingo-btn') : document.querySelector(`.type-btn[data-type="${suggested}"]`);
   if(btn)setTimeout(()=>btn.click(),80);
 }
 
