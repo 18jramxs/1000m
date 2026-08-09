@@ -422,6 +422,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
   <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
+
+  <div style="text-align:center;padding:24px 0 16px;font-size:11px;color:var(--text3);letter-spacing:0.4px;">
+    1000 m TRACKER
+    <div id="app-last-updated" style="margin-top:5px;font-size:9.5px;opacity:0.6;"></div>
+  </div>
 </div>
 
 <nav class="bottom-nav">
@@ -1141,6 +1146,17 @@ const suggested = suggestTypeForDate(todayStr());
 if(suggested){
   const btn = document.querySelector(`.type-btn[data-type="${suggested}"]`);
   if(btn)setTimeout(()=>btn.click(),80);
+}
+
+// document.lastModified es la fecha de mtime del archivo servido — sin
+// llevar la cuenta a mano, y sirve para detectar una copia cacheada vieja.
+const luEl = document.getElementById('app-last-updated');
+if(luEl){
+  const lm = new Date(document.lastModified);
+  if(!isNaN(lm)){
+    const pad = n=>String(n).padStart(2,'0');
+    luEl.textContent = `Actualizado ${pad(lm.getDate())}/${pad(lm.getMonth()+1)}/${lm.getFullYear()} · ${pad(lm.getHours())}:${pad(lm.getMinutes())}`;
+  }
 }
 </script>
 </body>
