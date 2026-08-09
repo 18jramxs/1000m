@@ -48,7 +48,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .header{background:rgba(10,10,15,0.7);backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .header h1{font-size:17px;font-weight:700;letter-spacing:0.3px;background:linear-gradient(135deg,#f2f2f7 0%,#aeaeb2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 
-/* NAV — más curva, perfil iPhone 15 Pro */
+/* NAV */
 .bottom-nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:430px;background:rgba(18,18,28,0.88);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.13);border-radius:38px;display:flex;z-index:100;padding:6px;box-shadow:0 8px 32px rgba(0,0,0,0.45),0 1px 0 rgba(255,255,255,0.06) inset;gap:2px;}
 .nav-btn{flex:1;background:none;border:none;color:var(--text3);padding:9px 4px 8px;font-size:9.5px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:color 0.2s;letter-spacing:0.2px;border-radius:30px;position:relative;z-index:1;}
 .nav-btn.active{color:#fff;}
@@ -91,41 +91,24 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .block-title-group{flex:1;}
 .block-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
 .block-value{font-size:14px;font-weight:600;color:var(--text);}
-.info-btn{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-style:italic;font-family:'Times New Roman',serif;transition:all 0.18s;}
-.info-btn:active{transform:scale(0.92);background:var(--accent-bg);color:var(--accent);}
-.info-content{display:none;padding:12px 16px;font-size:12.5px;color:var(--text2);line-height:1.55;background:rgba(74,158,255,0.04);border-top:1px solid var(--border);}
-.info-content.open{display:block;}
-.info-content ul{margin:6px 0 0 16px;}
-.info-content li{margin-bottom:3px;}
 
 .block-body{padding:12px 16px;}
 .simple-input-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .simple-input-row:last-child{margin-bottom:0;}
 .serie-label{font-size:12px;font-weight:600;color:var(--text3);min-width:62px;}
-.serie-input{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text);font-size:13px;font-weight:500;padding:7px 9px;width:80px;outline:none;-webkit-appearance:none;text-align:center;transition:border-color 0.2s,background 0.25s;}
+.serie-input{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text);font-size:13px;font-weight:500;padding:7px 9px;width:80px;outline:none;-webkit-appearance:none;text-align:center;transition:border-color 0.2s;}
 .serie-input:focus{border-color:var(--accent);}
-.serie-input.improved{background:rgba(48,209,88,0.13);border-color:rgba(48,209,88,0.4);}
-.serie-input.worsened{background:rgba(255,69,58,0.10);border-color:rgba(255,69,58,0.35);}
 .serie-input::placeholder{color:var(--text3);}
-.compare-info{flex:1;display:flex;justify-content:flex-end;gap:10px;font-size:11px;color:var(--text3);text-align:right;}
-.compare-pill{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;padding:3px 7px;font-weight:500;}
-.compare-pill.pr{color:var(--amber);border-color:rgba(255,214,10,0.3);background:rgba(255,214,10,0.08);}
 
-.check-row{display:flex;align-items:center;gap:10px;padding:10px 0;}
-.check-circle{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.18s;flex-shrink:0;}
-.check-circle.checked{background:var(--green);border-color:var(--green);box-shadow:0 0 10px rgba(48,209,88,0.4);}
-.check-circle.checked::after{content:'';width:8px;height:8px;background:white;border-radius:50%;}
-.check-circle:active{transform:scale(1.18);}
-.check-text{font-size:13px;color:var(--text2);font-weight:500;}
-
-.target-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(74,158,255,0.13);border:1px solid rgba(74,158,255,0.3);color:var(--accent);padding:3px 9px;border-radius:14px;font-size:11px;font-weight:600;margin-top:5px;}
+.tramo-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.tramo-row:last-child{margin-bottom:0;}
 
 .save-btn{width:100%;background:linear-gradient(135deg,var(--accent),#2d7ae0);color:white;border:none;border-radius:var(--radius);padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px;letter-spacing:0.3px;box-shadow:0 4px 20px rgba(74,158,255,0.25);}
 .save-btn:active{opacity:0.85;transform:scale(0.99);}
 
-/* TEST CARD */
+/* BANNER */
 .test-banner{background:linear-gradient(135deg,rgba(255,214,10,0.15),rgba(255,159,10,0.10));border:1px solid rgba(255,214,10,0.3);border-radius:var(--radius);padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
-.test-banner-icon{width:32px;height:32px;border-radius:50%;background:rgba(255,214,10,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.test-banner-icon{width:32px;height:32px;border-radius:50%;background:rgba(255,214,10,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
 .test-banner-text{flex:1;font-size:12.5px;font-weight:500;color:var(--text);}
 .test-banner-text strong{color:var(--amber);}
 
@@ -149,9 +132,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 .type-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;margin-top:4px;}
 .type-badge.cortas{background:var(--accent-bg);color:var(--accent);}
-.type-badge.tirada{background:var(--green-bg);color:var(--green);}
+.type-badge.rodaje{background:var(--green-bg);color:var(--green);}
 .type-badge.largas{background:var(--purple-bg);color:var(--purple);}
 .type-badge.test{background:var(--amber-bg);color:var(--amber);}
+.badge-done{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;background:var(--green-bg);color:var(--green);flex-shrink:0;}
 
 /* PROGRESO */
 .pill-row{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
@@ -163,41 +147,18 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .stat-val{font-size:18px;font-weight:700;}
 .stat-lbl{font-size:10px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.4px;}
 
-.chart-card{background:var(--bg-card);backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
 .chart-card-label{font-size:11px;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
 
 .empty-state{text-align:center;color:var(--text3);padding:40px 20px;font-size:14px;}
 
-/* PLAN */
+/* AGENDA */
 .objetivo-card{background:linear-gradient(135deg,rgba(74,158,255,0.12),rgba(48,209,88,0.08));border:1px solid rgba(74,158,255,0.25);border-radius:var(--radius);padding:18px;margin-bottom:12px;text-align:center;}
 .objetivo-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;font-weight:600;margin-bottom:6px;}
 .objetivo-val{font-size:42px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#4a9eff,#30d158);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .objetivo-sub{font-size:12px;color:var(--text2);margin-top:4px;}
 
-.fase-card{padding:14px 16px;}
-.fase-badge{display:inline-block;padding:4px 11px;border-radius:14px;font-size:11px;font-weight:700;letter-spacing:0.6px;background:var(--accent-bg);color:var(--accent);border:1px solid rgba(74,158,255,0.3);margin-bottom:9px;}
-.fase-period{font-size:13px;color:var(--text2);margin-bottom:4px;}
-.fase-progress{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin:10px 0 6px;}
-.fase-progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:3px;}
-.fase-progress-text{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
-
-.proximo-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;}
-.proximo-day{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
-.proximo-tipo{font-size:14px;font-weight:600;color:var(--text);margin-top:3px;}
-.proximo-detail{font-size:12.5px;color:var(--text2);margin-top:5px;}
-
-.niveles-list{display:flex;flex-direction:column;gap:8px;}
-.nivel-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;display:flex;align-items:center;gap:12px;}
-.nivel-num{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--text2);flex-shrink:0;}
-.nivel-item.active .nivel-num{background:var(--accent-bg);color:var(--accent);border:1px solid rgba(74,158,255,0.3);}
-.nivel-item.completed .nivel-num{background:var(--green-bg);color:var(--green);border:1px solid rgba(48,209,88,0.3);}
-.nivel-info{flex:1;min-width:0;}
-.nivel-titulo{font-size:13px;font-weight:600;color:var(--text);}
-.nivel-fecha{font-size:11px;color:var(--text3);margin-top:1px;}
-.nivel-status{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;flex-shrink:0;padding:3px 8px;border-radius:10px;}
-.nivel-status.activo{background:var(--accent-bg);color:var(--accent);}
-.nivel-status.completado{background:var(--green-bg);color:var(--green);}
-.nivel-status.pendiente{background:rgba(255,255,255,0.04);color:var(--text3);}
+.nav-arrow-btn{background:var(--bg-card);border:1px solid var(--border);color:var(--text2);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nav-arrow-btn:active{transform:scale(0.92);background:var(--accent-bg);color:var(--accent);}
 
 .records-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .record-item{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px;text-align:center;}
@@ -220,13 +181,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 .add-btn{width:100%;background:rgba(74,158,255,0.12);border:1px solid rgba(74,158,255,0.3);color:var(--accent);border-radius:var(--radius-sm);padding:11px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;}
 .add-btn:active{transform:scale(0.98);}
-.add-btn.disabled{opacity:0.4;pointer-events:none;}
-
-.note-item{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 13px;margin-bottom:7px;}
-.note-date{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:0.3px;margin-bottom:3px;}
-.note-text{font-size:13px;color:var(--text2);line-height:1.4;}
-.note-actions{display:flex;gap:6px;margin-top:6px;}
-.note-del{background:none;border:none;color:var(--red);font-size:11px;cursor:pointer;opacity:0.7;}
 
 /* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;}
@@ -235,17 +189,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .modal-title{font-size:16px;font-weight:700;margin-bottom:14px;}
 .modal-input,.modal-textarea,.modal-select{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text);font-size:14px;padding:9px 11px;width:100%;outline:none;-webkit-appearance:none;margin-bottom:10px;font-family:inherit;}
 .modal-textarea{resize:vertical;min-height:80px;line-height:1.4;}
-.modal-input:focus,.modal-textarea:focus{border-color:var(--accent);}
+.modal-input:focus,.modal-textarea:focus,.modal-select:focus{border-color:var(--accent);}
 .modal-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:5px;display:block;}
 .modal-actions{display:flex;gap:8px;margin-top:6px;}
 .modal-btn{flex:1;padding:11px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;}
 .modal-btn.primary{background:linear-gradient(135deg,var(--accent),#2d7ae0);color:white;}
 .modal-btn.secondary{background:var(--bg-card);border:1px solid var(--border);color:var(--text2);}
-
-.range-input{width:100%;-webkit-appearance:none;background:transparent;margin:8px 0;}
-.range-input::-webkit-slider-runnable-track{height:6px;background:rgba(255,255,255,0.10);border-radius:3px;}
-.range-input::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);margin-top:-8px;cursor:pointer;border:2px solid white;}
-.range-output{text-align:center;font-size:24px;font-weight:700;color:var(--accent);}
 
 /* SETTINGS */
 .settings-group{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;backdrop-filter:var(--glass);}
@@ -263,18 +212,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .toast.green{border-color:rgba(48,209,88,0.4);color:var(--green);}
 .toast.amber{border-color:rgba(255,214,10,0.4);color:var(--amber);}
 
-.evaluacion-card{background:linear-gradient(135deg,rgba(48,209,88,0.10),rgba(74,158,255,0.06));border:1px solid rgba(48,209,88,0.25);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
-
 /* CAROUSEL */
 .corpo-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);cursor:pointer;transition:all 0.2s;flex-shrink:0;}
 .corpo-dot.active{background:var(--accent);width:16px;border-radius:3px;}
 #prog-carousel::-webkit-scrollbar{display:none;}
 .prog-slide{flex-shrink:0;}
-.evaluacion-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.evaluacion-titulo{font-size:14px;font-weight:700;}
-.evaluacion-actions{display:flex;gap:6px;margin-top:10px;}
-.eval-btn{flex:1;padding:8px;border-radius:var(--radius-xs);font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,0.05);color:var(--text2);}
-.eval-btn:active{transform:scale(0.98);}
 </style>
 </head>
 <body>
@@ -295,15 +237,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 
   <div class="type-grid">
-    <button class="type-btn" onclick="selectType('cortas')">SERIES<br>CORTAS</button>
-    <button class="type-btn" onclick="selectType('tirada')">TIRADA<br>CONTINUA</button>
-    <button class="type-btn" onclick="selectType('largas')">SERIES<br>LARGAS</button>
-    <button class="type-btn" onclick="selectType('test')">TEST<br>1000 m</button>
+    <button class="type-btn" data-type="cortas" onclick="selectType('cortas',this)">SERIES<br>CORTAS</button>
+    <button class="type-btn" data-type="largas" onclick="selectType('largas',this)">SERIES<br>LARGAS</button>
+    <button class="type-btn" data-type="rodaje" onclick="selectType('rodaje',this)">RODAJE<br>CONTINUO</button>
+    <button class="type-btn" data-type="test" onclick="selectType('test',this)">TEST<br>1000 m</button>
   </div>
 
   <div id="test-banner" class="test-banner" style="display:none">
-    <div class="test-banner-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffd60a" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-    <div class="test-banner-text" id="test-banner-text">Hoy toca <strong>TEST 1000 m</strong>. Sustituye al entreno de series largas.</div>
+    <div class="test-banner-icon">⏱</div>
+    <div class="test-banner-text" id="test-banner-text"></div>
   </div>
 
   <div id="entreno-content"></div>
@@ -316,8 +258,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="filter-row">
     <button class="filter-chip active" onclick="filterHistory('all',this)">Todos</button>
     <button class="filter-chip" onclick="filterHistory('cortas',this)">Series cortas</button>
-    <button class="filter-chip" onclick="filterHistory('tirada',this)">Tirada</button>
     <button class="filter-chip" onclick="filterHistory('largas',this)">Series largas</button>
+    <button class="filter-chip" onclick="filterHistory('rodaje',this)">Rodaje</button>
     <button class="filter-chip" onclick="filterHistory('test',this)">Tests</button>
   </div>
   <div id="history-list"></div>
@@ -338,10 +280,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="stat-pill"><div class="stat-val" id="stat-best-1000">—</div><div class="stat-lbl">Mejor 1000 m</div></div>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-pill"><div class="stat-val" id="stat-best-400">—</div><div class="stat-lbl">Mejor 400m</div></div>
-    <div class="stat-pill"><div class="stat-val" id="stat-best-600">—</div><div class="stat-lbl">Mejor 600m</div></div>
-    <div class="stat-pill"><div class="stat-val" id="stat-best-tirada">—</div><div class="stat-lbl">Mejor tirada</div></div>
+  <div class="fisico-card" style="padding:14px;">
+    <div class="section-subtitle" style="margin-bottom:8px;">Mejor tiempo por distancia (periodo)</div>
+    <div class="records-grid" id="dist-best-list" style="grid-template-columns:repeat(auto-fill,minmax(84px,1fr));"></div>
   </div>
 
   <div class="fisico-card" style="overflow:hidden;">
@@ -357,59 +298,49 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
     <div id="prog-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onProgScroll()">
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 14px 16px;">
-        <div class="chart-card-label">Evolución 1000 m (tests)</div><canvas id="chart-1000" height="180"></canvas>
+        <div class="chart-card-label">Evolución test 1000 m (objetivo 2:55)</div><canvas id="chart-1000" height="180"></canvas>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 14px 16px;">
-        <div class="chart-card-label">Series 400m (media por sesión)</div><canvas id="chart-400" height="180"></canvas>
+        <div class="chart-card-label">Por distancia</div>
+        <div class="pill-row" id="dist-pill-row" style="margin-bottom:10px;"></div>
+        <canvas id="chart-dist" height="180"></canvas>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 14px 16px;">
-        <div class="chart-card-label">Series 600m (media por sesión)</div><canvas id="chart-600" height="180"></canvas>
+        <div class="chart-card-label">Ritmo medio rodaje (min/km)</div><canvas id="chart-rodaje-pace" height="180"></canvas>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 14px 16px;">
-        <div class="chart-card-label">Ritmo medio tirada (min/km)</div><canvas id="chart-tirada" height="180"></canvas>
+        <div class="chart-card-label">Volumen rodaje (km por sesión)</div><canvas id="chart-rodaje-vol" height="180"></canvas>
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- PLAN -->
-<div id="screen-plan" class="screen">
+<!-- AGENDA -->
+<div id="screen-agenda" class="screen">
+
+  <!-- SEMANA -->
+  <div class="fisico-card" style="padding:14px 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <button class="nav-arrow-btn" onclick="agendaWeekOffset--;renderAgendaScreen()">‹</button>
+      <div style="text-align:center;">
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Semana <span id="agenda-week-num"></span></div>
+        <div style="font-size:14px;font-weight:600;" id="agenda-week-range"></div>
+      </div>
+      <button class="nav-arrow-btn" onclick="agendaWeekOffset++;renderAgendaScreen()">›</button>
+    </div>
+    <button class="add-btn" id="agenda-today-btn" onclick="agendaWeekOffset=0;renderAgendaScreen()">Hoy</button>
+  </div>
+
+  <div id="agenda-days"></div>
+
+  <button class="add-btn" onclick="copyWeekToNext()">Copiar semana a la siguiente</button>
 
   <!-- OBJETIVO -->
-  <div class="objetivo-card">
+  <div class="objetivo-card" style="margin-top:14px;">
     <div class="objetivo-lbl">Objetivo final</div>
     <div class="objetivo-val">2:55</div>
-    <div class="objetivo-sub">Sept 2027 · Promo 44 · 10/10 baremo</div>
-  </div>
-
-  <!-- FASE ACTUAL -->
-  <div class="fisico-card">
-    <div class="section-header">
-      <div class="section-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-      <div><div class="section-title-text">Nivel actual</div><div class="section-subtitle" id="fase-subtitle">—</div></div>
-    </div>
-    <div class="fase-card">
-      <span class="fase-badge" id="fase-badge">NIVEL 1</span>
-      <div class="fase-period" id="fase-period">1 mayo 2026 – 31 julio 2026</div>
-      <div class="fase-progress"><div class="fase-progress-bar" id="fase-bar" style="width:0%"></div></div>
-      <div class="fase-progress-text"><span id="fase-dias">Día — / —</span><span id="fase-restante">Restan —</span></div>
-    </div>
-  </div>
-
-  <!-- PRÓXIMO ENTRENO -->
-  <div class="fisico-card">
-    <div class="section-header">
-      <div class="section-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-      <div><div class="section-title-text">Próximo entreno</div><div class="section-subtitle">Lo que toca hacer</div></div>
-    </div>
-    <div class="section-body">
-      <div class="proximo-card" id="proximo-card">
-        <div class="proximo-day">—</div>
-        <div class="proximo-tipo">—</div>
-        <div class="proximo-detail">—</div>
-      </div>
-    </div>
+    <div class="objetivo-sub">10/10 baremo · Policía Nacional</div>
   </div>
 
   <!-- TEST MENSUAL -->
@@ -436,9 +367,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="section-body">
       <div class="records-grid">
         <div class="record-item"><div class="record-val" id="pr-1000">—</div><div class="record-lbl">1000 m</div></div>
-        <div class="record-item"><div class="record-val" id="pr-400">—</div><div class="record-lbl">400m</div></div>
-        <div class="record-item"><div class="record-val" id="pr-600">—</div><div class="record-lbl">600m</div></div>
-        <div class="record-item"><div class="record-val" id="pr-tirada">—</div><div class="record-lbl">Ritmo tirada</div></div>
+        <div class="record-item"><div class="record-val" id="pr-rodaje">—</div><div class="record-lbl">Ritmo rodaje</div></div>
       </div>
     </div>
   </div>
@@ -447,46 +376,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="fisico-card">
     <div class="section-header">
       <div class="section-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#bf5af2" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
-      <div style="flex:1"><div class="section-title-text">Baremo 1000 m</div><div class="section-subtitle">Hombres · Promo 42 (referencia)</div></div>
-      <button class="info-btn" onclick="openBaremoEdit()" style="margin-right:14px">✎</button>
+      <div style="flex:1"><div class="section-title-text">Baremo 1000 m</div><div class="section-subtitle">Editable</div></div>
+      <button class="nav-arrow-btn" style="width:28px;height:28px;font-size:13px;margin-right:14px" onclick="openBaremoEdit()">✎</button>
     </div>
     <div class="section-body">
       <table class="baremo-table" id="baremo-table"></table>
-    </div>
-  </div>
-
-  <!-- NIVELES -->
-  <div class="fisico-card">
-    <div class="section-header">
-      <div class="section-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
-      <div><div class="section-title-text">Calendario de niveles</div><div class="section-subtitle">5 niveles · 17 meses</div></div>
-    </div>
-    <div class="section-body">
-      <div class="niveles-list" id="niveles-list"></div>
-    </div>
-  </div>
-
-  <!-- NOTAS -->
-  <div class="fisico-card">
-    <div class="section-header">
-      <div class="section-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></div>
-      <div><div class="section-title-text">Notas del nivel</div><div class="section-subtitle">Día a día relevante</div></div>
-    </div>
-    <div class="section-body">
-      <div id="notas-list"></div>
-      <button class="add-btn" onclick="openNoteModal()">+ Añadir nota</button>
-    </div>
-  </div>
-
-  <!-- EVALUACIÓN -->
-  <div class="fisico-card">
-    <div class="section-header">
-      <div class="section-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffd60a" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-      <div><div class="section-title-text">Evaluación de nivel</div><div class="section-subtitle">Al cerrar el periodo</div></div>
-    </div>
-    <div class="section-body">
-      <button class="add-btn" id="eval-btn" onclick="openEvaluacion()">Rellenar evaluación</button>
-      <div id="evaluaciones-list" style="margin-top:10px"></div>
     </div>
   </div>
 
@@ -510,6 +404,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
   <div class="settings-group">
+    <div class="settings-group-title">Resumen</div>
+    <div class="settings-row" onclick="copyResumen('semana')">
+      <div class="settings-row-icon" style="background:rgba(191,90,242,0.15)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#bf5af2" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-4"/></svg></div>
+      <span>Copiar resumen (última semana)</span>
+    </div>
+    <div class="settings-row" onclick="copyResumen('mes')">
+      <div class="settings-row-icon" style="background:rgba(191,90,242,0.15)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#bf5af2" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-4"/></svg></div>
+      <span>Copiar resumen (último mes)</span>
+    </div>
+  </div>
+  <div class="settings-group">
     <div class="settings-group-title">Peligro</div>
     <div class="settings-row danger" onclick="clearAllData()">
       <div class="settings-row-icon" style="background:var(--red-bg)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ff453a" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></div>
@@ -529,72 +434,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <button class="nav-btn" onclick="showScreen('progreso',this)">
     <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><polyline points="4 18 9 13 13 16 20 7"/></svg></span>Progreso
   <span class="nav-indicator"></span></button>
-  <button class="nav-btn" onclick="showScreen('plan',this)">
-    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Plan
+  <button class="nav-btn" onclick="showScreen('agenda',this)">
+    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Agenda
   <span class="nav-indicator"></span></button>
   <button class="nav-btn" onclick="showScreen('ajustes',this)">
     <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>Ajustes
   <span class="nav-indicator"></span></button>
 </nav>
-
-<!-- MODAL NOTA -->
-<div class="modal-bg" id="note-modal">
-  <div class="modal">
-    <div class="modal-title">Añadir nota</div>
-    <span class="modal-label">Fecha</span>
-    <input type="date" class="modal-input" id="note-date">
-    <span class="modal-label">Nota</span>
-    <textarea class="modal-textarea" id="note-text" placeholder="Ej: Dormí mal, alergia, lesión leve..."></textarea>
-    <div class="modal-actions">
-      <button class="modal-btn secondary" onclick="closeModal('note-modal')">Cancelar</button>
-      <button class="modal-btn primary" onclick="saveNote()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL EVALUACIÓN -->
-<div class="modal-bg" id="eval-modal">
-  <div class="modal">
-    <div class="modal-title">Evaluación del nivel</div>
-    <div id="eval-auto" style="background:rgba(74,158,255,0.06);border:1px solid rgba(74,158,255,0.2);border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;line-height:1.55;color:var(--text2);"></div>
-
-    <span class="modal-label">¿Cómo te has encontrado? (1-10)</span>
-    <input type="range" min="1" max="10" value="7" class="range-input" id="eval-feeling" oninput="document.getElementById('eval-feeling-out').textContent=this.value">
-    <div class="range-output" id="eval-feeling-out">7</div>
-
-    <span class="modal-label">¿Dolores o lesiones?</span>
-    <textarea class="modal-textarea" id="eval-pain" placeholder="Ninguna / describe..."></textarea>
-
-    <span class="modal-label">¿Mejora notada en concreto?</span>
-    <textarea class="modal-textarea" id="eval-progress" placeholder="Ej: tirada más fluida, series más rápidas..."></textarea>
-
-    <span class="modal-label">¿Cambio de peso? (kg, opcional)</span>
-    <input type="number" class="modal-input" id="eval-weight" step="0.1" placeholder="Ej: -2.5">
-
-    <span class="modal-label">¿Otros cambios de contexto?</span>
-    <textarea class="modal-textarea" id="eval-context" placeholder="Zapatillas, pista, horario..."></textarea>
-
-    <div class="modal-actions">
-      <button class="modal-btn secondary" onclick="closeModal('eval-modal')">Cancelar</button>
-      <button class="modal-btn primary" onclick="saveEvaluacion()">Guardar evaluación</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL VER EVALUACIÓN -->
-<div class="modal-bg" id="view-eval-modal">
-  <div class="modal">
-    <div class="modal-title" id="view-eval-title">Evaluación</div>
-    <div id="view-eval-content" style="font-size:13px;line-height:1.55;color:var(--text2);white-space:pre-wrap;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;"></div>
-    <div class="modal-actions">
-      <button class="modal-btn secondary" onclick="closeModal('view-eval-modal')">Cerrar</button>
-      <button class="modal-btn primary" onclick="copyCurrentEval()">Copiar</button>
-    </div>
-    <div class="modal-actions" style="margin-top:8px">
-      <button class="modal-btn secondary" style="flex:1" onclick="downloadCurrentEval()">Descargar TXT</button>
-    </div>
-  </div>
-</div>
 
 <!-- MODAL BAREMO EDIT -->
 <div class="modal-bg" id="baremo-modal">
@@ -613,23 +459,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <script>
 // ========== CONFIG ==========
-const NIVELES = [
-  {n:1, ini:'2026-05-01', fin:'2026-07-31', titulo:'Construcción de base'},
-  {n:2, ini:'2026-08-01', fin:'2026-10-31', titulo:'Por definir'},
-  {n:3, ini:'2026-11-01', fin:'2027-01-31', titulo:'Por definir'},
-  {n:4, ini:'2027-02-01', fin:'2027-04-30', titulo:'Por definir'},
-  {n:5, ini:'2027-05-01', fin:'2027-09-30', titulo:'Recta final'}
-];
-
-// Plan por nivel: ritmos objetivo (en segundos)
-const PLAN_NIVEL = {
-  1: {
-    cortas: {label:'6 × 400m', target:'1:35', targetSec:95, count:6, dist:400},
-    tirada: {label:'4 km tirada continua', target:'5:30 min/km', targetSec:330, dist:4},
-    largas: {label:'4 × 600m', target:'2:24', targetSec:144, count:4, dist:600}
-  }
-};
-
 // Baremo Promo 42 — editable
 const BAREMO_DEFAULT = [
   {max:240, pts:0, label:'> 4:00'},
@@ -645,390 +474,269 @@ const BAREMO_DEFAULT = [
   {max:175, pts:10, label:'≤ 2:55'}
 ];
 
-// Día -> tipo de entreno automático
-const DAY_TO_TYPE = {3:'cortas', 5:'tirada', 0:'largas'}; // miércoles, viernes, domingo
-const TYPE_LABELS = {cortas:'Series cortas', tirada:'Tirada continua', largas:'Series largas', test:'Test 1000 m'};
-const TYPE_COLORS = {cortas:'#4a9eff', tirada:'#30d158', largas:'#bf5af2', test:'#ffd60a'};
+const TYPE_LABELS = {cortas:'Series cortas', largas:'Series largas', rodaje:'Rodaje', test:'Test 1000 m'};
+const AGENDA_TYPE_LABELS = {cortas:'Series cortas', largas:'Series largas', rodaje:'Rodaje', test:'Test 1000 m', agilidad:'Agilidad', descanso:'Descanso'};
+const DOW_NAMES_FULL = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const DAY_HINT = {1:'',2:'',3:'Carrera + agilidad',4:'',5:'Carrera',6:'',0:'Carrera'};
+const WEEK1_START = '2026-08-03';
 
 // ========== STATE ==========
 let currentType = null;
 let currentSessionDate = todayStr();
-let sessionState = {};
 let historyFilter = 'all';
 let currentProgressPeriod = 'mes';
+let selectedDistance = null;
+let agendaWeekOffset = 0;
 let charts = {};
-let currentEvalText = '';
+let tramoRowSeq = 0;
 
 // ========== STORAGE ==========
 function getData(){try{return JSON.parse(localStorage.getItem('m1000_sessions')||'[]');}catch{return[];}}
 function saveData(d){localStorage.setItem('m1000_sessions',JSON.stringify(d));}
 function getMeta(){try{return JSON.parse(localStorage.getItem('m1000_meta')||'{}');}catch{return {};}}
 function saveMeta(d){localStorage.setItem('m1000_meta',JSON.stringify(d));}
+function getAgenda(){try{return JSON.parse(localStorage.getItem('m1000_agenda')||'{}');}catch{return {};}}
+function saveAgendaData(d){localStorage.setItem('m1000_agenda',JSON.stringify(d));}
+
+// ========== MIGRATION ==========
+function migrateData(){
+  const data = getData();
+  let changed = false;
+  const migrated = data.map(s=>{
+    if(s.type==='tirada'){
+      changed = true;
+      const paceSec = parseTime(s.pace);
+      const distKm = 4;
+      return {date:s.date, type:'rodaje', distKm, time: paceSec!=null?Math.round(paceSec*distKm):null};
+    }
+    if((s.type==='cortas'||s.type==='largas') && Array.isArray(s.series)){
+      changed = true;
+      const dist = s.type==='cortas'?400:600;
+      const tramos = (s.series||[]).map(v=>parseTime(v)).filter(t=>t!=null).map(t=>({dist,time:t,rec:null}));
+      return {date:s.date, type:s.type, tramos};
+    }
+    if(s.type==='test' && typeof s.time==='string'){
+      changed = true;
+      return {date:s.date, type:'test', time:parseTime(s.time), split1:null, split2:null};
+    }
+    return s;
+  });
+  if(changed) saveData(migrated);
+}
 
 // ========== UTILS ==========
-function todayStr(){return new Date().toISOString().split('T')[0];}
+// Nota: se usa formateo en hora local (nunca toISOString) para evitar que el
+// desfase horario UTC (p.ej. Europe/Madrid) desplace la fecha un día.
+function toLocalISO(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function todayStr(){return toLocalISO(new Date());}
 function formatDate(s){if(!s)return '';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`;}
-function formatDateLong(s){if(!s)return '';const[y,m,d]=s.split('-');const meses=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];return`${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`;}
-function parseTime(s){if(!s)return null;s=String(s).trim();const m=s.match(/^(\d+):(\d{2})(?:\.(\d+))?$/);if(m){return parseInt(m[1])*60+parseInt(m[2])+(m[3]?parseFloat('0.'+m[3]):0);}const n=parseFloat(s);return isNaN(n)?null:n;}
+function parseTime(s){if(s==null||s==='')return null;s=String(s).trim();const m=s.match(/^(\d+):(\d{2})(?:\.(\d+))?$/);if(m){return parseInt(m[1])*60+parseInt(m[2])+(m[3]?parseFloat('0.'+m[3]):0);}const n=parseFloat(s);return isNaN(n)?null:n;}
 function formatTime(secs){if(secs==null||isNaN(secs))return '—';const m=Math.floor(secs/60);const s=(secs-m*60).toFixed(secs<60?1:0);const sStr=secs<60?(secs<10?'0'+s:s):s.padStart(2,'0');return m>0?`${m}:${sStr}`:`${s}s`;}
+function formatTimeForInput(secs){if(secs==null||isNaN(secs))return '';const m=Math.floor(secs/60);const s=Math.round(secs-m*60);return m>0?`${m}:${String(s).padStart(2,'0')}`:String(Math.round(secs));}
 function formatPace(secsPerKm){if(secsPerKm==null||isNaN(secsPerKm))return '—';const m=Math.floor(secsPerKm/60);const s=Math.round(secsPerKm-m*60);return`${m}:${String(s).padStart(2,'0')}`;}
 function daysBetween(a,b){return Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/(1000*60*60*24));}
-function getStartDate(p){const d=new Date();if(p==='semana')d.setDate(d.getDate()-7);else if(p==='mes')d.setMonth(d.getMonth()-1);else if(p==='anual')d.setFullYear(d.getFullYear()-1);else if(p==='todo')return '2000-01-01';return d.toISOString().split('T')[0];}
-
-function getCurrentNivel(){
-  const today = todayStr();
-  for(const n of NIVELES){if(today>=n.ini && today<=n.fin)return n;}
-  if(today<NIVELES[0].ini)return NIVELES[0];
-  return NIVELES[NIVELES.length-1];
-}
-function getNivelPlan(nivelN){return PLAN_NIVEL[nivelN]||PLAN_NIVEL[1];}
+function addDays(dateStr,n){const d=new Date(dateStr+'T12:00:00');d.setDate(d.getDate()+n);return toLocalISO(d);}
+function getStartDate(p){const d=new Date();if(p==='semana')d.setDate(d.getDate()-7);else if(p==='mes')d.setMonth(d.getMonth()-1);else if(p==='anual')d.setFullYear(d.getFullYear()-1);else if(p==='todo')return '2000-01-01';return toLocalISO(d);}
 
 // Test mensual: primer domingo de cada mes
 function getNextTestDate(fromDate){
   const d = new Date(fromDate+'T12:00:00');
   let probe = new Date(d.getFullYear(), d.getMonth(), 1);
   while(probe.getDay()!==0)probe.setDate(probe.getDate()+1);
-  if(probe.toISOString().split('T')[0] < fromDate){
+  if(toLocalISO(probe) < fromDate){
     probe = new Date(d.getFullYear(), d.getMonth()+1, 1);
     while(probe.getDay()!==0)probe.setDate(probe.getDate()+1);
   }
-  return probe.toISOString().split('T')[0];
+  return toLocalISO(probe);
 }
 function isTestDay(dateStr){
   const d = new Date(dateStr+'T12:00:00');
   if(d.getDay()!==0)return false;
   const firstSun = new Date(d.getFullYear(),d.getMonth(),1);
   while(firstSun.getDay()!==0)firstSun.setDate(firstSun.getDate()+1);
-  return firstSun.toISOString().split('T')[0]===dateStr;
+  return toLocalISO(firstSun)===dateStr;
+}
+function suggestTypeForDate(dateStr){
+  if(isTestDay(dateStr))return 'test';
+  const dow = new Date(dateStr+'T12:00:00').getDay();
+  if(dow===0)return 'largas';
+  if(dow===3)return 'cortas';
+  if(dow===5)return 'rodaje';
+  return null;
 }
 
 function getBaremo(){const m=getMeta();return m.baremo||BAREMO_DEFAULT;}
 function getBaremoForTime(timeSecs){
+  if(timeSecs==null||isNaN(timeSecs))return {pts:0,label:'—'};
   const b = getBaremo();
-  if(timeSecs > 240)return {pts:0,label:'> 4:00'};
-  for(const r of b){if(timeSecs<=r.max && r.pts>0){return r;}}
-  return b[0];
+  const sorted = b.slice().sort((a,c)=>c.pts-a.pts);
+  for(const r of sorted){
+    if(r.pts>0 && timeSecs<=r.max)return r;
+  }
+  const zero = b.find(r=>r.pts===0);
+  return zero || {pts:0,label:'> 4:00'};
 }
 
 // ========== ENTRENO ==========
-const TYPE_FIXED_DAY = {cortas:'Miércoles', tirada:'Viernes', largas:'Domingo', test:'Domingo'};
-function selectType(type){
+function selectType(type, el){
   currentType = type;
   document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
-  event.target.classList.add('selected');
+  el.classList.add('selected');
   document.getElementById('session-title').textContent = TYPE_LABELS[type];
-  document.getElementById('session-day-label').textContent = TYPE_FIXED_DAY[type];
   document.getElementById('save-btn').style.display='block';
-  renderEntrenoBlocks();
+  renderEntrenoContent();
+}
+function updateSessionLabel(){
+  document.getElementById('session-day-label').textContent = DOW_NAMES_FULL[new Date(currentSessionDate+'T12:00:00').getDay()];
 }
 function onDateChange(){
   currentSessionDate = document.getElementById('entreno-date-input').value || todayStr();
-  checkTestBanner();
-  if(currentType)renderEntrenoBlocks();
+  updateSessionLabel();
+  updateSuggestionBanner();
+  if(currentType)renderEntrenoContent();
 }
-function checkTestBanner(){
+function updateSuggestionBanner(){
   const banner = document.getElementById('test-banner');
-  if(isTestDay(currentSessionDate)){banner.style.display='flex';}
-  else{banner.style.display='none';}
+  const suggestion = suggestTypeForDate(currentSessionDate);
+  if(!suggestion){banner.style.display='none';return;}
+  banner.style.display='flex';
+  document.getElementById('test-banner-text').innerHTML = suggestion==='test'
+    ? `Hoy toca <strong>TEST 1000 m</strong>.`
+    : `Sugerido hoy: <strong>${TYPE_LABELS[suggestion]}</strong>.`;
 }
 
-function renderEntrenoBlocks(){
+function renderEntrenoContent(){
   const container = document.getElementById('entreno-content');
-  const nivel = getCurrentNivel();
-  const plan = getNivelPlan(nivel.n);
-  sessionState = {};
-
-  // Cargar sesión existente si hay
   const existing = getData().find(s=>s.date===currentSessionDate && s.type===currentType);
-
-  if(currentType==='cortas'){
-    const cfg = plan.cortas;
-    container.innerHTML = renderCalentamiento('cortas') +
-      renderSeries('cortas', cfg, existing) +
-      renderDescanso('cortas') +
-      renderVuelta('cortas');
-  } else if(currentType==='tirada'){
-    const cfg = plan.tirada;
-    container.innerHTML = renderCalentamientoTirada() +
-      renderTirada(cfg, existing) +
-      renderVuelta('tirada');
-  } else if(currentType==='largas'){
-    const cfg = plan.largas;
-    container.innerHTML = renderCalentamiento('largas') +
-      renderSeries('largas', cfg, existing) +
-      renderDescanso('largas') +
-      renderVuelta('largas');
+  const agendaEntry = getAgenda()[currentSessionDate];
+  let refHtml = '';
+  if(agendaEntry && (agendaEntry.text || agendaEntry.type)){
+    refHtml = `<div class="test-banner" style="display:flex;background:linear-gradient(135deg,rgba(74,158,255,0.12),rgba(74,158,255,0.06));border-color:rgba(74,158,255,0.25)">
+      <div class="test-banner-icon" style="background:rgba(74,158,255,0.18)">📋</div>
+      <div class="test-banner-text">Agenda: <strong>${AGENDA_TYPE_LABELS[agendaEntry.type]||''}</strong>${agendaEntry.text?' — '+agendaEntry.text:''}</div>
+    </div>`;
+  }
+  if(currentType==='cortas'||currentType==='largas'){
+    container.innerHTML = refHtml + renderTramosBlock();
+    tramoRowSeq = 0;
+    document.getElementById('tramos-list').innerHTML = '';
+    (existing?.tramos||[]).forEach(t=>addTramoRow(t.dist, formatTimeForInput(t.time), t.rec!=null?formatTimeForInput(t.rec):''));
+  } else if(currentType==='rodaje'){
+    container.innerHTML = refHtml + renderRodajeBlock(existing);
+    attachRodajeListeners();
   } else if(currentType==='test'){
-    container.innerHTML = renderCalentamiento('test') +
-      renderTest(existing) +
-      renderVuelta('test');
+    container.innerHTML = refHtml + renderTestBlock(existing);
+    attachTestListeners();
   }
-  attachInputListeners();
 }
 
-function infoIcon(id){return `<button class="info-btn" onclick="toggleInfo('${id}')">i</button>`;}
-function infoBox(id, html){return `<div class="info-content" id="info-${id}">${html}</div>`;}
-
-function renderCalentamiento(type){
-  const id = 'cal-'+type;
+function renderTramosBlock(){
   return `<div class="block-card">
     <div class="block-header">
       <div class="block-title-group">
-        <div class="block-title">Calentamiento</div>
-        <div class="block-value">15 min</div>
+        <div class="block-title">Tramos</div>
+        <div class="block-value">Registro libre</div>
       </div>
-      ${infoIcon(id)}
     </div>
-    ${infoBox(id, '<ul><li>10 min trote suave (ritmo cómodo, conversación posible)</li><li>5 min movilidad dinámica: skipping, talones al glúteo, rodillas al pecho andando, zancadas</li><li>Sin estiramientos estáticos antes</li></ul>')}
-  </div>`;
-}
-function renderCalentamientoTirada(){
-  const id = 'cal-tirada';
-  return `<div class="block-card">
-    <div class="block-header">
-      <div class="block-title-group">
-        <div class="block-title">Calentamiento</div>
-        <div class="block-value">5 min</div>
-      </div>
-      ${infoIcon(id)}
-    </div>
-    ${infoBox(id, '<ul><li>Empezar muy lento los primeros 5 min</li><li>Subir gradualmente al ritmo cómodo de la tirada</li><li>Sin estiramientos estáticos antes</li></ul>')}
-  </div>`;
-}
-
-function renderSeries(type, cfg, existing){
-  const id = 'series-'+type;
-  const previousData = getPreviousSerieData(type);
-  const recordData = getRecordSerieData(type);
-  let rows = '';
-  for(let i=0;i<cfg.count;i++){
-    const val = existing?.series?.[i]||'';
-    const prev = previousData[i] != null ? formatTime(previousData[i]) : '—';
-    const rec = recordData[i] != null ? formatTime(recordData[i]) : '—';
-    rows += `<div class="simple-input-row">
-      <span class="serie-label">${i+1}ª · ${cfg.dist}m</span>
-      <input type="text" class="serie-input" data-idx="${i}" data-type="${type}" placeholder="0:00" value="${val}">
-      <div class="compare-info">
-        <span class="compare-pill">ant: ${prev}</span>
-        <span class="compare-pill pr">pr: ${rec}</span>
-      </div>
-    </div>`;
-  }
-  return `<div class="block-card">
-    <div class="block-header">
-      <div class="block-title-group">
-        <div class="block-title">${cfg.label}</div>
-        <div class="block-value">Ritmo objetivo</div>
-        <span class="target-pill">▸ ${cfg.target}</span>
-      </div>
-      ${infoIcon(id)}
-    </div>
-    ${infoBox(id, `<ul><li>Cada ${cfg.dist}m a ritmo rápido objetivo: <strong>${cfg.target}</strong></li><li>Ritmo según Nivel ${getCurrentNivel().n}, ajustado a tu progresión</li><li>Calle 1 de la pista para medir distancia exacta</li></ul>`)}
-    <div class="block-body">${rows}</div>
-  </div>`;
-}
-
-function renderTirada(cfg, existing){
-  const id = 'tirada-block';
-  const previousPace = getPreviousTiradaPace();
-  const recordPace = getRecordTiradaPace();
-  const val = existing?.pace || '';
-  return `<div class="block-card">
-    <div class="block-header">
-      <div class="block-title-group">
-        <div class="block-title">Tirada continua</div>
-        <div class="block-value">${cfg.dist} km</div>
-        <span class="target-pill">▸ ${cfg.target}</span>
-      </div>
-      ${infoIcon(id)}
-    </div>
-    ${infoBox(id, `<ul><li>Distancia: <strong>${cfg.dist} km</strong> seguidos</li><li>Ritmo cómodo: "puedo hablar entrecortado pero hablar"</li><li>No mirar reloj cada minuto, fluir</li><li>En verano: parque o ruta con sombra, no pista</li></ul>`)}
     <div class="block-body">
-      <div class="simple-input-row">
-        <span class="serie-label">Ritmo medio</span>
-        <input type="text" class="serie-input" id="tirada-pace" placeholder="0:00" value="${val}" style="width:100px">
-        <div class="compare-info">
-          <span class="compare-pill">ant: ${previousPace!=null?formatPace(previousPace):'—'}</span>
-          <span class="compare-pill pr">pr: ${recordPace!=null?formatPace(recordPace):'—'}</span>
-        </div>
+      <div style="display:flex;gap:8px;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">
+        <span style="width:64px">Dist (m)</span><span style="width:76px">Tiempo</span><span style="width:66px">Rec</span>
       </div>
+      <div id="tramos-list"></div>
+      <button class="add-btn" onclick="addTramoRow()">+ Añadir tramo</button>
     </div>
   </div>`;
 }
+function addTramoRow(dist,time,rec){
+  const list = document.getElementById('tramos-list');
+  const rowId = 'tramo-'+(tramoRowSeq++);
+  const div = document.createElement('div');
+  div.className = 'tramo-row';
+  div.id = rowId;
+  div.innerHTML = `
+    <input type="number" class="serie-input" style="width:64px" placeholder="m" value="${dist!=null?dist:''}">
+    <input type="text" class="serie-input" style="width:76px" placeholder="mm:ss" value="${time!=null?time:''}">
+    <input type="text" class="serie-input" style="width:66px" placeholder="rec" value="${rec!=null?rec:''}">
+    <button class="del-btn" onclick="document.getElementById('${rowId}').remove()">✕</button>
+  `;
+  list.appendChild(div);
+}
 
-function renderTest(existing){
-  const id = 'test-block';
-  const prev = getPreviousTestData();
-  const rec = getRecordTestTime();
+function renderRodajeBlock(existing){
+  const distVal = existing?.distKm!=null ? existing.distKm : '';
+  const timeVal = existing?.time!=null ? formatTimeForInput(existing.time) : '';
   return `<div class="block-card">
-    <div class="block-header">
-      <div class="block-title-group">
-        <div class="block-title">Test 1000 m</div>
-        <div class="block-value">A tope, máximo esfuerzo</div>
-      </div>
-      ${infoIcon(id)}
-    </div>
-    ${infoBox(id, '<ul><li>Calienta bien (15 min) antes del test</li><li>Distancia exacta 1000 m en pista (2.5 vueltas calle 1)</li><li>Cronométralo con Garmin</li><li>Apunta tiempo final, ritmo medio y sensación</li></ul>')}
+    <div class="block-header"><div class="block-title-group"><div class="block-title">Rodaje</div><div class="block-value">Tirada continua</div></div></div>
     <div class="block-body">
-      <div class="simple-input-row">
-        <span class="serie-label">Tiempo</span>
-        <input type="text" class="serie-input" id="test-time" placeholder="0:00" value="${existing?.time||''}" style="width:100px">
-        <div class="compare-info">
-          <span class="compare-pill">ant: ${prev?formatTime(prev.time):'—'}</span>
-          <span class="compare-pill pr">pr: ${rec!=null?formatTime(rec):'—'}</span>
-        </div>
-      </div>
-      <div class="simple-input-row">
-        <span class="serie-label">Ritmo medio</span>
-        <input type="text" class="serie-input" id="test-pace" placeholder="0:00" value="${existing?.pace||''}" style="width:100px">
-      </div>
-      <div class="simple-input-row">
-        <span class="serie-label">Sensación</span>
-        <input type="number" min="1" max="10" class="serie-input" id="test-feel" placeholder="1-10" value="${existing?.feel||''}" style="width:80px">
-      </div>
+      <div class="simple-input-row"><span class="serie-label">Distancia</span><input type="number" step="0.1" min="0" class="serie-input" id="rodaje-dist" placeholder="km" value="${distVal}"></div>
+      <div class="simple-input-row"><span class="serie-label">Tiempo</span><input type="text" class="serie-input" id="rodaje-time" placeholder="mm:ss" value="${timeVal}"></div>
+      <div class="simple-input-row"><span class="serie-label">Ritmo</span><span id="rodaje-pace-out" style="font-weight:700;color:var(--accent);font-size:14px">—</span></div>
     </div>
   </div>`;
 }
+function attachRodajeListeners(){
+  const upd = ()=>{
+    const dist = parseFloat(document.getElementById('rodaje-dist').value);
+    const time = parseTime(document.getElementById('rodaje-time').value);
+    const out = document.getElementById('rodaje-pace-out');
+    out.textContent = (dist>0 && time!=null) ? formatPace(time/dist)+' /km' : '—';
+  };
+  document.getElementById('rodaje-dist').addEventListener('input',upd);
+  document.getElementById('rodaje-time').addEventListener('input',upd);
+  upd();
+}
 
-function renderDescanso(type){
-  const id = 'desc-'+type;
-  const min = type==='cortas'?2:3;
+function renderTestBlock(existing){
+  const timeVal = existing?.time!=null ? formatTimeForInput(existing.time) : '';
+  const s1 = existing?.split1!=null ? formatTimeForInput(existing.split1) : '';
+  const s2 = existing?.split2!=null ? formatTimeForInput(existing.split2) : '';
   return `<div class="block-card">
-    <div class="block-header">
-      <div class="block-title-group">
-        <div class="block-title">Descanso entre series</div>
-        <div class="block-value">${min} min</div>
-      </div>
-      ${infoIcon(id)}
+    <div class="block-header"><div class="block-title-group"><div class="block-title">Test 1000 m</div><div class="block-value">A tope, máximo esfuerzo</div></div></div>
+    <div class="block-body">
+      <div class="simple-input-row"><span class="serie-label">Tiempo</span><input type="text" class="serie-input" id="test-time" placeholder="mm:ss" value="${timeVal}"></div>
+      <div class="simple-input-row"><span class="serie-label">1º 500m</span><input type="text" class="serie-input" id="test-split1" placeholder="opcional" value="${s1}"></div>
+      <div class="simple-input-row"><span class="serie-label">2º 500m</span><input type="text" class="serie-input" id="test-split2" placeholder="opcional" value="${s2}"></div>
+      <div class="simple-input-row"><span class="serie-label">Baremo</span><span id="test-baremo-out" style="font-weight:700;color:var(--amber);font-size:14px">—</span></div>
     </div>
-    ${infoBox(id, type==='cortas' ? '<ul><li>Trote MUY suave o caminar entre series</li><li>No parar quieto del todo</li></ul>' : '<ul><li>Caminar tranquilamente</li><li>Más descanso porque la serie es más larga</li></ul>')}
   </div>`;
 }
-
-function renderVuelta(type){
-  const id = 'vuelta-'+type;
-  let html = '';
-  if(type==='tirada'){
-    html = '<ul><li>5 min caminando</li><li>5 min estiramientos estáticos: gemelos, isquios, cuádriceps, glúteo, aductores</li></ul>';
-    return `<div class="block-card">
-      <div class="block-header">
-        <div class="block-title-group">
-          <div class="block-title">Vuelta a la calma</div>
-          <div class="block-value">10 min</div>
-        </div>
-        ${infoIcon(id)}
-      </div>
-      ${infoBox(id, html)}
-    </div>`;
-  }
-  html = '<ul><li>5 min trote suave</li><li>5 min estiramientos estáticos: gemelos, isquios, cuádriceps, glúteo, aductores</li></ul>';
-  return `<div class="block-card">
-    <div class="block-header">
-      <div class="block-title-group">
-        <div class="block-title">Vuelta a la calma</div>
-        <div class="block-value">10 min</div>
-      </div>
-      ${infoIcon(id)}
-    </div>
-    ${infoBox(id, html)}
-  </div>`;
-}
-
-function toggleInfo(id){
-  const el = document.getElementById('info-'+id);
-  if(el)el.classList.toggle('open');
-}
-
-function attachInputListeners(){
-  document.querySelectorAll('.serie-input').forEach(inp=>{
-    inp.addEventListener('input', e=>colorizeSerie(e.target));
-    colorizeSerie(inp);
-  });
-}
-function colorizeSerie(inp){
-  inp.classList.remove('improved','worsened');
-  const val = parseTime(inp.value);
-  if(val==null)return;
-  if(inp.id==='tirada-pace'){
-    const prev = getPreviousTiradaPace();
-    if(prev!=null){
-      if(val<prev)inp.classList.add('improved');
-      else if(val>prev)inp.classList.add('worsened');
-    }
-    return;
-  }
-  if(inp.id==='test-time'){
-    const prev = getPreviousTestData();
-    if(prev){
-      if(val<prev.time)inp.classList.add('improved');
-      else if(val>prev.time)inp.classList.add('worsened');
-    }
-    return;
-  }
-  const idx = parseInt(inp.dataset.idx);
-  const type = inp.dataset.type;
-  if(isNaN(idx)||!type)return;
-  const prev = getPreviousSerieData(type)[idx];
-  if(prev==null)return;
-  if(val<prev)inp.classList.add('improved');
-  else if(val>prev)inp.classList.add('worsened');
-}
-
-function getPreviousSerieData(type){
-  const all = getData().filter(s=>s.type===type && s.date<currentSessionDate).sort((a,b)=>b.date.localeCompare(a.date));
-  if(!all.length)return [];
-  const last = all[0];
-  return (last.series||[]).map(parseTime);
-}
-function getRecordSerieData(type){
-  const all = getData().filter(s=>s.type===type && s.date<=currentSessionDate);
-  if(!all.length)return [];
-  const cfg = getNivelPlan(getCurrentNivel().n)[type];
-  if(!cfg)return [];
-  const records = new Array(cfg.count).fill(null);
-  for(const s of all){
-    (s.series||[]).forEach((v,i)=>{
-      const t = parseTime(v);
-      if(t==null)return;
-      if(records[i]==null||t<records[i])records[i]=t;
-    });
-  }
-  return records;
-}
-function getPreviousTiradaPace(){
-  const all = getData().filter(s=>s.type==='tirada' && s.date<currentSessionDate).sort((a,b)=>b.date.localeCompare(a.date));
-  return all.length ? parseTime(all[0].pace) : null;
-}
-function getRecordTiradaPace(){
-  const all = getData().filter(s=>s.type==='tirada' && s.date<=currentSessionDate);
-  let rec = null;
-  all.forEach(s=>{const t=parseTime(s.pace);if(t!=null&&(rec==null||t<rec))rec=t;});
-  return rec;
-}
-function getPreviousTestData(){
-  const all = getData().filter(s=>s.type==='test' && s.date<currentSessionDate).sort((a,b)=>b.date.localeCompare(a.date));
-  if(!all.length)return null;
-  return {time:parseTime(all[0].time)};
-}
-function getRecordTestTime(){
-  const all = getData().filter(s=>s.type==='test' && s.date<=currentSessionDate);
-  let rec = null;
-  all.forEach(s=>{const t=parseTime(s.time);if(t!=null&&(rec==null||t<rec))rec=t;});
-  return rec;
+function attachTestListeners(){
+  const upd = ()=>{
+    const t = parseTime(document.getElementById('test-time').value);
+    const out = document.getElementById('test-baremo-out');
+    if(t!=null){const b=getBaremoForTime(t);out.textContent=`${b.pts}/10 · ${b.label}`;}
+    else out.textContent = '—';
+  };
+  document.getElementById('test-time').addEventListener('input',upd);
+  upd();
 }
 
 function saveSession(){
   if(!currentType){showToast('Selecciona tipo');return;}
   const session = {date:currentSessionDate, type:currentType};
   if(currentType==='cortas'||currentType==='largas'){
-    session.series = [];
-    document.querySelectorAll('.serie-input[data-type]').forEach(i=>session.series.push(i.value||''));
-  } else if(currentType==='tirada'){
-    session.pace = document.getElementById('tirada-pace').value;
+    const rows = [...document.querySelectorAll('#tramos-list .tramo-row')];
+    session.tramos = rows.map(r=>{
+      const inputs = r.querySelectorAll('input');
+      const dist = parseFloat(inputs[0].value);
+      const time = parseTime(inputs[1].value);
+      const rec = inputs[2].value ? parseTime(inputs[2].value) : null;
+      return {dist,time,rec};
+    }).filter(t=>t.dist>0 && t.time!=null);
+    if(!session.tramos.length){showToast('Añade al menos un tramo');return;}
+  } else if(currentType==='rodaje'){
+    const dist = parseFloat(document.getElementById('rodaje-dist').value);
+    const time = parseTime(document.getElementById('rodaje-time').value);
+    if(!(dist>0)||time==null){showToast('Completa distancia y tiempo');return;}
+    session.distKm = dist; session.time = time;
   } else if(currentType==='test'){
-    session.time = document.getElementById('test-time').value;
-    session.pace = document.getElementById('test-pace').value;
-    session.feel = document.getElementById('test-feel').value;
+    const time = parseTime(document.getElementById('test-time').value);
+    if(time==null){showToast('Introduce el tiempo');return;}
+    session.time = time;
+    const s1 = parseTime(document.getElementById('test-split1').value);
+    const s2 = parseTime(document.getElementById('test-split2').value);
+    session.split1 = s1!=null?s1:null;
+    session.split2 = s2!=null?s2:null;
   }
   const data = getData();
   const idx = data.findIndex(s=>s.date===session.date && s.type===session.type);
@@ -1038,13 +746,18 @@ function saveSession(){
   showToast('Sesión guardada ✓', 'green');
 }
 function checkPR(session){
-  const all = getData().filter(s=>s.type===session.type && s.date<session.date);
-  if(session.type==='test'){
-    const t = parseTime(session.time);
-    if(t==null)return;
-    const prevs = all.map(s=>parseTime(s.time)).filter(Boolean);
-    if(!prevs.length||t<Math.min(...prevs))setTimeout(()=>showToast('Récord 1000 m: '+formatTime(t),'amber'),700);
+  if(session.type==='test' && session.time!=null){
+    const prevs = getData().filter(s=>s.type==='test' && s.date<session.date).map(s=>s.time).filter(t=>t!=null);
+    if(!prevs.length || session.time<Math.min(...prevs))setTimeout(()=>showToast('Récord 1000 m: '+formatTime(session.time),'amber'),700);
   }
+}
+function getRecordTestTime(){
+  const all = getData().filter(s=>s.type==='test').map(s=>s.time).filter(t=>t!=null);
+  return all.length?Math.min(...all):null;
+}
+function getRecordRodajePace(){
+  const all = getData().filter(s=>s.type==='rodaje' && s.distKm>0 && s.time!=null).map(s=>s.time/s.distKm);
+  return all.length?Math.min(...all):null;
 }
 
 // ========== HISTORIAL ==========
@@ -1057,16 +770,17 @@ function renderHistory(){
   list.innerHTML = data.map((s,i)=>{
     let bodyContent = '';
     if(s.type==='cortas'||s.type==='largas'){
-      bodyContent = (s.series||[]).filter(Boolean).map((v,idx)=>`<div class="history-row"><span class="history-row-name">${idx+1}ª serie</span><span class="history-row-val">${v||'—'}</span></div>`).join('');
-    } else if(s.type==='tirada'){
-      bodyContent = `<div class="history-row"><span class="history-row-name">Ritmo medio</span><span class="history-row-val">${s.pace||'—'} min/km</span></div>`;
+      bodyContent = (s.tramos||[]).map((t,idx)=>`<div class="history-row"><span class="history-row-name">${idx+1}ª · ${t.dist}m</span><span class="history-row-val">${formatTime(t.time)}${t.rec!=null?' · rec '+formatTime(t.rec):''}</span></div>`).join('');
+    } else if(s.type==='rodaje'){
+      const pace = (s.distKm>0 && s.time!=null) ? s.time/s.distKm : null;
+      bodyContent = `<div class="history-row"><span class="history-row-name">Distancia</span><span class="history-row-val">${s.distKm!=null?s.distKm+' km':'—'}</span></div>
+        <div class="history-row"><span class="history-row-name">Tiempo</span><span class="history-row-val">${formatTime(s.time)}</span></div>
+        <div class="history-row"><span class="history-row-name">Ritmo</span><span class="history-row-val">${pace!=null?formatPace(pace)+' /km':'—'}</span></div>`;
     } else if(s.type==='test'){
-      let pts = '';
-      const t = parseTime(s.time);
-      if(t!=null){const b=getBaremoForTime(t);pts=` · ${b.pts}/10`;}
-      bodyContent = `<div class="history-row"><span class="history-row-name">Tiempo${pts}</span><span class="history-row-val">${s.time||'—'}</span></div>
-        <div class="history-row"><span class="history-row-name">Ritmo medio</span><span class="history-row-val">${s.pace||'—'}</span></div>
-        <div class="history-row"><span class="history-row-name">Sensación</span><span class="history-row-val">${s.feel?s.feel+'/10':'—'}</span></div>`;
+      const b = s.time!=null?getBaremoForTime(s.time):null;
+      bodyContent = `<div class="history-row"><span class="history-row-name">Tiempo${b?' · '+b.pts+'/10':''}</span><span class="history-row-val">${formatTime(s.time)}</span></div>`;
+      if(s.split1!=null)bodyContent += `<div class="history-row"><span class="history-row-name">1º 500m</span><span class="history-row-val">${formatTime(s.split1)}</span></div>`;
+      if(s.split2!=null)bodyContent += `<div class="history-row"><span class="history-row-name">2º 500m</span><span class="history-row-val">${formatTime(s.split2)}</span></div>`;
     }
     return `<div class="history-session">
       <div class="history-session-header">
@@ -1088,6 +802,11 @@ function deleteSession(date,type){if(!confirm('¿Borrar la sesión del '+formatD
 
 // ========== PROGRESO ==========
 function setProgressPeriod(p,el){currentProgressPeriod=p;document.querySelectorAll('#screen-progreso .pill-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderProgreso();}
+function getAllDistances(){
+  const set = new Set();
+  getData().forEach(s=>{if(s.tramos)s.tramos.forEach(t=>{if(t.dist)set.add(t.dist);});});
+  return [...set].sort((a,b)=>a-b);
+}
 function renderProgreso(){
   const start = getStartDate(currentProgressPeriod);
   const data = getData().filter(s=>s.date>=start);
@@ -1095,48 +814,101 @@ function renderProgreso(){
   const sessions = data.length;
   let km = 0;
   data.forEach(s=>{
-    if(s.type==='cortas')km+=2.4;
-    else if(s.type==='largas')km+=2.4;
-    else if(s.type==='tirada')km+=4;
-    else if(s.type==='test')km+=1;
-    km+=0.7; // calentamiento aprox
+    if(s.type==='cortas'||s.type==='largas')km += (s.tramos||[]).reduce((a,t)=>a+(t.dist||0),0)/1000;
+    else if(s.type==='rodaje')km += s.distKm||0;
+    else if(s.type==='test')km += 1;
   });
 
-  const tests = data.filter(s=>s.type==='test').map(s=>parseTime(s.time)).filter(Boolean);
+  const tests = data.filter(s=>s.type==='test').map(s=>s.time).filter(t=>t!=null);
   const best1000 = tests.length?Math.min(...tests):null;
-  const all400 = data.filter(s=>s.type==='cortas').flatMap(s=>(s.series||[]).map(parseTime).filter(Boolean));
-  const best400 = all400.length?Math.min(...all400):null;
-  const all600 = data.filter(s=>s.type==='largas').flatMap(s=>(s.series||[]).map(parseTime).filter(Boolean));
-  const best600 = all600.length?Math.min(...all600):null;
-  const tiradas = data.filter(s=>s.type==='tirada').map(s=>parseTime(s.pace)).filter(Boolean);
-  const bestTirada = tiradas.length?Math.min(...tiradas):null;
 
   document.getElementById('stat-sessions').textContent = sessions;
   document.getElementById('stat-distance').textContent = km.toFixed(1);
   document.getElementById('stat-best-1000').textContent = formatTime(best1000);
-  document.getElementById('stat-best-400').textContent = formatTime(best400);
-  document.getElementById('stat-best-600').textContent = formatTime(best600);
-  document.getElementById('stat-best-tirada').textContent = formatPace(bestTirada);
 
-  renderChart('chart-1000', getData().filter(s=>s.type==='test'&&s.date>=start), '#ffd60a', s=>parseTime(s.time));
-  renderChart('chart-400', getData().filter(s=>s.type==='cortas'&&s.date>=start), '#4a9eff', s=>{const arr=(s.series||[]).map(parseTime).filter(Boolean);return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;});
-  renderChart('chart-600', getData().filter(s=>s.type==='largas'&&s.date>=start), '#bf5af2', s=>{const arr=(s.series||[]).map(parseTime).filter(Boolean);return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;});
-  renderChart('chart-tirada', getData().filter(s=>s.type==='tirada'&&s.date>=start), '#30d158', s=>parseTime(s.pace));
+  const distBest = {};
+  data.forEach(s=>{
+    if(s.type!=='cortas'&&s.type!=='largas')return;
+    (s.tramos||[]).forEach(t=>{
+      if(t.dist==null||t.time==null)return;
+      if(distBest[t.dist]==null||t.time<distBest[t.dist])distBest[t.dist]=t.time;
+    });
+  });
+  const dists = Object.keys(distBest).map(Number).sort((a,b)=>a-b);
+  document.getElementById('dist-best-list').innerHTML = dists.length
+    ? dists.map(d=>`<div class="record-item"><div class="record-val" style="font-size:15px">${formatTime(distBest[d])}</div><div class="record-lbl">${d}m</div></div>`).join('')
+    : '<div class="empty-state" style="padding:16px">Sin tramos en este periodo</div>';
+
+  renderDistanceSelector();
+  renderProgresoCharts(start);
+}
+function renderDistanceSelector(){
+  const dists = getAllDistances();
+  const row = document.getElementById('dist-pill-row');
+  if(!dists.length){row.innerHTML='<div style="font-size:12px;color:var(--text3)">Sin datos aún</div>';return;}
+  if(selectedDistance==null||!dists.includes(selectedDistance))selectedDistance=dists[0];
+  row.innerHTML = dists.map(d=>`<button class="pill-btn ${d===selectedDistance?'active':''}" onclick="selectedDistance=${d};renderProgresoCharts(getStartDate(currentProgressPeriod))">${d}m</button>`).join('');
 }
 
-const cOpts = {responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>formatTime(ctx.parsed.y)}}},scales:{x:{ticks:{color:'#636366',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#636366',font:{size:10},callback:v=>formatTime(v)},grid:{color:'rgba(255,255,255,0.04)'},reverse:true}}};
+const cOpts = (tickFormatter,reverseY,showLegend)=>({
+  responsive:true,
+  plugins:{legend:{display:!!showLegend,labels:{color:'#aeaeb2',font:{size:10}}},tooltip:{callbacks:{label:ctx=>tickFormatter(ctx.parsed.y)}}},
+  scales:{x:{ticks:{color:'#636366',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
+    y:{ticks:{color:'#636366',font:{size:10},callback:v=>tickFormatter(v)},grid:{color:'rgba(255,255,255,0.04)'},reverse:!!reverseY}}
+});
 
-function renderChart(id, sessions, color, valFn){
-  sessions.sort((a,b)=>a.date.localeCompare(b.date));
-  const labels = sessions.map(s=>formatDate(s.date));
-  const vals = sessions.map(valFn);
+function renderLineChart(id, labels, datasets, tickFormatter, reverseY){
   if(charts[id])charts[id].destroy();
   const ctx = document.getElementById(id).getContext('2d');
   charts[id] = new Chart(ctx,{
     type:'line',
-    data:{labels,datasets:[{data:vals,borderColor:color,backgroundColor:color+'14',borderWidth:2,pointBackgroundColor:color,pointRadius:4,tension:0.35,fill:true}]},
-    options:cOpts
+    data:{labels, datasets:datasets.map(ds=>({
+      label: ds.label||'',
+      data: ds.data,
+      borderColor: ds.color,
+      backgroundColor: ds.dashed?'transparent':ds.color+'14',
+      borderWidth:2,
+      borderDash: ds.dashed?[6,4]:[],
+      pointBackgroundColor: ds.color,
+      pointRadius: ds.dashed?0:4,
+      tension:0.35,
+      fill: !ds.dashed
+    }))},
+    options: cOpts(tickFormatter, reverseY, datasets.length>1)
   });
+}
+function renderBarChart(id, labels, data, color){
+  if(charts[id])charts[id].destroy();
+  const ctx = document.getElementById(id).getContext('2d');
+  charts[id] = new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:color+'55',borderColor:color,borderWidth:1,borderRadius:4}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#636366',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#636366',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}
+  });
+}
+
+function renderProgresoCharts(start){
+  const testSessions = getData().filter(s=>s.type==='test'&&s.date>=start&&s.time!=null).sort((a,b)=>a.date.localeCompare(b.date));
+  renderLineChart('chart-1000',
+    testSessions.map(s=>formatDate(s.date)),
+    [
+      {data:testSessions.map(s=>s.time), color:'#ffd60a', label:'Tiempo'},
+      {data:testSessions.map(()=>175), color:'#30d158', dashed:true, label:'Objetivo 2:55'}
+    ], formatTime, true);
+
+  const distSessions = getData().filter(s=>(s.type==='cortas'||s.type==='largas')&&s.date>=start&&(s.tramos||[]).some(t=>t.dist===selectedDistance)).sort((a,b)=>a.date.localeCompare(b.date));
+  const bestVals = distSessions.map(s=>{const ts=s.tramos.filter(t=>t.dist===selectedDistance).map(t=>t.time);return Math.min(...ts);});
+  const avgVals = distSessions.map(s=>{const ts=s.tramos.filter(t=>t.dist===selectedDistance).map(t=>t.time);return ts.reduce((a,b)=>a+b,0)/ts.length;});
+  renderLineChart('chart-dist', distSessions.map(s=>formatDate(s.date)), [
+    {data:bestVals, color:'#4a9eff', label:'Mejor'},
+    {data:avgVals, color:'#bf5af2', label:'Media'}
+  ], formatTime, true);
+
+  const rodajeSessions = getData().filter(s=>s.type==='rodaje'&&s.date>=start&&s.time!=null&&s.distKm>0).sort((a,b)=>a.date.localeCompare(b.date));
+  renderLineChart('chart-rodaje-pace', rodajeSessions.map(s=>formatDate(s.date)), [
+    {data:rodajeSessions.map(s=>s.time/s.distKm), color:'#30d158', label:'Ritmo'}
+  ], formatPace, true);
+  renderBarChart('chart-rodaje-vol', rodajeSessions.map(s=>formatDate(s.date)), rodajeSessions.map(s=>s.distKm), '#30d158');
 }
 
 function goProgSlide(idx){
@@ -1153,227 +925,112 @@ function updateProgDots(idx){
   document.querySelectorAll('#prog-dots .corpo-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
 }
 
-// ========== PLAN ==========
-function renderPlan(){
-  const nivel = getCurrentNivel();
+// ========== AGENDA ==========
+function getWeekStart(dateStr){
+  const d = new Date(dateStr+'T12:00:00');
+  const day = d.getDay();
+  const diff = (day===0?-6:1-day);
+  d.setDate(d.getDate()+diff);
+  return toLocalISO(d);
+}
+function getWeekNumber(weekStart){return Math.round(daysBetween(WEEK1_START,weekStart)/7)+1;}
+
+function renderAgendaScreen(){
+  renderAgendaWeek();
+  renderNextTestInfo();
+  renderRecordsInfo();
+  renderBaremo();
+}
+function renderAgendaWeek(){
+  const todayWeekStart = getWeekStart(todayStr());
+  const targetWeekStart = addDays(todayWeekStart, agendaWeekOffset*7);
+  const weekNum = getWeekNumber(targetWeekStart);
+  const weekEnd = addDays(targetWeekStart,6);
+  document.getElementById('agenda-week-num').textContent = weekNum;
+  document.getElementById('agenda-week-range').textContent = `${formatDate(targetWeekStart)} – ${formatDate(weekEnd)}`;
+  document.getElementById('agenda-today-btn').style.display = agendaWeekOffset===0 ? 'none' : 'flex';
+
+  const agenda = getAgenda();
+  const sessionDates = new Set(getData().map(s=>s.date));
+  let html = '';
+  for(let i=0;i<7;i++){
+    const date = addDays(targetWeekStart,i);
+    const dow = new Date(date+'T12:00:00').getDay();
+    const entry = agenda[date] || {};
+    const isToday = date===todayStr();
+    const hasSession = sessionDates.has(date);
+    html += `<div class="block-card" style="${isToday?'border-color:rgba(74,158,255,0.4)':''}">
+      <div class="block-header">
+        <div class="block-title-group">
+          <div class="block-title">${DOW_NAMES_FULL[dow]} · ${formatDate(date)}${isToday?' · HOY':''}</div>
+          <select class="modal-select" style="width:auto;margin-bottom:0;margin-top:4px;padding:5px 8px;font-size:12px" onchange="updateAgendaDay('${date}','type',this.value)">
+            <option value="">— tipo —</option>
+            ${Object.entries(AGENDA_TYPE_LABELS).map(([k,l])=>`<option value="${k}" ${entry.type===k?'selected':''}>${l}</option>`).join('')}
+          </select>
+          ${!entry.type && DAY_HINT[dow] ? `<div style="font-size:10.5px;color:var(--text3);margin-top:3px">Sugerido: ${DAY_HINT[dow]}</div>` : ''}
+        </div>
+        ${hasSession?'<span class="badge-done">✓ Hecho</span>':''}
+      </div>
+      <div class="block-body">
+        <textarea class="modal-textarea" style="min-height:44px;margin-bottom:0;font-size:13px" placeholder="Qué toca hoy..." onchange="updateAgendaDay('${date}','text',this.value)">${entry.text||''}</textarea>
+      </div>
+    </div>`;
+  }
+  document.getElementById('agenda-days').innerHTML = html;
+}
+function updateAgendaDay(date,field,value){
+  const agenda = getAgenda();
+  if(!agenda[date])agenda[date]={};
+  agenda[date][field] = value;
+  if(!agenda[date].type && !agenda[date].text) delete agenda[date];
+  saveAgendaData(agenda);
+  if(field==='type')renderAgendaWeek();
+}
+function copyWeekToNext(){
+  const todayWeekStart = getWeekStart(todayStr());
+  const base = addDays(todayWeekStart, agendaWeekOffset*7);
+  const nextBase = addDays(base,7);
+  if(!confirm('¿Copiar esta semana a la siguiente? Se sobrescribirá lo que haya.'))return;
+  const agenda = getAgenda();
+  for(let i=0;i<7;i++){
+    const d = addDays(base,i), nd = addDays(nextBase,i);
+    if(agenda[d])agenda[nd]={...agenda[d]}; else delete agenda[nd];
+  }
+  saveAgendaData(agenda);
+  agendaWeekOffset++;
+  renderAgendaScreen();
+  showToast('Semana copiada ✓','green');
+}
+
+function renderNextTestInfo(){
   const today = todayStr();
-  const totalDias = daysBetween(nivel.ini, nivel.fin)+1;
-  const diasTrans = Math.max(0, daysBetween(nivel.ini, today)+1);
-  const diasRest = Math.max(0, daysBetween(today, nivel.fin));
-  const pct = Math.min(100, Math.max(0, (diasTrans/totalDias)*100));
-
-  document.getElementById('fase-badge').textContent = `NIVEL ${nivel.n}`;
-  document.getElementById('fase-subtitle').textContent = nivel.titulo;
-  document.getElementById('fase-period').textContent = formatDateLong(nivel.ini)+' – '+formatDateLong(nivel.fin);
-  document.getElementById('fase-bar').style.width = pct+'%';
-  document.getElementById('fase-dias').textContent = `Día ${Math.min(diasTrans,totalDias)} / ${totalDias}`;
-  document.getElementById('fase-restante').textContent = `Restan ${diasRest}d`;
-
-  // Próximo entreno
-  renderProximoEntreno();
-
-  // Test
   const nextTest = getNextTestDate(today);
   document.getElementById('next-test-date').textContent = formatDate(nextTest);
-  document.getElementById('next-test-days').textContent = daysBetween(today, nextTest)+' días';
+  document.getElementById('next-test-days').textContent = daysBetween(today,nextTest)+' días';
   const lastTest = getData().filter(s=>s.type==='test').sort((a,b)=>b.date.localeCompare(a.date))[0];
-  if(lastTest){
-    const t = parseTime(lastTest.time);
-    const pts = t!=null ? ' · '+getBaremoForTime(t).pts+'/10' : '';
-    document.getElementById('last-test-result').textContent = (lastTest.time||'—') + pts;
+  if(lastTest && lastTest.time!=null){
+    const pts = getBaremoForTime(lastTest.time).pts;
+    document.getElementById('last-test-result').textContent = formatTime(lastTest.time)+' · '+pts+'/10';
   } else {
     document.getElementById('last-test-result').textContent = 'Sin tests aún';
   }
-
-  // Records
+}
+function renderRecordsInfo(){
   document.getElementById('pr-1000').textContent = formatTime(getRecordTestTime());
-  document.getElementById('pr-400').textContent = formatTime(getOverallRecord('cortas'));
-  document.getElementById('pr-600').textContent = formatTime(getOverallRecord('largas'));
-  document.getElementById('pr-tirada').textContent = formatPace(getRecordTiradaPace());
-
-  // Baremo
-  renderBaremo();
-
-  // Niveles
-  renderNiveles();
-
-  // Notas
-  renderNotas();
-
-  // Evaluación
-  renderEvaluaciones();
-}
-function getOverallRecord(type){
-  const all = getData().filter(s=>s.type===type);
-  let rec = null;
-  all.forEach(s=>(s.series||[]).forEach(v=>{const t=parseTime(v);if(t!=null&&(rec==null||t<rec))rec=t;}));
-  return rec;
-}
-function renderProximoEntreno(){
-  const today = new Date();
-  for(let i=0;i<7;i++){
-    const d = new Date(today);d.setDate(d.getDate()+i);
-    const dow = d.getDay();
-    const dateStr = d.toISOString().split('T')[0];
-    if(isTestDay(dateStr) && i>=0){
-      const cfg = getNivelPlan(getCurrentNivel().n);
-      document.querySelector('#proximo-card .proximo-day').textContent = (i===0?'HOY':i===1?'MAÑANA':formatDate(dateStr).toUpperCase());
-      document.querySelector('#proximo-card .proximo-tipo').textContent = 'Test 1000 m';
-      document.querySelector('#proximo-card .proximo-detail').textContent = 'A tope · objetivo final 2:55';
-      return;
-    }
-    if(DAY_TO_TYPE[dow]){
-      const t = DAY_TO_TYPE[dow];
-      const cfg = getNivelPlan(getCurrentNivel().n)[t];
-      document.querySelector('#proximo-card .proximo-day').textContent = (i===0?'HOY':i===1?'MAÑANA':formatDate(dateStr).toUpperCase());
-      document.querySelector('#proximo-card .proximo-tipo').textContent = TYPE_LABELS[t];
-      document.querySelector('#proximo-card .proximo-detail').textContent = cfg.label+' · '+cfg.target;
-      return;
-    }
-  }
+  const pace = getRecordRodajePace();
+  document.getElementById('pr-rodaje').textContent = pace!=null ? formatPace(pace)+' /km' : '—';
 }
 function renderBaremo(){
   const b = getBaremo();
   const lastTest = getData().filter(s=>s.type==='test').sort((a,b)=>b.date.localeCompare(a.date))[0];
   let currentPts = -1;
-  if(lastTest){const t=parseTime(lastTest.time);if(t!=null)currentPts=getBaremoForTime(t).pts;}
+  if(lastTest && lastTest.time!=null)currentPts = getBaremoForTime(lastTest.time).pts;
   const html = b.map(r=>{
     const cls = r.pts===currentPts?'current':(r.pts===10?'target':'');
     return `<tr class="${cls}"><td>${r.label}</td><td>${r.pts} pts</td></tr>`;
   }).join('');
   document.getElementById('baremo-table').innerHTML = html;
 }
-function renderNiveles(){
-  const today = todayStr();
-  const cur = getCurrentNivel();
-  document.getElementById('niveles-list').innerHTML = NIVELES.map(n=>{
-    let status='', cls='';
-    if(today>n.fin){status='Completado';cls='completado';}
-    else if(n.n===cur.n){status='Activo';cls='activo';}
-    else{status='Pendiente';cls='pendiente';}
-    const itemCls = cls==='completado'?'completed':(cls==='activo'?'active':'');
-    return `<div class="nivel-item ${itemCls}">
-      <div class="nivel-num">${n.n}</div>
-      <div class="nivel-info"><div class="nivel-titulo">${n.titulo}</div><div class="nivel-fecha">${formatDate(n.ini)} – ${formatDate(n.fin)}</div></div>
-      <div class="nivel-status ${cls}">${status}</div>
-    </div>`;
-  }).join('');
-}
-function renderNotas(){
-  const meta = getMeta();
-  const notas = (meta.notas||[]).filter(n=>{
-    const cur = getCurrentNivel();
-    return n.date>=cur.ini && n.date<=cur.fin;
-  }).sort((a,b)=>b.date.localeCompare(a.date));
-  const list = document.getElementById('notas-list');
-  if(!notas.length){list.innerHTML='<div style="font-size:12.5px;color:var(--text3);text-align:center;padding:8px 0">Sin notas en este nivel</div>';return;}
-  list.innerHTML = notas.map((n,i)=>`<div class="note-item">
-    <div class="note-date">${formatDate(n.date)}</div>
-    <div class="note-text">${n.text}</div>
-    <div class="note-actions"><button class="note-del" onclick="delNote(${meta.notas.indexOf(n)})">Eliminar</button></div>
-  </div>`).join('');
-}
-function openNoteModal(){document.getElementById('note-date').value=todayStr();document.getElementById('note-text').value='';document.getElementById('note-modal').classList.add('open');}
-function saveNote(){
-  const date=document.getElementById('note-date').value;
-  const text=document.getElementById('note-text').value.trim();
-  if(!date||!text){showToast('Completa fecha y nota');return;}
-  const meta=getMeta();if(!meta.notas)meta.notas=[];
-  meta.notas.push({date,text,created:Date.now()});
-  saveMeta(meta);closeModal('note-modal');renderNotas();showToast('Nota guardada ✓','green');
-}
-function delNote(idx){
-  if(!confirm('¿Borrar nota?'))return;
-  const meta=getMeta();meta.notas.splice(idx,1);saveMeta(meta);renderNotas();
-}
-
-// ========== EVALUACIÓN ==========
-function openEvaluacion(){
-  const auto = generateAutoEval();
-  document.getElementById('eval-auto').innerHTML = auto;
-  document.getElementById('eval-feeling').value = 7;
-  document.getElementById('eval-feeling-out').textContent = '7';
-  document.getElementById('eval-pain').value='';
-  document.getElementById('eval-progress').value='';
-  document.getElementById('eval-weight').value='';
-  document.getElementById('eval-context').value='';
-  document.getElementById('eval-modal').classList.add('open');
-}
-function generateAutoEval(){
-  const nivel = getCurrentNivel();
-  const sessions = getData().filter(s=>s.date>=nivel.ini && s.date<=nivel.fin);
-  const tests = sessions.filter(s=>s.type==='test').sort((a,b)=>a.date.localeCompare(b.date));
-  const cortas = sessions.filter(s=>s.type==='cortas');
-  const largas = sessions.filter(s=>s.type==='largas');
-  const tiradas = sessions.filter(s=>s.type==='tirada');
-  const all400 = cortas.flatMap(s=>(s.series||[]).map(parseTime).filter(Boolean));
-  const all600 = largas.flatMap(s=>(s.series||[]).map(parseTime).filter(Boolean));
-  const allPace = tiradas.map(s=>parseTime(s.pace)).filter(Boolean);
-
-  let html = `<strong>Resumen automático Nivel ${nivel.n}</strong><br>`;
-  html += `Periodo: ${formatDate(nivel.ini)} – ${formatDate(nivel.fin)}<br>`;
-  html += `Sesiones completadas: ${sessions.length}<br><br>`;
-  if(tests.length){
-    html += `<strong>Tests:</strong><br>`;
-    tests.forEach(t=>{html+=`· ${formatDate(t.date)}: ${t.time||'—'} (ritmo ${t.pace||'—'}, sensación ${t.feel||'—'}/10)<br>`;});
-    html += `<br>`;
-  }
-  if(all400.length){html += `<strong>400m:</strong> mejor ${formatTime(Math.min(...all400))} · media ${formatTime(all400.reduce((a,b)=>a+b,0)/all400.length)}<br>`;}
-  if(all600.length){html += `<strong>600m:</strong> mejor ${formatTime(Math.min(...all600))} · media ${formatTime(all600.reduce((a,b)=>a+b,0)/all600.length)}<br>`;}
-  if(allPace.length){html += `<strong>Tirada:</strong> mejor ${formatPace(Math.min(...allPace))} · media ${formatPace(allPace.reduce((a,b)=>a+b,0)/allPace.length)}<br>`;}
-
-  const meta = getMeta();
-  const notas = (meta.notas||[]).filter(n=>n.date>=nivel.ini&&n.date<=nivel.fin);
-  if(notas.length){
-    html += `<br><strong>Notas del periodo:</strong><br>`;
-    notas.forEach(n=>{html+=`· ${formatDate(n.date)}: ${n.text}<br>`;});
-  }
-  return html;
-}
-function saveEvaluacion(){
-  const meta = getMeta();
-  if(!meta.evaluaciones)meta.evaluaciones=[];
-  const nivel = getCurrentNivel();
-  const auto = document.getElementById('eval-auto').innerText;
-  const feel = document.getElementById('eval-feeling').value;
-  const pain = document.getElementById('eval-pain').value.trim();
-  const progress = document.getElementById('eval-progress').value.trim();
-  const weight = document.getElementById('eval-weight').value.trim();
-  const context = document.getElementById('eval-context').value.trim();
-
-  const fullText = auto+'\n\n'+
-    '— PARTE MANUAL —\n'+
-    'Sensación general: '+feel+'/10\n'+
-    'Dolores/lesiones: '+(pain||'Ninguna')+'\n'+
-    'Mejora notada: '+(progress||'—')+'\n'+
-    'Cambio de peso: '+(weight?weight+' kg':'—')+'\n'+
-    'Otros cambios: '+(context||'—');
-
-  meta.evaluaciones.push({nivel:nivel.n, fecha:todayStr(), text:fullText});
-  saveMeta(meta);
-  closeModal('eval-modal');
-  renderEvaluaciones();
-  showToast('Evaluación guardada ✓','green');
-}
-function renderEvaluaciones(){
-  const meta = getMeta();
-  const list = document.getElementById('evaluaciones-list');
-  const evals = meta.evaluaciones||[];
-  if(!evals.length){list.innerHTML='';return;}
-  list.innerHTML = evals.slice().reverse().map((e,i)=>`<div class="evaluacion-card">
-    <div class="evaluacion-header"><div class="evaluacion-titulo">Evaluación Nivel ${e.nivel}</div><span style="font-size:11px;color:var(--text3);margin-left:auto">${formatDate(e.fecha)}</span></div>
-    <div class="evaluacion-actions">
-      <button class="eval-btn" onclick="viewEval(${evals.length-1-i})">Ver</button>
-      <button class="eval-btn" onclick="copyEval(${evals.length-1-i})">Copiar</button>
-      <button class="eval-btn" onclick="downloadEval(${evals.length-1-i})">TXT</button>
-    </div>
-  </div>`).join('');
-}
-function viewEval(i){const e=getMeta().evaluaciones[i];currentEvalText=e.text;document.getElementById('view-eval-title').textContent='Evaluación Nivel '+e.nivel;document.getElementById('view-eval-content').textContent=e.text;document.getElementById('view-eval-modal').classList.add('open');}
-function copyEval(i){const e=getMeta().evaluaciones[i];navigator.clipboard.writeText(e.text).then(()=>showToast('Copiado al portapapeles ✓','green'));}
-function copyCurrentEval(){navigator.clipboard.writeText(currentEvalText).then(()=>showToast('Copiado ✓','green'));}
-function downloadEval(i){const e=getMeta().evaluaciones[i];const blob=new Blob([e.text],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='evaluacion-nivel-'+e.nivel+'.txt';a.click();showToast('Descargado ✓','green');}
-function downloadCurrentEval(){const blob=new Blob([currentEvalText],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='evaluacion.txt';a.click();showToast('Descargado ✓','green');}
 
 // ========== BAREMO EDIT ==========
 function openBaremoEdit(){
@@ -1389,7 +1046,7 @@ function saveBaremo(){
   const b = getBaremo().slice();
   document.querySelectorAll('[data-baremo-idx]').forEach(inp=>{
     const i = parseInt(inp.dataset.baremoIdx);
-    b[i].label = inp.value;
+    b[i] = {...b[i], label: inp.value};
   });
   const meta = getMeta();meta.baremo=b;saveMeta(meta);
   closeModal('baremo-modal');renderBaremo();showToast('Baremo guardado ✓','green');
@@ -1402,40 +1059,88 @@ function showScreen(name,btn){
   document.getElementById('screen-'+name).classList.add('active');btn.classList.add('active');
   if(name==='historial')renderHistory();
   if(name==='progreso')renderProgreso();
-  if(name==='plan')renderPlan();
+  if(name==='agenda')renderAgendaScreen();
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function showToast(msg,cls){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(cls||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
 
 // ========== I/O ==========
-function exportJSON(){const all={sessions:getData(),meta:getMeta()};const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='1000m-backup.json';a.click();showToast('Backup exportado ✓','green');}
-function handleImport(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const p=JSON.parse(ev.target.result);if(p.sessions){saveData(p.sessions);saveMeta(p.meta||{});}else saveData(p);showToast('Importado ✓','green');renderHistory();}catch{showToast('Error al importar');}};r.readAsText(f);e.target.value='';}
+function exportJSON(){const all={sessions:getData(),meta:getMeta(),agenda:getAgenda()};const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='1000m-backup.json';a.click();showToast('Backup exportado ✓','green');}
+function handleImport(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const p=JSON.parse(ev.target.result);
+      if(p.sessions){saveData(p.sessions);saveMeta(p.meta||{});if(p.agenda)saveAgendaData(p.agenda);}
+      else saveData(p);
+      migrateData();
+      showToast('Importado ✓','green');renderHistory();
+    }catch{showToast('Error al importar');}
+  };
+  r.readAsText(f);e.target.value='';
+}
 function exportCSV(){
   const rows=[['Fecha','Tipo','Datos']];
   getData().forEach(s=>{
     let info='';
-    if(s.type==='cortas'||s.type==='largas')info=(s.series||[]).join(' / ');
-    else if(s.type==='tirada')info='ritmo '+(s.pace||'—');
-    else if(s.type==='test')info=`${s.time||'—'} | ${s.pace||'—'} | sens ${s.feel||'—'}/10`;
+    if(s.type==='cortas'||s.type==='largas')info=(s.tramos||[]).map(t=>`${t.dist}m:${formatTime(t.time)}${t.rec!=null?`(rec ${formatTime(t.rec)})`:''}`).join(' / ');
+    else if(s.type==='rodaje')info=`${s.distKm!=null?s.distKm:'—'}km en ${formatTime(s.time)}`;
+    else if(s.type==='test'){
+      const b=s.time!=null?getBaremoForTime(s.time):null;
+      info=`${formatTime(s.time)}${b?` (${b.pts}/10)`:''}${s.split1!=null?` · 1º:${formatTime(s.split1)}`:''}${s.split2!=null?` · 2º:${formatTime(s.split2)}`:''}`;
+    }
     rows.push([s.date,TYPE_LABELS[s.type],info]);
   });
   const blob=new Blob([rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n')],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='1000m-tracker.csv';a.click();showToast('CSV exportado ✓','green');
 }
-function clearAllData(){if(!confirm('¿Seguro? Se borrará TODO.'))return;localStorage.removeItem('m1000_sessions');localStorage.removeItem('m1000_meta');showToast('Datos borrados');setTimeout(()=>location.reload(),700);}
+function generateResumenText(period){
+  const start = getStartDate(period);
+  const data = getData().filter(s=>s.date>=start).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!data.length)return 'Sin sesiones en el periodo.';
+  const lines = [`Resumen ${period==='semana'?'última semana':'último mes'} (${formatDate(start)} – ${formatDate(todayStr())})`,''];
+  data.forEach(s=>{
+    lines.push(`${formatDate(s.date)} · ${TYPE_LABELS[s.type]}`);
+    if(s.type==='cortas'||s.type==='largas'){
+      (s.tramos||[]).forEach((t,i)=>{
+        lines.push(`  ${i+1}. ${t.dist}m — ${formatTime(t.time)}${t.rec!=null?` (rec ${formatTime(t.rec)})`:''}`);
+      });
+    } else if(s.type==='rodaje'){
+      const pace = (s.distKm>0 && s.time!=null) ? s.time/s.distKm : null;
+      lines.push(`  ${s.distKm!=null?s.distKm:'—'} km — ${formatTime(s.time)}${pace!=null?` (${formatPace(pace)} min/km)`:''}`);
+    } else if(s.type==='test'){
+      const b = s.time!=null?getBaremoForTime(s.time):null;
+      lines.push(`  Total: ${formatTime(s.time)}${b?` (${b.pts}/10)`:''}`);
+      if(s.split1!=null)lines.push(`  1º 500m: ${formatTime(s.split1)}`);
+      if(s.split2!=null)lines.push(`  2º 500m: ${formatTime(s.split2)}`);
+    }
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+function copyResumen(period){
+  const text = generateResumenText(period);
+  navigator.clipboard.writeText(text).then(()=>showToast('Resumen copiado ✓','green'));
+}
+function clearAllData(){
+  if(!confirm('¿Seguro? Se borrará TODO.'))return;
+  localStorage.removeItem('m1000_sessions');
+  localStorage.removeItem('m1000_meta');
+  localStorage.removeItem('m1000_agenda');
+  showToast('Datos borrados');setTimeout(()=>location.reload(),700);
+}
 
 // ========== INIT ==========
+migrateData();
 document.getElementById('entreno-date-input').value = todayStr();
-checkTestBanner();
-
-// Auto-detectar tipo de hoy
-const today = new Date();
-const dow = today.getDay();
-if(isTestDay(todayStr())){
-  setTimeout(()=>{document.querySelectorAll('.type-btn')[3].click();},80);
-} else if(DAY_TO_TYPE[dow]){
-  const idx = {'cortas':0,'tirada':1,'largas':2}[DAY_TO_TYPE[dow]];
-  setTimeout(()=>{document.querySelectorAll('.type-btn')[idx].click();},80);
+currentSessionDate = todayStr();
+updateSessionLabel();
+updateSuggestionBanner();
+const suggested = suggestTypeForDate(todayStr());
+if(suggested){
+  const btn = document.querySelector(`.type-btn[data-type="${suggested}"]`);
+  if(btn)setTimeout(()=>btn.click(),80);
 }
 </script>
 </body>
