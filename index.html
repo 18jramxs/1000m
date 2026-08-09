@@ -404,17 +404,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
   <div class="settings-group">
-    <div class="settings-group-title">Resumen</div>
-    <div class="settings-row" onclick="copyResumen('semana')">
-      <div class="settings-row-icon" style="background:rgba(191,90,242,0.15)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#bf5af2" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-4"/></svg></div>
-      <span>Copiar resumen (última semana)</span>
-    </div>
-    <div class="settings-row" onclick="copyResumen('mes')">
-      <div class="settings-row-icon" style="background:rgba(191,90,242,0.15)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#bf5af2" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-4"/></svg></div>
-      <span>Copiar resumen (último mes)</span>
-    </div>
-  </div>
-  <div class="settings-group">
     <div class="settings-group-title">Peligro</div>
     <div class="settings-row danger" onclick="clearAllData()">
       <div class="settings-row-icon" style="background:var(--red-bg)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ff453a" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></div>
@@ -480,14 +469,13 @@ const BAREMO_DEFAULT = [
 ];
 
 const TYPE_LABELS = {cortas:'Series cortas', largas:'Series largas', rodaje:'Rodaje', test:'Test 1000 m'};
-const AGENDA_TYPE_LABELS = {cortas:'Series cortas', largas:'Series largas', rodaje:'Rodaje', test:'Test 1000 m', agilidad:'Agilidad', descanso:'Descanso'};
 const DOW_NAMES_FULL = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-const DAY_HINT = {1:'',2:'',3:'Carrera + agilidad',4:'',5:'Carrera',6:'',0:'Carrera'};
 const WEEK1_START = '2026-08-03';
 
 // ========== STATE ==========
 let currentType = null;
 let currentSessionDate = todayStr();
+let dateAnchor = todayStr(); // referencia para los saltos por tipo; solo cambia con edición manual de fecha
 let historyFilter = 'all';
 let currentProgressPeriod = 'mes';
 let selectedDistance = null;
@@ -583,12 +571,30 @@ function getBaremoForTime(timeSecs){
 }
 
 // ========== ENTRENO ==========
+// Cada tipo tiene un día fijo de la semana (miércoles=cortas, viernes=rodaje,
+// domingo=largas salvo el primer domingo de mes que es test). Al elegir un
+// tipo, la fecha salta al día correspondiente más reciente (hoy incluido).
+function nearestDateForType(type, fromDate){
+  let d = fromDate;
+  for(let i=0;i<45;i++){
+    if(suggestTypeForDate(d)===type)return d;
+    d = addDays(d,-1);
+  }
+  return fromDate;
+}
 function selectType(type, el){
   currentType = type;
   document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
   el.classList.add('selected');
   document.getElementById('session-title').textContent = TYPE_LABELS[type];
   document.getElementById('save-btn').style.display='block';
+  const matchDate = nearestDateForType(type, dateAnchor);
+  if(matchDate !== currentSessionDate){
+    currentSessionDate = matchDate;
+    document.getElementById('entreno-date-input').value = matchDate;
+    updateSessionLabel();
+    updateSuggestionBanner();
+  }
   renderEntrenoContent();
 }
 function updateSessionLabel(){
@@ -596,18 +602,17 @@ function updateSessionLabel(){
 }
 function onDateChange(){
   currentSessionDate = document.getElementById('entreno-date-input').value || todayStr();
+  dateAnchor = currentSessionDate;
   updateSessionLabel();
   updateSuggestionBanner();
   if(currentType)renderEntrenoContent();
 }
 function updateSuggestionBanner(){
   const banner = document.getElementById('test-banner');
-  const suggestion = suggestTypeForDate(currentSessionDate);
-  if(!suggestion){banner.style.display='none';return;}
+  const fixedType = suggestTypeForDate(currentSessionDate);
+  if(!fixedType){banner.style.display='none';return;}
   banner.style.display='flex';
-  document.getElementById('test-banner-text').innerHTML = suggestion==='test'
-    ? `Hoy toca <strong>TEST 1000 m</strong>.`
-    : `Sugerido hoy: <strong>${TYPE_LABELS[suggestion]}</strong>.`;
+  document.getElementById('test-banner-text').innerHTML = `Toca <strong>${TYPE_LABELS[fixedType]}</strong>.`;
 }
 
 function renderEntrenoContent(){
@@ -615,10 +620,10 @@ function renderEntrenoContent(){
   const existing = getData().find(s=>s.date===currentSessionDate && s.type===currentType);
   const agendaEntry = getAgenda()[currentSessionDate];
   let refHtml = '';
-  if(agendaEntry && (agendaEntry.text || agendaEntry.type)){
+  if(agendaEntry && agendaEntry.text){
     refHtml = `<div class="test-banner" style="display:flex;background:linear-gradient(135deg,rgba(74,158,255,0.12),rgba(74,158,255,0.06));border-color:rgba(74,158,255,0.25)">
       <div class="test-banner-icon" style="background:rgba(74,158,255,0.18)">📋</div>
-      <div class="test-banner-text">Agenda: <strong>${AGENDA_TYPE_LABELS[agendaEntry.type]||''}</strong>${agendaEntry.text?' — '+agendaEntry.text:''}</div>
+      <div class="test-banner-text">Agenda — ${agendaEntry.text}</div>
     </div>`;
   }
   if(currentType==='cortas'||currentType==='largas'){
@@ -964,32 +969,27 @@ function renderAgendaWeek(){
     const entry = agenda[date] || {};
     const isToday = date===todayStr();
     const hasSession = sessionDates.has(date);
+    const fixedType = suggestTypeForDate(date);
     html += `<div class="block-card" style="${isToday?'border-color:rgba(74,158,255,0.4)':''}">
       <div class="block-header">
         <div class="block-title-group">
           <div class="block-title">${DOW_NAMES_FULL[dow]} · ${formatDate(date)}${isToday?' · HOY':''}</div>
-          <select class="modal-select" style="width:auto;margin-bottom:0;margin-top:4px;padding:5px 8px;font-size:12px" onchange="updateAgendaDay('${date}','type',this.value)">
-            <option value="">— tipo —</option>
-            ${Object.entries(AGENDA_TYPE_LABELS).map(([k,l])=>`<option value="${k}" ${entry.type===k?'selected':''}>${l}</option>`).join('')}
-          </select>
-          ${!entry.type && DAY_HINT[dow] ? `<div style="font-size:10.5px;color:var(--text3);margin-top:3px">Sugerido: ${DAY_HINT[dow]}</div>` : ''}
+          ${fixedType ? `<span class="type-badge ${fixedType}" style="margin-top:5px">${TYPE_LABELS[fixedType]}</span>` : `<div style="font-size:11px;color:var(--text3);margin-top:4px">Día libre</div>`}
         </div>
         ${hasSession?'<span class="badge-done">✓ Hecho</span>':''}
       </div>
       <div class="block-body">
-        <textarea class="modal-textarea" style="min-height:44px;margin-bottom:0;font-size:13px" placeholder="Qué toca hoy..." onchange="updateAgendaDay('${date}','text',this.value)">${entry.text||''}</textarea>
+        <textarea class="modal-textarea" style="min-height:44px;margin-bottom:0;font-size:13px" placeholder="Qué toca hoy..." onchange="updateAgendaText('${date}',this.value)">${entry.text||''}</textarea>
       </div>
     </div>`;
   }
   document.getElementById('agenda-days').innerHTML = html;
 }
-function updateAgendaDay(date,field,value){
+function updateAgendaText(date,value){
   const agenda = getAgenda();
-  if(!agenda[date])agenda[date]={};
-  agenda[date][field] = value;
-  if(!agenda[date].type && !agenda[date].text) delete agenda[date];
+  if(value && value.trim()){agenda[date]={text:value};}
+  else{delete agenda[date];}
   saveAgendaData(agenda);
-  if(field==='type')renderAgendaWeek();
 }
 function copyWeekToNext(){
   const todayWeekStart = getWeekStart(todayStr());
@@ -1099,34 +1099,6 @@ function exportCSV(){
   });
   const blob=new Blob([rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n')],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='1000m-tracker.csv';a.click();showToast('CSV exportado ✓','green');
-}
-function generateResumenText(period){
-  const start = getStartDate(period);
-  const data = getData().filter(s=>s.date>=start).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!data.length)return 'Sin sesiones en el periodo.';
-  const lines = [`Resumen ${period==='semana'?'última semana':'último mes'} (${formatDate(start)} – ${formatDate(todayStr())})`,''];
-  data.forEach(s=>{
-    lines.push(`${formatDate(s.date)} · ${TYPE_LABELS[s.type]}`);
-    if(s.type==='cortas'||s.type==='largas'){
-      (s.tramos||[]).forEach((t,i)=>{
-        lines.push(`  ${i+1}. ${t.dist}m — ${formatTime(t.time)}${t.rec!=null?` (rec ${formatTime(t.rec)})`:''}`);
-      });
-    } else if(s.type==='rodaje'){
-      const pace = (s.distKm>0 && s.time!=null) ? s.time/s.distKm : null;
-      lines.push(`  ${s.distKm!=null?s.distKm:'—'} km — ${formatTime(s.time)}${pace!=null?` (${formatPace(pace)} min/km)`:''}`);
-    } else if(s.type==='test'){
-      const b = s.time!=null?getBaremoForTime(s.time):null;
-      lines.push(`  Total: ${formatTime(s.time)}${b?` (${b.pts}/10)`:''}`);
-      if(s.split1!=null)lines.push(`  1º 500m: ${formatTime(s.split1)}`);
-      if(s.split2!=null)lines.push(`  2º 500m: ${formatTime(s.split2)}`);
-    }
-    lines.push('');
-  });
-  return lines.join('\n');
-}
-function copyResumen(period){
-  const text = generateResumenText(period);
-  navigator.clipboard.writeText(text).then(()=>showToast('Resumen copiado ✓','green'));
 }
 function clearAllData(){
   if(!confirm('¿Seguro? Se borrará TODO.'))return;
