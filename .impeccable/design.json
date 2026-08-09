@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-09T00:00:00Z",
+  "title": "Design System: 1000 m Tracker",
+  "extensions": {
+    "colorMeta": {
+      "bg-void": { "role": "neutral", "displayName": "Void Black", "canonical": "#050507", "tonalRamp": ["#050507","#0a0a0c","#141419","#1e1e24","#38383f","#5c5c66","#8f8f99","#d8d8de"] },
+      "card-glass": { "role": "neutral", "displayName": "Card Glass", "canonical": "rgba(255,255,255,0.045)", "tonalRamp": ["rgba(255,255,255,0.018)","rgba(255,255,255,0.03)","rgba(255,255,255,0.045)","rgba(255,255,255,0.06)","rgba(255,255,255,0.07)","rgba(255,255,255,0.09)","rgba(255,255,255,0.14)","rgba(255,255,255,0.22)"] },
+      "text-primary": { "role": "neutral", "displayName": "Text Primary", "canonical": "#ffffff", "tonalRamp": ["rgba(255,255,255,0.18)","rgba(255,255,255,0.3)","rgba(255,255,255,0.42)","rgba(255,255,255,0.54)","rgba(255,255,255,0.62)","rgba(255,255,255,0.78)","rgba(255,255,255,0.9)","#ffffff"] },
+      "blue-cta": { "role": "primary", "displayName": "Blue CTA", "canonical": "#2979ff", "tonalRamp": ["#0d2a5c","#123c80","#1a52ad","#2065d6","#2979ff","#4a8fff","#6ea8ff","#a8c9ff"] },
+      "volt-lime": { "role": "secondary", "displayName": "Volt Lime", "canonical": "#b6ff2e", "tonalRamp": ["#2e3a08","#465609","#5f720c","#7f9613","#a3c11c","#b6ff2e","#c8ff5e","#e0ffa0"] },
+      "baremo-amber": { "role": "tertiary", "displayName": "Baremo Amber", "canonical": "#ffd60a", "tonalRamp": ["#4d3f00","#665400","#806a00","#998000","#cca800","#ffd60a","#ffe14d","#fff0a3"] },
+      "series-pink": { "role": "tertiary", "displayName": "Series Pink", "canonical": "#ff2d92", "tonalRamp": ["#4d0d2c","#66103b","#801451","#991966","#cc217f","#ff2d92","#ff62ae","#ffa3d1"] },
+      "ember-orange": { "role": "tertiary", "displayName": "Ember Orange", "canonical": "#ff6b00", "tonalRamp": ["#4d2000","#662b00","#803600","#994100","#cc5700","#ff6b00","#ff8f3d","#ffbf8a"] },
+      "signal-red": { "role": "negative", "displayName": "Signal Red", "canonical": "#ff453a", "tonalRamp": ["#4d1512","#661c17","#80231d","#992a23","#cc3830","#ff453a","#ff7169","#ffaba6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Hero Display", "purpose": "Today-hero title and the largest number on any screen (e.g. objetivo 2:55)." },
+      "label-display": { "displayName": "Label Display", "purpose": "Type-picker buttons, chips, modal titles, stat-tile values — display-face short labels/numbers." },
+      "mono-data": { "displayName": "Mono Data", "purpose": "Any logged or computed value: times, dates, table cells, badges." }
+    },
+    "shadows": [
+      { "name": "shadow-card", "value": "0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)", "purpose": "Default resting elevation for glass cards." },
+      { "name": "shadow-card-lg", "value": "0 18px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08)", "purpose": "Highest-attention surfaces: today-hero, modal sheet, toast." },
+      { "name": "shadow-nav", "value": "0 14px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08)", "purpose": "Floating bottom-nav pill." },
+      { "name": "nav-indicator-glow", "value": "0 2px 12px rgba(0,0,0,0.3), 0 0 16px -6px rgba(182,255,46,0.16), inset 0 1px 0 rgba(255,255,255,0.16)", "purpose": "Intentional colored glow on the sliding nav indicator, ported verbatim from gym-tracker." }
+    ],
+    "motion": [
+      { "name": "ease-out-soft", "value": "cubic-bezier(0.22,1,0.36,1)", "purpose": "Screen transition (pageIn)." },
+      { "name": "ease-pop", "value": "cubic-bezier(0.16,1,0.3,1)", "purpose": "Button/chip press feedback." },
+      { "name": "ease-spring", "value": "cubic-bezier(0.34,1.56,0.64,1)", "purpose": "Nav indicator slide (bounce), intentional brand commitment shared with gym-tracker." },
+      { "name": "ease-drawer", "value": "cubic-bezier(0.32,0.72,0,1)", "purpose": "Bottom-sheet modal slide-up." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Save CTA",
+      "kind": "button",
+      "refersTo": "save-cta",
+      "description": "Primary full-width action button that commits a logged session.",
+      "html": "<button class=\"ds-save-btn\">Guardar sesión</button>",
+      "css": ".ds-save-btn{width:100%;background:linear-gradient(180deg,#3989ff 0%,#2979ff 50%,#1f6ce8 100%);color:#fff;border:none;border-radius:20px;padding:16px;font-family:'Bebas Neue',Anton,sans-serif;font-size:18px;font-weight:400;letter-spacing:1px;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 18px rgba(41,121,255,0.35), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15);transition:transform 0.18s cubic-bezier(0.16,1,0.3,1), box-shadow 0.28s ease;}.ds-save-btn:hover{transform:translateY(-1px);}.ds-save-btn:active{transform:scale(0.985);box-shadow:0 3px 10px rgba(41,121,255,0.45), inset 0 1px 0 rgba(255,255,255,0.4);}.ds-save-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(41,121,255,0.4);}"
+    },
+    {
+      "name": "Type Picker Button",
+      "kind": "button",
+      "refersTo": "type-picker-selected",
+      "description": "3-across selector for session type; selected state inverts to white.",
+      "html": "<div style=\"display:grid;grid-template-columns:repeat(3,1fr);gap:6px;\"><button class=\"ds-type-btn selected\">Series<br>cortas</button><button class=\"ds-type-btn\">Rodaje<br>continuo</button><button class=\"ds-type-btn\">Series<br>largas</button></div>",
+      "css": ".ds-type-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.62);padding:12px 2px;border-radius:14px;font-family:'Bebas Neue',Anton,sans-serif;font-size:15px;font-weight:400;letter-spacing:0.4px;text-transform:uppercase;line-height:1.15;cursor:pointer;text-align:center;transition:background 0.22s ease, border-color 0.22s ease, color 0.22s ease, transform 0.18s cubic-bezier(0.16,1,0.3,1);}.ds-type-btn:hover{border-color:rgba(255,255,255,0.14);}.ds-type-btn:active{transform:scale(0.95);}.ds-type-btn.selected{background:#fff;border-color:#fff;color:#000;box-shadow:0 6px 18px rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.4);}"
+    },
+    {
+      "name": "Glass Card",
+      "kind": "card",
+      "refersTo": "card-glass",
+      "description": "Base card recipe with layered gradient fill and a glossy top-edge highlight line, used across the app for every content block.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Marcas personales</div><div class=\"ds-card-body\">1000 m · 2:58</div></div>",
+      "css": ".ds-card{position:relative;background:linear-gradient(160deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.018) 60%, rgba(255,255,255,0.03) 100%);backdrop-filter:blur(36px) saturate(220%) brightness(1.05);border:1px solid rgba(255,255,255,0.08);border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);padding:16px;color:#fff;}.ds-card::after{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);border-radius:1px;pointer-events:none;}.ds-card-title{font-size:16px;font-weight:700;margin-bottom:6px;}.ds-card-body{font-family:'SF Mono',ui-monospace,monospace;font-size:13px;color:rgba(255,255,255,0.62);}"
+    },
+    {
+      "name": "Today Hero",
+      "kind": "custom",
+      "refersTo": "card-glass",
+      "description": "Signature opening surface: oversized Bebas Neue title, ghost watermark, one-shot shine sweep, and a 2-tile stat row below the title (never a kicker above it).",
+      "html": "<div class=\"ds-hero\"><div class=\"ds-hero-bg\">CORRE</div><div class=\"ds-hero-title\">Series cortas</div><div class=\"ds-hero-stats\"><div class=\"ds-hero-tile\"><div class=\"v\">23</div><div class=\"l\">Próx. test</div></div><div class=\"ds-hero-tile\"><div class=\"v\">7</div><div class=\"l\">Baremo actual</div></div></div></div>",
+      "css": ".ds-hero{position:relative;border-radius:26px;background:linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025));border:1px solid rgba(255,255,255,0.14);backdrop-filter:blur(44px) saturate(200%);padding:22px 22px 18px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);}.ds-hero-bg{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:96px;color:rgba(255,255,255,0.045);text-transform:uppercase;top:-8px;right:-16px;pointer-events:none;}.ds-hero-title{font-family:'Bebas Neue',sans-serif;font-size:38px;color:#fff;text-transform:uppercase;position:relative;}.ds-hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;position:relative;}.ds-hero-tile{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:8px 10px;text-align:center;}.ds-hero-tile .v{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;}.ds-hero-tile .l{font-size:9.5px;color:rgba(255,255,255,0.54);margin-top:4px;text-transform:uppercase;letter-spacing:0.7px;font-weight:600;}"
+    },
+    {
+      "name": "Bottom Nav (sliding indicator)",
+      "kind": "nav",
+      "refersTo": "nav-pill",
+      "description": "Floating pill nav with a spring-eased sliding indicator, ported verbatim from gym-tracker including its motion and colored glow.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-indicator\"></span><button class=\"ds-nav-btn active\">Entreno</button><button class=\"ds-nav-btn\">Historial</button><button class=\"ds-nav-btn\">Progreso</button></nav>",
+      "css": ".ds-nav{position:relative;background:rgba(14,14,18,0.6);backdrop-filter:blur(40px) saturate(200%);border:1px solid rgba(255,255,255,0.14);border-radius:100px;display:flex;padding:6px;gap:2px;box-shadow:0 14px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);}.ds-nav-btn{flex:1;background:none;border:none;color:rgba(255,255,255,0.54);padding:9px 4px 7px;font-size:9.5px;font-weight:600;letter-spacing:0.4px;cursor:pointer;position:relative;z-index:1;transition:color 0.28s ease, transform 0.22s cubic-bezier(0.16,1,0.3,1);}.ds-nav-btn.active{color:#fff;}.ds-nav-btn:active{transform:scale(0.92);}.ds-nav-indicator{position:absolute;top:6px;bottom:6px;left:6px;width:30%;border-radius:100px;background:linear-gradient(160deg, rgba(255,255,255,0.14), rgba(255,255,255,0.05));border:1px solid rgba(255,255,255,0.2);box-shadow:0 2px 12px rgba(0,0,0,0.3), 0 0 16px -6px rgba(182,255,46,0.16), inset 0 1px 0 rgba(255,255,255,0.16);transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1), width 0.5s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;z-index:0;}"
+    },
+    {
+      "name": "Bottom Sheet Modal",
+      "kind": "custom",
+      "refersTo": "card-glass",
+      "description": "Drawer-eased bottom sheet with a drag handle, used for baremo editing and other focused edits.",
+      "html": "<div class=\"ds-modal-bg\"><div class=\"ds-modal\"><div class=\"ds-modal-title\">Editar baremo</div><input class=\"ds-modal-input\" placeholder=\"MM:SS\"><div class=\"ds-modal-actions\"><button class=\"ds-modal-btn secondary\">Cancelar</button><button class=\"ds-modal-btn primary\">Guardar</button></div></div></div>",
+      "css": ".ds-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);display:flex;align-items:flex-end;}.ds-modal{width:100%;background:linear-gradient(165deg, rgba(30,30,37,0.82), rgba(14,14,18,0.92));backdrop-filter:blur(44px) saturate(200%);border:1px solid rgba(255,255,255,0.14);border-bottom:none;border-radius:26px 26px 0 0;padding:14px 20px 24px;box-shadow:0 18px 50px rgba(0,0,0,0.55);}.ds-modal::before{content:'';display:block;width:38px;height:5px;background:rgba(255,255,255,0.18);border-radius:3px;margin:0 auto 18px;}.ds-modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:14px;color:#fff;}.ds-modal-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-size:14px;padding:9px 11px;width:100%;margin-bottom:10px;font-family:'SF Mono',monospace;}.ds-modal-actions{display:flex;gap:8px;}.ds-modal-btn{flex:1;padding:12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;border:none;}.ds-modal-btn.primary{background:#fff;color:#000;}.ds-modal-btn.secondary{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.62);}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Family Glass",
+    "overview": "This is not an organic system that evolved on its own project; it is a deliberate, token-for-token port of gym-tracker's shipped CSS (colors, Bebas Neue + SF Mono type pairing, the glass-card recipe with its glossy top-edge highlight, the pill bottom-nav with a single sliding indicator, the today-hero pattern, the activity-map calendar, the bottom-sheet modal, the blue-glow save CTA) reapplied to a different domain: series cortas/largas, rodaje, timed 1000m tests, and baremo scoring. The two apps are used by the same person preparing for the same Policía Nacional physical exam, and they are meant to read as one family wearing two outfits of the same cut. Where this build's own content diverges from gym-tracker's (an amber baremo accent, a pink series-largas badge, the activity-map's trained/rest legend), those are genuine 1000m-specific extensions of the shared vocabulary, not departures from it.\n\nThe material is near-black frosted glass at every surface: translucent white-on-black cards with heavy backdrop blur, a slow-drifting radial-gradient mesh behind everything, and a near-invisible dot-grain texture over the whole viewport. Numbers are the loudest thing on screen — oversized Bebas Neue for hero titles, stat tiles, and the 2:55 objective card — while everything administrative (labels, timestamps, table data) drops into small-caps SF Mono. Motion is springy and confident (a spring-eased sliding nav indicator, a one-shot shine sweep across the today-hero, snappy button-press scale-downs) rather than flat or restrained.",
+    "keyCharacteristics": [
+      "Near-black glass surfaces with a glossy top-edge highlight on every card",
+      "Bebas Neue oversized numerals for hero data; SF Mono for administrative/tabular data",
+      "A single blue CTA color, reserved for the primary save action and the current-baremo row",
+      "Selected/active states invert to solid white-on-black rather than tinting the accent color",
+      "Pill bottom-nav with one spring-eased sliding indicator shared verbatim with gym-tracker"
+    ],
+    "rules": [
+      { "name": "The One CTA Rule", "body": "Blue is the only color that means \"primary action.\" It appears on the save button and the current-baremo row — nowhere else does an interactive element use blue as its resting fill.", "section": "colors" },
+      { "name": "The Invert-to-White Rule", "body": "Selected/active states (type picker, filter chips, progress-period pills, primary modal button) invert to solid white background with black text instead of tinting toward the accent color.", "section": "colors" },
+      { "name": "The Data-Is-Mono Rule", "body": "Any value the user logged or that the app computed from logged data renders in SF Mono; Bebas Neue never carries dense tabular data.", "section": "typography" },
+      { "name": "The Glossy Top-Edge Rule", "body": "Every glass card carries a 1px horizontal highlight line inset 8% from each edge at its very top, simulating a light catching the top rim of a glass panel.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep Bebas Neue reserved for headline-scale numbers, hero titles, and short uppercase button/chip labels — never body copy or dense data.",
+      "Do render every logged/computed value (times, dates, table cells) in SF Mono, per the Data-Is-Mono Rule.",
+      "Do apply the glossy top-edge highlight to any new card-like surface, per the Glossy Top-Edge Rule.",
+      "Do treat the spring-eased sliding nav indicator, its colored glow shadow, and the subtle full-viewport grain texture as intentional shared brand commitments with gym-tracker — not defects to \"fix\" by flattening them.",
+      "Do put contextual info (day/date, status) in a row below a card's title, not above it."
+    ],
+    "donts": [
+      "Don't add a kicker or eyebrow label above any heading. Gym-tracker's own incumbent .today-hero does this; this build deliberately did not port it, because a kicker/eyebrow above a heading is an absolute craft-floor ban that no brief overrides. This is a defect carried by gym-tracker's build, not a pattern to reproduce here or reintroduce there.",
+      "Don't tint a selected/active state toward its category accent color — invert to solid white-on-black instead, per the Invert-to-White Rule.",
+      "Don't give an ordinary content card its own drop shadow; shadows are reserved for the header, nav, hero, modal, and toast tier only.",
+      "Don't introduce a second CTA color; blue stays the only \"act on this\" signal on screen."
+    ]
+  }
+}
