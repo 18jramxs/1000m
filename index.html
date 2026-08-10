@@ -426,7 +426,7 @@ finish review, the verdict, and DESIGN.md.
   <div class="fisico-card" style="overflow:hidden;">
     <div class="section-header" style="padding-bottom:6px;">
       <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg></div>
-      <div style="flex:1"><div class="section-title-text">Marcas personales</div><div class="section-subtitle">Desliza para ver el test mensual</div></div>
+      <div style="flex:1"><div class="section-title-text">Marcas personales</div><div class="section-subtitle">Desliza para ver la evolución</div></div>
       <div style="display:flex;gap:5px;padding-right:2px;" id="rec-dots">
         <div class="corpo-dot active" onclick="goRecSlide(0)"></div>
         <div class="corpo-dot" onclick="goRecSlide(1)"></div>
@@ -439,11 +439,31 @@ finish review, the verdict, and DESIGN.md.
           <div class="record-item"><div class="record-val" id="pr-rodaje">—</div><div class="record-lbl">Ritmo rodaje</div></div>
         </div>
       </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="test-info-card" style="margin-bottom:0;">
-          <div class="test-info-row"><span class="lbl">Próximo test</span><span class="val" id="next-test-date">—</span></div>
-          <div class="test-info-row"><span class="lbl">Días restantes</span><span class="val" id="next-test-days">—</span></div>
-          <div class="test-info-row"><span class="lbl">Último resultado</span><span class="val" id="last-test-result">—</span></div>
+      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;width:100%;">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 16px 8px;">
+          <div style="flex:1"><div class="section-title-text" style="font-size:14px;">Evolución</div><div class="section-subtitle" style="margin-top:2px;">Desliza entre gráficas</div></div>
+          <div style="display:flex;gap:5px;" id="prog-dots">
+            <div class="corpo-dot active" onclick="goProgSlide(0)"></div>
+            <div class="corpo-dot" onclick="goProgSlide(1)"></div>
+            <div class="corpo-dot" onclick="goProgSlide(2)"></div>
+            <div class="corpo-dot" onclick="goProgSlide(3)"></div>
+          </div>
+        </div>
+        <div id="prog-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onProgScroll()">
+          <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
+            <div class="chart-card-label">Evolución test 1000 m (objetivo 2:55)</div><canvas id="chart-1000" height="180"></canvas>
+          </div>
+          <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
+            <div class="chart-card-label">Por distancia</div>
+            <div class="pill-row" id="dist-pill-row" style="margin-bottom:10px;"></div>
+            <canvas id="chart-dist" height="180"></canvas>
+          </div>
+          <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
+            <div class="chart-card-label">Ritmo medio rodaje (min/km)</div><canvas id="chart-rodaje-pace" height="180"></canvas>
+          </div>
+          <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
+            <div class="chart-card-label">Volumen rodaje (km por sesión)</div><canvas id="chart-rodaje-vol" height="180"></canvas>
+          </div>
         </div>
       </div>
     </div>
@@ -452,35 +472,6 @@ finish review, the verdict, and DESIGN.md.
   <div class="fisico-card" style="padding:14px;">
     <div class="section-subtitle" style="margin-bottom:8px;">Mejor tiempo por distancia (periodo)</div>
     <div class="records-grid" id="dist-best-list" style="grid-template-columns:repeat(auto-fill,minmax(84px,1fr));"></div>
-  </div>
-
-  <div class="fisico-card" style="overflow:hidden;">
-    <div class="section-header" style="padding-bottom:6px;">
-      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><polyline points="4 18 9 13 13 16 20 7"/></svg></div>
-      <div style="flex:1"><div class="section-title-text">Evolución</div><div class="section-subtitle">Desliza entre gráficas</div></div>
-      <div style="display:flex;gap:5px;padding-right:2px;" id="prog-dots">
-        <div class="corpo-dot active" onclick="goProgSlide(0)"></div>
-        <div class="corpo-dot" onclick="goProgSlide(1)"></div>
-        <div class="corpo-dot" onclick="goProgSlide(2)"></div>
-        <div class="corpo-dot" onclick="goProgSlide(3)"></div>
-      </div>
-    </div>
-    <div id="prog-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onProgScroll()">
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 14px 16px;">
-        <div class="chart-card-label">Evolución test 1000 m (objetivo 2:55)</div><canvas id="chart-1000" height="180"></canvas>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 14px 16px;">
-        <div class="chart-card-label">Por distancia</div>
-        <div class="pill-row" id="dist-pill-row" style="margin-bottom:10px;"></div>
-        <canvas id="chart-dist" height="180"></canvas>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 14px 16px;">
-        <div class="chart-card-label">Ritmo medio rodaje (min/km)</div><canvas id="chart-rodaje-pace" height="180"></canvas>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 14px 16px;">
-        <div class="chart-card-label">Volumen rodaje (km por sesión)</div><canvas id="chart-rodaje-vol" height="180"></canvas>
-      </div>
-    </div>
   </div>
 
 </div>
@@ -506,10 +497,25 @@ finish review, the verdict, and DESIGN.md.
   <button class="add-btn" onclick="copyWeekToNext()">Copiar semana a la siguiente</button>
 
   <!-- OBJETIVO -->
-  <div class="objetivo-card" style="margin-top:14px;">
-    <div class="objetivo-lbl">Objetivo final</div>
-    <div class="objetivo-val">2:55</div>
-    <div class="objetivo-sub">10/10 baremo · Policía Nacional</div>
+  <div class="objetivo-card" style="margin-top:14px;padding:0;overflow:hidden;">
+    <div style="display:flex;gap:5px;justify-content:center;padding-top:14px;" id="obj-dots">
+      <div class="corpo-dot active" onclick="goObjSlide(0)"></div>
+      <div class="corpo-dot" onclick="goObjSlide(1)"></div>
+    </div>
+    <div id="obj-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onObjScroll()">
+      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:10px 20px 20px;text-align:center;">
+        <div class="objetivo-lbl">Objetivo final</div>
+        <div class="objetivo-val">2:55</div>
+        <div class="objetivo-sub">10/10 baremo · Policía Nacional</div>
+      </div>
+      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:10px 20px 20px;">
+        <div class="test-info-card" style="margin-bottom:0;background:rgba(255,255,255,0.05);">
+          <div class="test-info-row"><span class="lbl">Próximo test</span><span class="val" id="next-test-date">—</span></div>
+          <div class="test-info-row"><span class="lbl">Días restantes</span><span class="val" id="next-test-days">—</span></div>
+          <div class="test-info-row"><span class="lbl">Último resultado</span><span class="val" id="last-test-result">—</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- BAREMO -->
@@ -1027,7 +1033,6 @@ function renderProgreso(){
     : '<div class="empty-state" style="padding:16px">Sin tramos en este periodo</div>';
 
   renderRecordsInfo();
-  renderNextTestInfo();
   renderActivityMap();
   renderDistanceSelector();
   renderProgresoCharts(start);
@@ -1159,6 +1164,20 @@ function updateRecDots(idx){
   document.querySelectorAll('#rec-dots .corpo-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
 }
 
+function goObjSlide(idx){
+  const c=document.getElementById('obj-carousel');
+  c.scrollTo({left:c.offsetWidth*idx,behavior:'smooth'});
+  updateObjDots(idx);
+}
+function onObjScroll(){
+  const c=document.getElementById('obj-carousel');
+  const idx=Math.round(c.scrollLeft/c.offsetWidth);
+  updateObjDots(idx);
+}
+function updateObjDots(idx){
+  document.querySelectorAll('#obj-dots .corpo-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+
 // ========== AGENDA ==========
 function getWeekStart(dateStr){
   const d = new Date(dateStr+'T12:00:00');
@@ -1171,6 +1190,7 @@ function getWeekNumber(weekStart){return Math.round(daysBetween(WEEK1_START,week
 
 function renderAgendaScreen(){
   renderAgendaWeek();
+  renderNextTestInfo();
   renderBaremo();
 }
 function renderAgendaWeek(){
