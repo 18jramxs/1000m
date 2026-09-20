@@ -103,7 +103,13 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}}
 
 /* —— HEADER —— */
-.header{background:linear-gradient(to bottom, rgba(5,5,7,0.92) 0%, rgba(5,5,7,0.6) 80%, transparent 100%);backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header{background:linear-gradient(to bottom, rgba(5,5,7,0.92) 0%, rgba(5,5,7,0.6) 80%, transparent 100%);backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);border-bottom:1px solid var(--border);padding:14px 20px 12px;display:flex;flex-direction:column;gap:10px;position:sticky;top:0;z-index:100;}
+.header-row{display:flex;align-items:center;justify-content:space-between;}
+.header-status{display:flex;align-items:center;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--r-pill);padding:8px 4px;transition:opacity 0.3s ease;}
+.header-status-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;}
+.header-status-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;}
+.header-status-val{font-family:var(--font-mono);font-size:12.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.header-status-sep{width:1px;align-self:stretch;background:var(--border-2);margin:2px 0;}
 .header h1{font-size:13px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--text);display:flex;align-items:center;gap:10px;}
 .header h1 .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulseDot 2.2s ease-in-out infinite;}
 .header h1 .accent{color:var(--amber);font-family:var(--font-mono);font-weight:500;letter-spacing:0px;text-transform:none;}
@@ -229,6 +235,11 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
 .zone-badge.zone-green{background:var(--green-bg);color:var(--green);}
 .zone-badge.zone-orange{background:var(--orange-bg);color:var(--orange);}
 .zone-badge.zone-blue{background:var(--blue-bg);color:var(--blue2);}
+.zone-badge.zone-1{background:var(--blue-bg);color:var(--blue2);}
+.zone-badge.zone-2{background:var(--green-bg);color:var(--green);}
+.zone-badge.zone-3{background:var(--amber-bg);color:var(--amber);}
+.zone-badge.zone-4{background:var(--orange-bg);color:var(--orange);}
+.zone-badge.zone-5{background:var(--red-bg);color:var(--red);}
 
 .block-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:0.2px;background:rgba(255,255,255,0.06);color:var(--text3);margin-left:6px;font-family:var(--font-mono);}
 
@@ -348,7 +359,20 @@ finish review, the verdict, and DESIGN.md.
 -->
 
 <div class="header">
-  <h1><span class="dot"></span>1000 M TRACKER&nbsp;&nbsp;<span class="accent">jo$e</span></h1>
+  <div class="header-row">
+    <h1><span class="dot"></span>1000 M TRACKER&nbsp;&nbsp;<span class="accent">jo$e</span></h1>
+  </div>
+  <div class="header-status">
+    <div class="header-status-item">
+      <span class="header-status-lbl">Etapa</span>
+      <span class="header-status-val" id="header-status-bloque">—</span>
+    </div>
+    <div class="header-status-sep"></div>
+    <div class="header-status-item">
+      <span class="header-status-lbl">Opositando</span>
+      <span class="header-status-val" id="header-status-counter">—</span>
+    </div>
+  </div>
 </div>
 
 <!-- ENTRENO -->
@@ -357,7 +381,6 @@ finish review, the verdict, and DESIGN.md.
   <div class="today-hero">
     <div class="today-bg-text">CORRE</div>
     <div class="today-title" id="session-title">Selecciona tipo</div>
-    <div id="oposicion-counter" style="font-size:11px;color:var(--text3);margin-top:4px;font-family:var(--font-mono);position:relative"></div>
     <div class="today-stats">
       <div class="ts"><div class="v" id="hero-next-test">—</div><div class="l">Próx. test</div></div>
       <div class="ts"><div class="v" id="hero-baremo">—</div><div class="l">Baremo actual</div></div>
@@ -372,7 +395,12 @@ finish review, the verdict, and DESIGN.md.
 
   <div class="session-info">
     <div class="session-label" id="session-day-label"></div>
-    <input type="date" id="entreno-date-input" class="date-input" onchange="onDateChange()">
+    <div style="display:flex;align-items:center;gap:8px">
+      <input type="date" id="entreno-date-input" class="date-input" onchange="onDateChange()">
+      <button class="nav-arrow-btn" style="width:34px;height:34px;font-size:13px" onclick="openAgendaModal()" title="Agenda">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </button>
+    </div>
   </div>
 
   <div id="entreno-content"></div>
@@ -394,6 +422,24 @@ finish review, the verdict, and DESIGN.md.
 
 <!-- PROGRESO -->
 <div id="screen-progreso" class="screen">
+  <div class="fisico-card" style="padding:16px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;">
+      <div style="flex:1;min-width:0;text-align:center">
+        <div class="section-subtitle" style="margin-bottom:3px">Etapa actual</div>
+        <div style="font-family:var(--font-disp);font-size:21px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="etapa-progreso-bloque">—</div>
+      </div>
+      <div style="width:1px;align-self:stretch;background:var(--border-2)"></div>
+      <div style="flex:1;min-width:0;text-align:center">
+        <div class="section-subtitle" style="margin-bottom:3px">Opositando</div>
+        <div style="font-family:var(--font-disp);font-size:21px;line-height:1.15" id="etapa-progreso-dias">—</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+      <span class="session-label" style="margin-bottom:0">Inicio oposición</span>
+      <input type="date" class="date-input" id="etapa-progreso-start-input" onchange="updateOposicionStart(this.value)">
+    </div>
+  </div>
+
   <div class="pill-row">
     <button class="pill-btn" onclick="setProgressPeriod('semana',this)">Semana</button>
     <button class="pill-btn active" onclick="setProgressPeriod('mes',this)">Mes</button>
@@ -457,7 +503,6 @@ finish review, the verdict, and DESIGN.md.
       <div style="display:flex;gap:5px;padding-right:2px;" id="rec-dots">
         <div class="corpo-dot active" onclick="goRecSlide(0)"></div>
         <div class="corpo-dot" onclick="goRecSlide(1)"></div>
-        <div class="corpo-dot" onclick="goRecSlide(2)"></div>
       </div>
     </div>
     <div id="rec-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onRecScroll()">
@@ -466,10 +511,6 @@ finish review, the verdict, and DESIGN.md.
           <div class="record-item"><div class="record-val" id="pr-1000">—</div><div class="record-lbl">1000 m</div></div>
           <div class="record-item"><div class="record-val" id="pr-rodaje">—</div><div class="record-lbl">Ritmo rodaje</div></div>
         </div>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="section-subtitle" style="margin-bottom:8px;">Mejor tiempo por distancia (periodo)</div>
-        <div class="records-grid" id="dist-best-list" style="grid-template-columns:repeat(auto-fill,minmax(84px,1fr));"></div>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
         <div class="section-subtitle" style="margin-bottom:8px;">% respecto al objetivo (<span id="pr-objetivo-lbl">—</span>)</div>
@@ -490,17 +531,11 @@ finish review, the verdict, and DESIGN.md.
         <div class="corpo-dot" onclick="goProgSlide(3)"></div>
         <div class="corpo-dot" onclick="goProgSlide(4)"></div>
         <div class="corpo-dot" onclick="goProgSlide(5)"></div>
-        <div class="corpo-dot" onclick="goProgSlide(6)"></div>
       </div>
     </div>
     <div id="prog-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onProgScroll()">
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
         <div class="chart-card-label">Evolución test 1000 m (objetivo 2:55)</div><canvas id="chart-1000" height="180"></canvas>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="chart-card-label">Por distancia</div>
-        <div class="pill-row" id="dist-pill-row" style="margin-bottom:10px;"></div>
-        <canvas id="chart-dist" height="180"></canvas>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
         <div class="chart-card-label">Ritmo medio rodaje (min/km)</div><canvas id="chart-rodaje-pace" height="180"></canvas>
@@ -509,7 +544,7 @@ finish review, the verdict, and DESIGN.md.
         <div class="chart-card-label">Volumen rodaje (km por sesión)</div><canvas id="chart-rodaje-vol" height="180"></canvas>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="chart-card-label">FC media en rodaje (zona objetivo 135-150)</div><canvas id="chart-fc-rodaje" height="180"></canvas>
+        <div class="chart-card-label">FC media en rodaje (banda <span id="fc-rodaje-band-lbl">Z2</span>)</div><canvas id="chart-fc-rodaje" height="180"></canvas>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
         <div class="chart-card-label">Volumen semanal (km, todas las sesiones)</div><canvas id="chart-volumen-semanal" height="180"></canvas>
@@ -530,60 +565,87 @@ finish review, the verdict, and DESIGN.md.
 
 </div>
 
-<!-- AGENDA -->
-<div id="screen-agenda" class="screen">
-
-  <!-- SEMANA -->
-  <div class="fisico-card" style="padding:14px 16px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
-      <button class="nav-arrow-btn" onclick="agendaWeekOffset--;renderAgendaScreen()">‹</button>
-      <div style="text-align:center;">
-        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Semana <span id="agenda-week-num"></span></div>
-        <div style="font-size:14px;font-weight:600;" id="agenda-week-range"></div>
-      </div>
-      <button class="nav-arrow-btn" onclick="agendaWeekOffset++;renderAgendaScreen()">›</button>
+<!-- AGENDA (modal, se abre desde el botón junto a la fecha en Entreno) -->
+<div class="modal-bg" id="agenda-modal">
+  <div class="modal" style="max-height:85vh">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="modal-title" style="margin-bottom:0">Agenda</div>
+      <button class="nav-arrow-btn" style="width:30px;height:30px;font-size:13px" onclick="closeModal('agenda-modal')">✕</button>
     </div>
-    <button class="add-btn" id="agenda-today-btn" onclick="agendaWeekOffset=0;renderAgendaScreen()">Hoy</button>
-  </div>
 
-  <div id="agenda-days"></div>
-
-  <button class="add-btn" onclick="copyWeekToNext()">Copiar semana a la siguiente</button>
-
-  <!-- OBJETIVO -->
-  <div class="objetivo-card" style="margin-top:14px;padding:0;overflow:hidden;">
-    <div style="display:flex;gap:5px;justify-content:center;padding-top:14px;" id="obj-dots">
-      <div class="corpo-dot active" onclick="goObjSlide(0)"></div>
-      <div class="corpo-dot" onclick="goObjSlide(1)"></div>
-    </div>
-    <div id="obj-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onObjScroll()">
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:10px 20px 20px;text-align:center;">
-        <div class="objetivo-lbl">Objetivo final</div>
-        <div class="objetivo-val" id="objetivo-val-lbl">—</div>
-        <div class="objetivo-sub">10/10 baremo · Policía Nacional</div>
+    <!-- SEMANA -->
+    <div class="fisico-card" style="padding:14px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <button class="nav-arrow-btn" onclick="agendaWeekOffset--;renderAgendaScreen()">‹</button>
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Semana <span id="agenda-week-num"></span></div>
+          <div style="font-size:14px;font-weight:600;" id="agenda-week-range"></div>
+        </div>
+        <button class="nav-arrow-btn" onclick="agendaWeekOffset++;renderAgendaScreen()">›</button>
       </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:10px 20px 20px;">
-        <div class="test-info-card" style="margin-bottom:0;background:rgba(255,255,255,0.05);">
-          <div class="test-info-row"><span class="lbl">Próximo test</span><span class="val" id="next-test-date">—</span></div>
-          <div class="test-info-row"><span class="lbl">Días restantes</span><span class="val" id="next-test-days">—</span></div>
-          <div class="test-info-row"><span class="lbl">Último resultado</span><span class="val" id="last-test-result">—</span></div>
+      <button class="add-btn" id="agenda-today-btn" onclick="agendaWeekOffset=0;renderAgendaScreen()">Hoy</button>
+    </div>
+
+    <div id="agenda-days"></div>
+
+    <button class="add-btn" onclick="copyWeekToNext()">Copiar semana a la siguiente</button>
+
+    <!-- OBJETIVO -->
+    <div class="objetivo-card" style="margin-top:14px;padding:0;overflow:hidden;">
+      <div style="display:flex;gap:5px;justify-content:center;padding-top:14px;" id="obj-dots">
+        <div class="corpo-dot active" onclick="goObjSlide(0)"></div>
+        <div class="corpo-dot" onclick="goObjSlide(1)"></div>
+      </div>
+      <div id="obj-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onObjScroll()">
+        <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:10px 20px 20px;text-align:center;">
+          <div class="objetivo-lbl">Objetivo final</div>
+          <div class="objetivo-val" id="objetivo-val-lbl">—</div>
+          <div class="objetivo-sub">10/10 baremo · Policía Nacional</div>
+        </div>
+        <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:10px 20px 20px;">
+          <div class="test-info-card" style="margin-bottom:0;background:rgba(255,255,255,0.05);">
+            <div class="test-info-row"><span class="lbl">Próximo test</span><span class="val" id="next-test-date">—</span></div>
+            <div class="test-info-row"><span class="lbl">Días restantes</span><span class="val" id="next-test-days">—</span></div>
+            <div class="test-info-row"><span class="lbl">Último resultado</span><span class="val" id="last-test-result">—</span></div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- BAREMO -->
+    <div class="fisico-card">
+      <div class="section-header">
+        <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
+        <div style="flex:1"><div class="section-title-text">Baremo 1000 m</div><div class="section-subtitle">Editable</div></div>
+        <button class="nav-arrow-btn" style="width:28px;height:28px;font-size:13px;margin-right:14px" onclick="openBaremoEdit()">✎</button>
+      </div>
+      <div class="section-body">
+        <table class="baremo-table" id="baremo-table"></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FÍSICO -->
+<div id="screen-fisico" class="screen">
+  <div class="fisico-card" style="padding:16px">
+    <div class="section-header" style="padding:0 0 14px">
+      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-8 4 16 3-11 2 3h6"/></svg></div>
+      <div style="flex:1"><div class="section-title-text">Datos físicos</div><div class="section-subtitle">Para calcular zonas de FC</div></div>
+    </div>
+    <div class="simple-input-row"><span class="serie-label">Peso</span><input type="number" step="0.1" min="0" class="serie-input" id="fisico-peso" placeholder="kg" onchange="updateFisico()"></div>
+    <div class="simple-input-row"><span class="serie-label">FC máxima</span><input type="number" class="serie-input" id="fisico-fcmax" placeholder="ppm" onchange="updateFisico()"></div>
   </div>
 
-  <!-- BAREMO -->
-  <div class="fisico-card">
-    <div class="section-header">
-      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
-      <div style="flex:1"><div class="section-title-text">Baremo 1000 m</div><div class="section-subtitle">Editable</div></div>
-      <button class="nav-arrow-btn" style="width:28px;height:28px;font-size:13px;margin-right:14px" onclick="openBaremoEdit()">✎</button>
+  <div class="fisico-card" style="overflow:hidden">
+    <div class="section-header" style="padding-bottom:8px">
+      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round"><line x1="4" y1="20" x2="4" y2="14"/><line x1="10" y1="20" x2="10" y2="10"/><line x1="16" y1="20" x2="16" y2="6"/><line x1="22" y1="20" x2="22" y2="2"/></svg></div>
+      <div style="flex:1"><div class="section-title-text">Zonas de FC</div><div class="section-subtitle" id="fisico-zonas-sub">% sobre tu FC máxima</div></div>
     </div>
     <div class="section-body">
-      <table class="baremo-table" id="baremo-table"></table>
+      <table class="baremo-table" id="fisico-zonas-table"></table>
     </div>
   </div>
-
 </div>
 
 <!-- AJUSTES -->
@@ -613,11 +675,6 @@ finish review, the verdict, and DESIGN.md.
   </div>
   <div class="settings-group">
     <div class="settings-group-title">Plan</div>
-    <div class="settings-row" style="cursor:default">
-      <div class="settings-row-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-      <span style="flex:1">Inicio oposición</span>
-      <input type="date" id="oposicion-start-input" class="date-input" onchange="updateOposicionStart(this.value)">
-    </div>
     <div class="settings-row" onclick="applySeedDataManual()">
       <div class="settings-row-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></div>
       <span>Recargar datos históricos</span>
@@ -649,8 +706,8 @@ finish review, the verdict, and DESIGN.md.
   <button class="nav-btn" onclick="showScreen('progreso',this)">
     <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><polyline points="4 18 9 13 13 16 20 7"/></svg></span>Progreso
   </button>
-  <button class="nav-btn" onclick="showScreen('agenda',this)">
-    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Agenda
+  <button class="nav-btn" onclick="showScreen('fisico',this)">
+    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-8 4 16 3-11 2 3h6"/></svg></span>Físico
   </button>
   <button class="nav-btn" onclick="showScreen('ajustes',this)">
     <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 018.4 12 3.6 3.6 0 0112 8.4a3.6 3.6 0 013.6 3.6 3.6 3.6 0 01-3.6 3.6z" stroke="none" fill="currentColor"/></svg></span>Ajustes
@@ -719,12 +776,12 @@ const SEED_SESIONES = [
 {"date":"2026-09-02","type":"cortas","fcMedia":136,"fcMax":174,"cadencia":123,"tramos":[{"dist":300,"time":77,"rec":150},{"dist":300,"time":70,"rec":150},{"dist":300,"time":66,"rec":150},{"dist":300,"time":67,"rec":null}]},
 {"date":"2026-09-04","type":"rodaje","fcMedia":164,"fcMax":179,"cadencia":136,"distKm":3.82,"time":1517},
 {"date":"2026-09-06","type":"test","fcMedia":161,"fcMax":181,"cadencia":165,"time":229,"split1":108,"split2":121},
-{"date":"2026-09-09","type":"cortas","fcMedia":137,"fcMax":167,"cadencia":134,"tramos":[{"dist":310,"time":68,"rec":150},{"dist":310,"time":67,"rec":150},{"dist":320,"time":69,"rec":150},{"dist":320,"time":70,"rec":150},{"dist":310,"time":70,"rec":null}]},
+{"date":"2026-09-09","type":"cortas","fcMedia":137,"fcMax":167,"cadencia":134,"tramos":[{"dist":300,"time":68,"rec":150},{"dist":300,"time":67,"rec":150},{"dist":300,"time":69,"rec":150},{"dist":300,"time":70,"rec":150},{"dist":300,"time":70,"rec":null}]},
 {"date":"2026-09-11","type":"rodaje","fcMedia":157,"fcMax":170,"cadencia":130,"distKm":4.09,"time":1567},
 {"date":"2026-09-13","type":"largas","fcMedia":136,"fcMax":176,"cadencia":143,"tramos":[{"dist":600,"time":155,"rec":210},{"dist":600,"time":147,"rec":210},{"dist":600,"time":152,"rec":null}]},
-{"date":"2026-09-16","type":"cortas","fcMedia":143,"fcMax":183,"cadencia":128,"tramos":[{"dist":410,"time":89,"rec":180},{"dist":410,"time":89,"rec":180},{"dist":400,"time":91,"rec":180},{"dist":410,"time":92,"rec":180},{"dist":410,"time":92,"rec":null}]},
+{"date":"2026-09-16","type":"cortas","fcMedia":143,"fcMax":183,"cadencia":128,"tramos":[{"dist":400,"time":89,"rec":180},{"dist":400,"time":89,"rec":180},{"dist":400,"time":91,"rec":180},{"dist":400,"time":92,"rec":180},{"dist":400,"time":92,"rec":null}]},
 {"date":"2026-09-18","type":"rodaje","fcMedia":157,"fcMax":168,"cadencia":135,"distKm":4.64,"time":1810},
-{"date":"2026-09-20","type":"largas","fcMedia":135,"fcMax":171,"cadencia":133,"tramos":[{"dist":500,"time":132,"rec":180},{"dist":490,"time":123,"rec":180},{"dist":490,"time":122,"rec":180},{"dist":490,"time":124,"rec":null}]}
+{"date":"2026-09-20","type":"largas","fcMedia":135,"fcMax":171,"cadencia":133,"tramos":[{"dist":500,"time":132,"rec":180},{"dist":500,"time":123,"rec":180},{"dist":500,"time":122,"rec":180},{"dist":500,"time":124,"rec":null}]}
 ];
 
 const SEED_AGENDA = {
@@ -763,7 +820,6 @@ let currentSessionDate = todayStr();
 let dateAnchor = todayStr(); // referencia para los saltos por tipo; solo cambia con edición manual de fecha
 let historyFilter = 'all';
 let currentProgressPeriod = 'mes';
-let selectedDistance = null;
 let agendaWeekOffset = 0;
 let progActViewMonth = null;
 let charts = {};
@@ -788,6 +844,24 @@ function getBloqueForDate(dateStr){
   return match;
 }
 function newBloqueId(){return 'bl'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+
+// ========== FÍSICO / ZONAS FC ==========
+function getFisico(){const m=getMeta();return m.fisico||{};}
+function saveFisico(f){const m=getMeta();m.fisico={...getFisico(),...f};saveMeta(m);}
+const FC_ZONES = [
+  {z:1, from:0.50, to:0.60, label:'Z1 · Recuperación', color:'var(--blue2)'},
+  {z:2, from:0.60, to:0.70, label:'Z2 · Aeróbico suave', color:'var(--green)'},
+  {z:3, from:0.70, to:0.80, label:'Z3 · Aeróbico', color:'var(--amber)'},
+  {z:4, from:0.80, to:0.90, label:'Z4 · Umbral', color:'var(--orange)'},
+  {z:5, from:0.90, to:2.00, label:'Z5 · Máximo', color:'var(--red)'}
+];
+function getFcZone(fc){
+  const fcMax = getFisico().fcMax;
+  if(!fcMax || fc==null || isNaN(fc))return null;
+  const pct = fc/fcMax;
+  for(const zone of FC_ZONES){if(pct<zone.to || zone.z===5)return zone;}
+  return FC_ZONES[FC_ZONES.length-1];
+}
 
 // ========== SEED APPLY (histórico, idempotente) ==========
 function applySeedData(){
@@ -821,7 +895,7 @@ function applySeedData(){
 }
 function applySeedDataManual(){
   const res = applySeedData();
-  renderAgendaScreen();renderHistory();renderProgreso();updateEntrenoHero();renderBloquesSettings();
+  renderAgendaScreen();renderHistory();renderProgreso();updateEntrenoHero();renderBloquesSettings();renderHeaderStatus();
   showToast(`Recargado: ${res.added} sesiones · ${res.agendaAdded} agenda`, 'green');
 }
 
@@ -829,7 +903,7 @@ function applySeedDataManual(){
 function migrateData(){
   const data = getData();
   let changed = false;
-  const migrated = data.map(s=>{
+  let migrated = data.map(s=>{
     if(s.type==='tirada'){
       changed = true;
       const paceSec = parseTime(s.pace);
@@ -848,6 +922,20 @@ function migrateData(){
     }
     return s;
   });
+  // Los tramos vienen de Garmin y traen ruido de lectura (410, 490...) — la
+  // distancia real siempre es múltiplo de 100, así que se corrige en cualquier
+  // dato ya guardado, no solo en lo nuevo que se introduzca desde ahora.
+  migrated = migrated.map(s=>{
+    if((s.type!=='cortas'&&s.type!=='largas') || !Array.isArray(s.tramos))return s;
+    let any = false;
+    const tramos = s.tramos.map(t=>{
+      const rd = roundDist100(t.dist);
+      if(rd!==t.dist)any = true;
+      return {...t, dist:rd};
+    });
+    if(any){changed = true; return {...s, tramos};}
+    return s;
+  });
   if(changed) saveData(migrated);
 }
 
@@ -856,6 +944,7 @@ function migrateData(){
 // desfase horario UTC (p.ej. Europe/Madrid) desplace la fecha un día.
 function toLocalISO(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function todayStr(){return toLocalISO(new Date());}
+function roundDist100(d){return (d==null||isNaN(d)) ? d : Math.round(d/100)*100;}
 function formatDate(s){if(!s)return '';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`;}
 function parseTime(s){if(s==null||s==='')return null;s=String(s).trim();const m=s.match(/^(\d+):(\d{2})(?:\.(\d+))?$/);if(m){return parseInt(m[1])*60+parseInt(m[2])+(m[3]?parseFloat('0.'+m[3]):0);}const n=parseFloat(s);return isNaN(n)?null:n;}
 function formatTime(secs){if(secs==null||isNaN(secs))return '—';const m=Math.floor(secs/60);const s=(secs-m*60).toFixed(secs<60?1:0);const sStr=secs<60?(secs<10?'0'+s:s):s.padStart(2,'0');return m>0?`${m}:${sStr}`:`${s}s`;}
@@ -980,16 +1069,24 @@ function updateEntrenoHero(){
   const lastTest = getData().filter(s=>s.type==='test').sort((a,b)=>b.date.localeCompare(a.date))[0];
   const baremoEl = document.getElementById('hero-baremo');
   baremoEl.textContent = (lastTest && lastTest.time!=null) ? getBaremoForTime(lastTest.time).pts+'/10' : '—';
-  const counterEl = document.getElementById('oposicion-counter');
-  if(counterEl){
-    const start = getMeta().oposicionStart || '2026-09-01';
-    const dias = daysBetween(start,today)+1;
-    if(dias>0){
-      const sem = Math.floor(dias/7), rem = dias%7;
-      counterEl.textContent = `Opositando: ${dias} días · ${sem} sem ${rem} d`;
-    } else {
-      counterEl.textContent = '';
-    }
+}
+// Barra fija arriba del todo (dentro del header sticky) — etapa actual y
+// contador de días opositando, visibles en todas las pantallas.
+function renderHeaderStatus(){
+  const bloqueEl = document.getElementById('header-status-bloque');
+  const counterEl = document.getElementById('header-status-counter');
+  if(!bloqueEl||!counterEl)return;
+  const today = todayStr();
+  const bloque = getBloqueForDate(today);
+  bloqueEl.textContent = bloque ? bloque.nombre : 'Sin bloque';
+
+  const start = getMeta().oposicionStart || '2026-09-01';
+  const dias = daysBetween(start,today)+1;
+  if(dias>0){
+    const sem = Math.floor(dias/7), rem = dias%7;
+    counterEl.textContent = `${dias}d · ${sem}s ${rem}d`;
+  } else {
+    counterEl.textContent = '—';
   }
 }
 function onDateChange(){
@@ -1039,21 +1136,20 @@ function renderExtraFieldsBlock(existing){
       <div class="simple-input-row"><span class="serie-label">FC media</span><input type="number" class="serie-input" id="extra-fcmedia" placeholder="ppm" value="${fc}"></div>
       <div class="simple-input-row"><span class="serie-label">FC máx</span><input type="number" class="serie-input" id="extra-fcmax" placeholder="ppm" value="${fcMax}"></div>
       <div class="simple-input-row"><span class="serie-label">Cadencia</span><input type="number" class="serie-input" id="extra-cadencia" placeholder="p/min" value="${cad}"></div>
-      <div id="rodaje-zone-out"></div>
+      <div id="fc-zone-out"></div>
       <div class="simple-input-row" style="align-items:flex-start;margin-top:2px"><span class="serie-label" style="margin-top:9px">Notas</span><textarea class="modal-textarea" id="extra-notas" placeholder="Sensaciones, viento, terreno..." style="margin-bottom:0;min-height:56px;font-size:13px;flex:1">${notas}</textarea></div>
     </div>
   </div>`;
 }
 function attachExtraFieldsListeners(){
-  const out = document.getElementById('rodaje-zone-out');
-  if(currentType!=='rodaje'){if(out)out.innerHTML='';return;}
+  const out = document.getElementById('fc-zone-out');
   const el = document.getElementById('extra-fcmedia');
+  if(!out||!el)return;
   const upd=()=>{
     const v = parseFloat(el.value);
-    if(isNaN(v)){out.innerHTML='';return;}
-    if(v>=135&&v<=150)out.innerHTML='<span class="zone-badge zone-green">● En zona 135-150</span>';
-    else if(v>150)out.innerHTML='<span class="zone-badge zone-orange">● Demasiado rápido</span>';
-    else out.innerHTML='<span class="zone-badge zone-blue">● Por debajo de zona</span>';
+    const zone = getFcZone(v);
+    if(!zone){out.innerHTML = isNaN(v) ? '' : '<span style="font-size:11px;color:var(--text3)">Configura tu FC máx en Físico para ver la zona</span>';return;}
+    out.innerHTML = `<span class="zone-badge zone-${zone.z}">● ${zone.label}</span>`;
   };
   el.addEventListener('input',upd);
   upd();
@@ -1083,7 +1179,7 @@ function addTramoRow(dist,time,rec){
   div.className = 'tramo-row';
   div.id = rowId;
   div.innerHTML = `
-    <input type="number" class="serie-input" style="width:64px" placeholder="m" value="${dist!=null?dist:''}">
+    <input type="number" class="serie-input" style="width:64px" placeholder="m" value="${dist!=null?dist:''}" onblur="this.value=this.value?roundDist100(parseFloat(this.value)):''">
     <input type="text" class="serie-input" style="width:76px" placeholder="mm:ss" value="${time!=null?time:''}">
     <input type="text" class="serie-input" style="width:66px" placeholder="rec" value="${rec!=null?rec:''}">
     <button class="del-btn" onclick="document.getElementById('${rowId}').remove()">✕</button>
@@ -1161,7 +1257,7 @@ function saveSession(){
     const rows = [...document.querySelectorAll('#tramos-list .tramo-row')];
     session.tramos = rows.map(r=>{
       const inputs = r.querySelectorAll('input');
-      const dist = parseFloat(inputs[0].value);
+      const dist = roundDist100(parseFloat(inputs[0].value));
       const time = parseTime(inputs[1].value);
       const rec = inputs[2].value ? parseTime(inputs[2].value) : null;
       return {dist,time,rec};
@@ -1222,11 +1318,13 @@ function renderHistory(){
   list.innerHTML = data.map((s,i)=>{
     let bodyContent = '';
     if(s.type==='cortas'||s.type==='largas'){
-      bodyContent = (s.tramos||[]).map((t,idx)=>`<div class="history-row"><span class="history-row-name">${idx+1}ª · ${t.dist}m</span><span class="history-row-val">${formatTime(t.time)}${t.rec!=null?' · rec '+formatTime(t.rec):''}</span></div>`).join('');
+      bodyContent = (s.tramos||[]).map((t,idx)=>{
+        const pace = (t.dist>0 && t.time!=null) ? t.time/(t.dist/1000) : null;
+        return `<div class="history-row"><span class="history-row-name">${idx+1}ª · ${t.dist}m</span><span class="history-row-val">${pace!=null?formatPace(pace)+'/km':'—'}${t.rec!=null?' · rec '+formatTime(t.rec):''}</span></div>`;
+      }).join('');
     } else if(s.type==='rodaje'){
       const pace = (s.distKm>0 && s.time!=null) ? s.time/s.distKm : null;
       bodyContent = `<div class="history-row"><span class="history-row-name">Distancia</span><span class="history-row-val">${s.distKm!=null?s.distKm+' km':'—'}</span></div>
-        <div class="history-row"><span class="history-row-name">Tiempo</span><span class="history-row-val">${formatTime(s.time)}</span></div>
         <div class="history-row"><span class="history-row-name">Ritmo</span><span class="history-row-val">${pace!=null?formatPace(pace)+' /km':'—'}</span></div>`;
     } else if(s.type==='test'){
       const b = s.time!=null?getBaremoForTime(s.time):null;
@@ -1239,12 +1337,11 @@ function renderHistory(){
         bodyContent += `<div class="history-row"><span class="history-row-name">Diferencia</span><span class="history-row-val" style="color:${warn?'var(--orange)':'var(--text)'}">${(diff>=0?'+':'')+diff.toFixed(1)}s${warn?' ⚠ mala dosificación':''}</span></div>`;
       }
     }
-    if(s.type==='rodaje' && s.fcMedia!=null){
-      const zone = s.fcMedia>=135 && s.fcMedia<=150;
-      const over = s.fcMedia>150;
-      bodyContent += `<div class="history-row"><span class="history-row-name">Zona FC</span><span class="history-row-val"><span class="zone-badge ${zone?'zone-green':(over?'zone-orange':'zone-blue')}" style="margin:0">● ${zone?'En zona':(over?'Demasiado rápido':'Por debajo')}</span></span></div>`;
+    if(s.fcMedia!=null){
+      const zone = getFcZone(s.fcMedia);
+      const zoneHtml = zone ? ` · <span class="zone-badge zone-${zone.z}" style="margin:0">${zone.label}</span>` : '';
+      bodyContent += `<div class="history-row"><span class="history-row-name">FC media</span><span class="history-row-val">${s.fcMedia} ppm${zoneHtml}</span></div>`;
     }
-    if(s.fcMedia!=null)bodyContent += `<div class="history-row"><span class="history-row-name">FC media</span><span class="history-row-val">${s.fcMedia} ppm</span></div>`;
     if(s.fcMax!=null)bodyContent += `<div class="history-row"><span class="history-row-name">FC máx</span><span class="history-row-val">${s.fcMax} ppm</span></div>`;
     if(s.cadencia!=null)bodyContent += `<div class="history-row"><span class="history-row-name">Cadencia</span><span class="history-row-val">${s.cadencia} p/min</span></div>`;
     if(s.notas)bodyContent += `<div class="history-row"><span class="history-row-name">Notas</span><span class="history-row-val" style="text-align:left;font-family:var(--font-sans);font-weight:400;color:var(--text2)">${s.notas}</span></div>`;
@@ -1269,11 +1366,6 @@ function deleteSession(date,type){if(!confirm('¿Borrar la sesión del '+formatD
 
 // ========== PROGRESO ==========
 function setProgressPeriod(p,el){currentProgressPeriod=p;document.querySelectorAll('#screen-progreso .pill-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderProgreso();}
-function getAllDistances(){
-  const set = new Set();
-  getData().forEach(s=>{if(s.tramos)s.tramos.forEach(t=>{if(t.dist)set.add(t.dist);});});
-  return [...set].sort((a,b)=>a-b);
-}
 // Filtro combinado: periodo (pills) Y bloque (chips) — ambos se aplican a la vez.
 function getFilteredData(start){
   return getData().filter(s=>{
@@ -1299,7 +1391,27 @@ function setProgressBloque(id,el){
   el.classList.add('active');
   renderProgreso();
 }
+function renderEtapaProgreso(){
+  const bloqueEl = document.getElementById('etapa-progreso-bloque');
+  const diasEl = document.getElementById('etapa-progreso-dias');
+  const inputEl = document.getElementById('etapa-progreso-start-input');
+  if(!bloqueEl)return;
+  const today = todayStr();
+  const bloque = getBloqueForDate(today);
+  bloqueEl.textContent = bloque ? bloque.nombre : 'Sin bloque';
+  const start = getMeta().oposicionStart || '2026-09-01';
+  const dias = daysBetween(start,today)+1;
+  if(dias>0){
+    const sem = Math.floor(dias/7), rem = dias%7;
+    diasEl.textContent = `${dias} d`;
+    diasEl.innerHTML += `<div style="font-family:var(--font-sans);font-size:11px;font-weight:600;color:var(--text3);margin-top:2px">${sem} sem ${rem} d</div>`;
+  } else {
+    diasEl.textContent = '—';
+  }
+  if(inputEl)inputEl.value = start;
+}
 function renderProgreso(){
+  renderEtapaProgreso();
   const start = getStartDate(currentProgressPeriod);
   renderBloqueFilterChips();
   const data = getFilteredData(start);
@@ -1319,22 +1431,8 @@ function renderProgreso(){
   document.getElementById('stat-distance').textContent = km.toFixed(1);
   document.getElementById('stat-best-1000').textContent = formatTime(best1000);
 
-  const distBest = {};
-  data.forEach(s=>{
-    if(s.type!=='cortas'&&s.type!=='largas')return;
-    (s.tramos||[]).forEach(t=>{
-      if(t.dist==null||t.time==null)return;
-      if(distBest[t.dist]==null||t.time<distBest[t.dist])distBest[t.dist]=t.time;
-    });
-  });
-  const dists = Object.keys(distBest).map(Number).sort((a,b)=>a-b);
-  document.getElementById('dist-best-list').innerHTML = dists.length
-    ? dists.map(d=>`<div class="record-item"><div class="record-val" style="font-size:15px">${formatTime(distBest[d])}</div><div class="record-lbl">${d}m</div></div>`).join('')
-    : '<div class="empty-state" style="padding:16px">Sin tramos en este periodo</div>';
-
   renderRecordsInfo();
   renderActivityMap();
-  renderDistanceSelector();
   renderProgresoCharts(start);
   renderBaremoProgreso();
   renderProyeccion();
@@ -1430,14 +1528,6 @@ function renderProyeccion(){
     </div>
     <div style="font-size:11px;color:var(--text3);line-height:1.4">Estimación orientativa basada en la tendencia de tus tests — no es una promesa, solo una proyección lineal simple.</div>`;
 }
-function renderDistanceSelector(){
-  const dists = getAllDistances();
-  const row = document.getElementById('dist-pill-row');
-  if(!dists.length){row.innerHTML='<div style="font-size:12px;color:var(--text3)">Sin datos aún</div>';return;}
-  if(selectedDistance==null||!dists.includes(selectedDistance))selectedDistance=dists[0];
-  row.innerHTML = dists.map(d=>`<button class="pill-btn ${d===selectedDistance?'active':''}" onclick="selectedDistance=${d};renderProgresoCharts(getStartDate(currentProgressPeriod))">${d}m</button>`).join('');
-}
-
 const cOpts = (tickFormatter,reverseY,showLegend)=>({
   responsive:true,
   plugins:{legend:{display:!!showLegend,labels:{color:'rgba(255,255,255,0.62)',font:{size:10}}},tooltip:{callbacks:{label:ctx=>tickFormatter(ctx.parsed.y)}}},
@@ -1487,14 +1577,6 @@ function renderProgresoCharts(start){
       {data:testSessions.map(()=>objetivoSecs), color:'#b6ff2e', dashed:true, label:'Objetivo '+formatTimeForInput(objetivoSecs)}
     ], formatTime, true);
 
-  const distSessions = filtered.filter(s=>(s.type==='cortas'||s.type==='largas')&&(s.tramos||[]).some(t=>t.dist===selectedDistance)).sort((a,b)=>a.date.localeCompare(b.date));
-  const bestVals = distSessions.map(s=>{const ts=s.tramos.filter(t=>t.dist===selectedDistance).map(t=>t.time);return Math.min(...ts);});
-  const avgVals = distSessions.map(s=>{const ts=s.tramos.filter(t=>t.dist===selectedDistance).map(t=>t.time);return ts.reduce((a,b)=>a+b,0)/ts.length;});
-  renderLineChart('chart-dist', distSessions.map(s=>formatDate(s.date)), [
-    {data:bestVals, color:'#2979ff', label:'Mejor'},
-    {data:avgVals, color:'#ff2d92', label:'Media'}
-  ], formatTime, true);
-
   const rodajeSessions = filtered.filter(s=>s.type==='rodaje'&&s.time!=null&&s.distKm>0).sort((a,b)=>a.date.localeCompare(b.date));
   renderLineChart('chart-rodaje-pace', rodajeSessions.map(s=>formatDate(s.date)), [
     {data:rodajeSessions.map(s=>s.time/s.distKm), color:'#b6ff2e', label:'Ritmo'}
@@ -1506,19 +1588,26 @@ function renderProgresoCharts(start){
   renderCadenciaChart(filtered);
 }
 
-// FC media en rodaje con banda sombreada 135-150 — construida con dos líneas
-// invisibles + fill:'-1' entre ellas (sin plugin de anotaciones externo).
+// FC media en rodaje con banda sombreada de la zona 2 (aeróbico suave, 60-70%
+// FCmax) — construida con dos líneas invisibles + fill:'-1' entre ellas (sin
+// plugin de anotaciones externo). Sin FC máx configurada en Físico, cae al
+// rango 135-150 del plan original como referencia razonable.
 function renderFcRodajeChart(rodajeSessions){
   const withFc = rodajeSessions.filter(s=>s.fcMedia!=null);
   const id = 'chart-fc-rodaje';
   if(charts[id])charts[id].destroy();
   const ctx = document.getElementById(id).getContext('2d');
   const labels = withFc.map(s=>formatDate(s.date));
+  const fcMax = getFisico().fcMax;
+  const bandLow = fcMax ? Math.round(fcMax*0.60) : 135;
+  const bandHigh = fcMax ? Math.round(fcMax*0.70) : 150;
+  const lblEl = document.getElementById('fc-rodaje-band-lbl');
+  if(lblEl)lblEl.textContent = `Z2 · ${bandLow}-${bandHigh}`;
   charts[id] = new Chart(ctx,{
     type:'line',
     data:{labels, datasets:[
-      {label:'135',data:labels.map(()=>135),borderColor:'transparent',backgroundColor:'transparent',pointRadius:0,fill:false},
-      {label:'150',data:labels.map(()=>150),borderColor:'transparent',backgroundColor:'rgba(182,255,46,0.10)',pointRadius:0,fill:'-1'},
+      {label:String(bandLow),data:labels.map(()=>bandLow),borderColor:'transparent',backgroundColor:'transparent',pointRadius:0,fill:false},
+      {label:String(bandHigh),data:labels.map(()=>bandHigh),borderColor:'transparent',backgroundColor:'rgba(182,255,46,0.10)',pointRadius:0,fill:'-1'},
       {label:'FC media',data:withFc.map(s=>s.fcMedia),borderColor:'#ffd60a',backgroundColor:'transparent',borderWidth:2,pointBackgroundColor:'#ffd60a',pointRadius:4,tension:0.35,fill:false}
     ]},
     options:{responsive:true,
@@ -1831,6 +1920,7 @@ function openBloqueEdit(id){
 }
 function refreshAfterBloqueChange(){
   renderBloquesSettings();
+  renderHeaderStatus();
   if(document.getElementById('screen-historial').classList.contains('active'))renderHistory();
   if(document.getElementById('screen-progreso').classList.contains('active'))renderProgreso();
 }
@@ -1861,7 +1951,8 @@ function deleteBloqueEdit(){
 function updateOposicionStart(val){
   if(!val)return;
   const meta = getMeta();meta.oposicionStart = val;saveMeta(meta);
-  updateEntrenoHero();
+  renderHeaderStatus();
+  renderEtapaProgreso();
   showToast('Fecha actualizada ✓','green');
 }
 
@@ -1884,15 +1975,54 @@ function showScreen(name,btn){
   if(name==='entreno')updateEntrenoHero();
   if(name==='historial')renderHistory();
   if(name==='progreso')renderProgreso();
-  if(name==='agenda')renderAgendaScreen();
+  if(name==='fisico')renderFisicoScreen();
   if(name==='ajustes')renderAjustesScreen();
 }
 function renderAjustesScreen(){
   renderBloquesSettings();
-  const el = document.getElementById('oposicion-start-input');
-  if(el)el.value = getMeta().oposicionStart || '2026-09-01';
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
+function openAgendaModal(){
+  renderAgendaScreen();
+  document.getElementById('agenda-modal').classList.add('open');
+}
+
+// ========== FÍSICO ==========
+function renderFisicoScreen(){
+  const f = getFisico();
+  const pesoEl = document.getElementById('fisico-peso');
+  const fcMaxEl = document.getElementById('fisico-fcmax');
+  if(pesoEl)pesoEl.value = f.peso!=null ? f.peso : '';
+  if(fcMaxEl)fcMaxEl.value = f.fcMax!=null ? f.fcMax : '';
+  renderFisicoZonas();
+}
+function renderFisicoZonas(){
+  const fcMax = getFisico().fcMax;
+  const sub = document.getElementById('fisico-zonas-sub');
+  const table = document.getElementById('fisico-zonas-table');
+  if(!table)return;
+  if(!fcMax){
+    if(sub)sub.textContent = 'Introduce tu FC máxima para ver los rangos en ppm';
+    table.innerHTML = FC_ZONES.map(z=>`<tr><td>${z.label}</td><td>${Math.round(z.from*100)}-${z.to>1?'100':Math.round(z.to*100)}%</td></tr>`).join('');
+    return;
+  }
+  if(sub)sub.textContent = `Sobre ${fcMax} ppm`;
+  table.innerHTML = FC_ZONES.map(z=>{
+    const lo = Math.round(z.from*fcMax);
+    const hi = z.to>1 ? fcMax : Math.round(z.to*fcMax);
+    return `<tr><td>${z.label}</td><td>${lo}-${hi} ppm</td></tr>`;
+  }).join('');
+}
+function updateFisico(){
+  const peso = document.getElementById('fisico-peso').value;
+  const fcMax = document.getElementById('fisico-fcmax').value;
+  saveFisico({
+    peso: peso ? parseFloat(peso) : null,
+    fcMax: fcMax ? parseInt(fcMax) : null
+  });
+  renderFisicoZonas();
+  showToast('Datos físicos guardados ✓','green');
+}
 function showToast(msg,cls){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(cls||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
 
 // ========== I/O ==========
@@ -1944,6 +2074,7 @@ document.getElementById('entreno-date-input').value = todayStr();
 currentSessionDate = todayStr();
 updateSessionLabel();
 updateEntrenoHero();
+renderHeaderStatus();
 updateNavIndicator(document.querySelector('.nav-btn.active'));
 const suggested = suggestTypeForDate(todayStr());
 if(suggested){
