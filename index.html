@@ -225,6 +225,13 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
 .type-badge.test{background:var(--amber-bg);color:var(--amber);}
 .badge-done{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;background:var(--green-bg);color:var(--green);flex-shrink:0;font-family:var(--font-mono);}
 
+.zone-badge{display:inline-block;padding:4px 10px;border-radius:var(--r-pill);font-size:11px;font-weight:700;letter-spacing:0.3px;font-family:var(--font-mono);margin:2px 0 8px;}
+.zone-badge.zone-green{background:var(--green-bg);color:var(--green);}
+.zone-badge.zone-orange{background:var(--orange-bg);color:var(--orange);}
+.zone-badge.zone-blue{background:var(--blue-bg);color:var(--blue2);}
+
+.block-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:0.2px;background:rgba(255,255,255,0.06);color:var(--text3);margin-left:6px;font-family:var(--font-mono);}
+
 /* —— PROGRESO —— */
 .pill-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
 .pill-btn{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:var(--r-pill);font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;font-family:inherit;transition:background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.16s var(--ease-pop);}
@@ -350,6 +357,7 @@ finish review, the verdict, and DESIGN.md.
   <div class="today-hero">
     <div class="today-bg-text">CORRE</div>
     <div class="today-title" id="session-title">Selecciona tipo</div>
+    <div id="oposicion-counter" style="font-size:11px;color:var(--text3);margin-top:4px;font-family:var(--font-mono);position:relative"></div>
     <div class="today-stats">
       <div class="ts"><div class="v" id="hero-next-test">—</div><div class="l">Próx. test</div></div>
       <div class="ts"><div class="v" id="hero-baremo">—</div><div class="l">Baremo actual</div></div>
@@ -393,10 +401,29 @@ finish review, the verdict, and DESIGN.md.
     <button class="pill-btn" onclick="setProgressPeriod('todo',this)">Todo</button>
   </div>
 
+  <div class="filter-row" id="bloque-filter-row"></div>
+
   <div class="stats-grid">
     <div class="stat-pill"><div class="stat-val" id="stat-sessions">0</div><div class="stat-lbl">Sesiones</div></div>
     <div class="stat-pill"><div class="stat-val" id="stat-distance">0</div><div class="stat-lbl">Km totales</div></div>
     <div class="stat-pill"><div class="stat-val" id="stat-best-1000">—</div><div class="stat-lbl">Mejor 1000 m</div></div>
+  </div>
+
+  <div class="fisico-card" style="overflow:hidden;">
+    <div class="section-header">
+      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
+      <div style="flex:1"><div class="section-title-text">Baremo y nota</div><div class="section-subtitle">Reactivo al baremo de Ajustes</div></div>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div class="record-item" style="flex:1"><div class="record-val" id="baremo-nota-actual" style="font-size:30px;color:var(--amber)">—</div><div class="record-lbl">Nota actual</div></div>
+        <div class="record-item" style="flex:1" id="baremo-nota-ultimo-wrap"><div class="record-val" id="baremo-nota-ultimo" style="font-size:30px">—</div><div class="record-lbl">Último test</div></div>
+      </div>
+      <div class="test-info-card" style="margin-bottom:10px;background:rgba(255,255,255,0.03)">
+        <div class="test-info-row"><span class="lbl">Para subir un punto</span><span class="val" id="baremo-falta">—</span></div>
+      </div>
+      <table class="baremo-table" id="baremo-table-progreso"></table>
+    </div>
   </div>
 
   <div class="fisico-card" style="padding:14px;">
@@ -445,7 +472,7 @@ finish review, the verdict, and DESIGN.md.
         <div class="records-grid" id="dist-best-list" style="grid-template-columns:repeat(auto-fill,minmax(84px,1fr));"></div>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="section-subtitle" style="margin-bottom:8px;">% respecto al objetivo (2:55)</div>
+        <div class="section-subtitle" style="margin-bottom:8px;">% respecto al objetivo (<span id="pr-objetivo-lbl">—</span>)</div>
         <div class="records-grid">
           <div class="record-item"><div class="record-val" id="pr-objetivo-pct">—</div><div class="record-lbl">Marca actual</div></div>
         </div>
@@ -461,6 +488,9 @@ finish review, the verdict, and DESIGN.md.
         <div class="corpo-dot" onclick="goProgSlide(1)"></div>
         <div class="corpo-dot" onclick="goProgSlide(2)"></div>
         <div class="corpo-dot" onclick="goProgSlide(3)"></div>
+        <div class="corpo-dot" onclick="goProgSlide(4)"></div>
+        <div class="corpo-dot" onclick="goProgSlide(5)"></div>
+        <div class="corpo-dot" onclick="goProgSlide(6)"></div>
       </div>
     </div>
     <div id="prog-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onProgScroll()">
@@ -478,7 +508,24 @@ finish review, the verdict, and DESIGN.md.
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
         <div class="chart-card-label">Volumen rodaje (km por sesión)</div><canvas id="chart-rodaje-vol" height="180"></canvas>
       </div>
+      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
+        <div class="chart-card-label">FC media en rodaje (zona objetivo 135-150)</div><canvas id="chart-fc-rodaje" height="180"></canvas>
+      </div>
+      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
+        <div class="chart-card-label">Volumen semanal (km, todas las sesiones)</div><canvas id="chart-volumen-semanal" height="180"></canvas>
+      </div>
+      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
+        <div class="chart-card-label">Cadencia media (pasos/min)</div><canvas id="chart-cadencia" height="180"></canvas>
+      </div>
     </div>
+  </div>
+
+  <div class="fisico-card" style="overflow:hidden;">
+    <div class="section-header">
+      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><polyline points="4 18 9 13 13 16 20 7"/><polyline points="20 7 20 12"/><polyline points="20 7 15 7"/></svg></div>
+      <div style="flex:1"><div class="section-title-text">Proyección hacia el objetivo</div><div class="section-subtitle">Estimación orientativa, no una promesa</div></div>
+    </div>
+    <div class="section-body" id="proyeccion-body"></div>
   </div>
 
 </div>
@@ -512,7 +559,7 @@ finish review, the verdict, and DESIGN.md.
     <div id="obj-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onObjScroll()">
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:10px 20px 20px;text-align:center;">
         <div class="objetivo-lbl">Objetivo final</div>
-        <div class="objetivo-val">2:55</div>
+        <div class="objetivo-val" id="objetivo-val-lbl">—</div>
         <div class="objetivo-sub">10/10 baremo · Policía Nacional</div>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:10px 20px 20px;">
@@ -554,6 +601,26 @@ finish review, the verdict, and DESIGN.md.
     <div class="settings-row" onclick="exportCSV()">
       <div class="settings-row-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
       <span>Exportar a CSV</span>
+    </div>
+  </div>
+  <div class="settings-group">
+    <div class="settings-group-title">Bloques</div>
+    <div id="bloques-settings-list"></div>
+    <div class="settings-row" onclick="openBloqueEdit(null)">
+      <div class="settings-row-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <span>Nuevo bloque</span>
+    </div>
+  </div>
+  <div class="settings-group">
+    <div class="settings-group-title">Plan</div>
+    <div class="settings-row" style="cursor:default">
+      <div class="settings-row-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <span style="flex:1">Inicio oposición</span>
+      <input type="date" id="oposicion-start-input" class="date-input" onchange="updateOposicionStart(this.value)">
+    </div>
+    <div class="settings-row" onclick="applySeedDataManual()">
+      <div class="settings-row-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></div>
+      <span>Recargar datos históricos</span>
     </div>
   </div>
   <div class="settings-group">
@@ -603,6 +670,22 @@ finish review, the verdict, and DESIGN.md.
   </div>
 </div>
 
+<!-- MODAL BLOQUE EDIT -->
+<div class="modal-bg" id="bloque-modal">
+  <div class="modal">
+    <div class="modal-title" id="bloque-modal-title">Nuevo bloque</div>
+    <label class="modal-label">Nombre</label>
+    <input type="text" class="modal-input" id="bloque-name-input" placeholder="Bloque 3 · Específico">
+    <label class="modal-label">Desde</label>
+    <input type="date" class="modal-input" id="bloque-date-input">
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="closeModal('bloque-modal')">Cancelar</button>
+      <button class="modal-btn primary" onclick="saveBloqueEdit()">Guardar</button>
+    </div>
+    <button class="add-btn" id="bloque-delete-btn" style="display:none;color:var(--red);border-color:rgba(255,69,58,0.3)" onclick="deleteBloqueEdit()">Borrar bloque</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -616,15 +699,63 @@ const BAREMO_DEFAULT = [
   {max:215, pts:4, label:'3:26 - 3:35'},
   {max:205, pts:5, label:'3:16 - 3:25'},
   {max:195, pts:6, label:'3:11 - 3:15'},
-  {max:190, pts:7, label:'3:06 - 3:10'},
-  {max:185, pts:8, label:'3:01 - 3:05'},
-  {max:180, pts:9, label:'2:56 - 3:00'},
-  {max:175, pts:10, label:'≤ 2:55'}
+  {max:190, pts:7, label:'3:07 - 3:10'},
+  {max:186, pts:8, label:'3:01 - 3:06'},
+  {max:180, pts:9, label:'2:55 - 3:00'},
+  {max:174, pts:10, label:'≤ 2:54'}
 ];
 
 const TYPE_LABELS = {cortas:'Series cortas', largas:'Series largas', rodaje:'Rodaje', test:'Test 1000 m'};
 const DOW_NAMES_FULL = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const WEEK1_START = '2026-08-03';
+
+// ========== SEED DATA (histórico, se aplica una sola vez) ==========
+const SEED_BLOQUES = [
+  {id:'b1', nombre:'Bloque 1 · Recopilación', desde:'2026-09-01'},
+  {id:'b2', nombre:'Bloque 2 · Base', desde:'2026-09-23'}
+];
+
+const SEED_SESIONES = [
+{"date":"2026-09-02","type":"cortas","fcMedia":136,"fcMax":174,"cadencia":123,"tramos":[{"dist":300,"time":77,"rec":150},{"dist":300,"time":70,"rec":150},{"dist":300,"time":66,"rec":150},{"dist":300,"time":67,"rec":null}]},
+{"date":"2026-09-04","type":"rodaje","fcMedia":164,"fcMax":179,"cadencia":136,"distKm":3.82,"time":1517},
+{"date":"2026-09-06","type":"test","fcMedia":161,"fcMax":181,"cadencia":165,"time":229,"split1":108,"split2":121},
+{"date":"2026-09-09","type":"cortas","fcMedia":137,"fcMax":167,"cadencia":134,"tramos":[{"dist":310,"time":68,"rec":150},{"dist":310,"time":67,"rec":150},{"dist":320,"time":69,"rec":150},{"dist":320,"time":70,"rec":150},{"dist":310,"time":70,"rec":null}]},
+{"date":"2026-09-11","type":"rodaje","fcMedia":157,"fcMax":170,"cadencia":130,"distKm":4.09,"time":1567},
+{"date":"2026-09-13","type":"largas","fcMedia":136,"fcMax":176,"cadencia":143,"tramos":[{"dist":600,"time":155,"rec":210},{"dist":600,"time":147,"rec":210},{"dist":600,"time":152,"rec":null}]},
+{"date":"2026-09-16","type":"cortas","fcMedia":143,"fcMax":183,"cadencia":128,"tramos":[{"dist":410,"time":89,"rec":180},{"dist":410,"time":89,"rec":180},{"dist":400,"time":91,"rec":180},{"dist":410,"time":92,"rec":180},{"dist":410,"time":92,"rec":null}]},
+{"date":"2026-09-18","type":"rodaje","fcMedia":157,"fcMax":168,"cadencia":135,"distKm":4.64,"time":1810},
+{"date":"2026-09-20","type":"largas","fcMedia":135,"fcMax":171,"cadencia":133,"tramos":[{"dist":500,"time":132,"rec":180},{"dist":490,"time":123,"rec":180},{"dist":490,"time":122,"rec":180},{"dist":490,"time":124,"rec":null}]}
+];
+
+const SEED_AGENDA = {
+"2026-09-02":{"text":"4 x 300 m @ 4:05-4:15 rec 2:30"},
+"2026-09-04":{"text":"20-25 min @ 6:15-6:45"},
+"2026-09-06":{"text":"TEST 1000 m (sustituye a 3 x 500 m @ 4:05-4:15 rec 3:00)"},
+"2026-09-09":{"text":"5 x 300 m @ 3:55-4:00 rec 2:30"},
+"2026-09-11":{"text":"25 min @ 6:15-6:45"},
+"2026-09-13":{"text":"3 x 600 m @ 4:05-4:15 rec 3:30"},
+"2026-09-16":{"text":"5 x 400 m @ 3:52-3:58 rec 3:00"},
+"2026-09-18":{"text":"30 min @ 6:15-6:45"},
+"2026-09-20":{"text":"4 x 500 m @ 4:00-4:10 rec 3:00"},
+"2026-09-23":{"text":"Rodaje 25 min · FC 135-150 · + 4 rectas de 20 s al final · cadencia objetivo 150"},
+"2026-09-25":{"text":"Rodaje 30 min · FC 135-150"},
+"2026-09-27":{"text":"5 x 400 m @ 1:30 (3:45/km) rec 2:30 · calentar 10 min + 4 rectas"},
+"2026-09-30":{"text":"Rodaje 30 min · FC 135-150 · + 4 rectas de 20 s"},
+"2026-10-02":{"text":"Rodaje 20 min muy suave · FC <145"},
+"2026-10-04":{"text":"TEST 1000 m · calentar 10 min + 4 rectas · salir el 1er 500 en 1:53-1:55"},
+"2026-10-07":{"text":"Rodaje 35 min · FC 135-150 · + 5 rectas de 20 s · cadencia 155"},
+"2026-10-09":{"text":"Rodaje 30 min · FC 135-150"},
+"2026-10-11":{"text":"Tempo 2 x 8 min · FC 160-170 · rec 3 min trote · anotar el ritmo que sale"},
+"2026-10-14":{"text":"Rodaje 35 min · FC 135-150 · + 5 rectas de 20 s"},
+"2026-10-16":{"text":"Rodaje 35 min · FC 135-150"},
+"2026-10-18":{"text":"6 x 400 m @ 1:28-1:30 rec 2:30 · calentar 10 min + 4 rectas"},
+"2026-10-21":{"text":"Rodaje 40 min · FC 135-150 · + 6 rectas de 20 s · cadencia 160"},
+"2026-10-23":{"text":"Rodaje 35 min · FC 135-150"},
+"2026-10-25":{"text":"Tempo 2 x 10 min · FC 160-170 · rec 3 min trote"},
+"2026-10-28":{"text":"Rodaje 30 min suave · FC <145"},
+"2026-10-30":{"text":"Rodaje 25 min suave · FC <145 · + 4 rectas de 20 s"},
+"2026-11-01":{"text":"TEST 1000 m · calentar 10 min + 4 rectas · dosificar: 1er 500 solo 3-4 s más rápido que el 2º"}
+};
 
 // ========== STATE ==========
 let currentType = null;
@@ -637,6 +768,7 @@ let agendaWeekOffset = 0;
 let progActViewMonth = null;
 let charts = {};
 let tramoRowSeq = 0;
+let currentProgressBloque = 'all';
 
 // ========== STORAGE ==========
 function getData(){try{return JSON.parse(localStorage.getItem('m1000_sessions')||'[]');}catch{return[];}}
@@ -645,6 +777,53 @@ function getMeta(){try{return JSON.parse(localStorage.getItem('m1000_meta')||'{}
 function saveMeta(d){localStorage.setItem('m1000_meta',JSON.stringify(d));}
 function getAgenda(){try{return JSON.parse(localStorage.getItem('m1000_agenda')||'{}');}catch{return {};}}
 function saveAgendaData(d){localStorage.setItem('m1000_agenda',JSON.stringify(d));}
+
+// ========== BLOQUES ==========
+function getBloques(){const m=getMeta();return (m.bloques||[]).slice().sort((a,b)=>a.desde.localeCompare(b.desde));}
+function saveBloques(b){const m=getMeta();m.bloques=b;saveMeta(m);}
+function getBloqueForDate(dateStr){
+  const bloques = getBloques();
+  let match = null;
+  for(const b of bloques){if(b.desde<=dateStr)match=b;}
+  return match;
+}
+function newBloqueId(){return 'bl'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+
+// ========== SEED APPLY (histórico, idempotente) ==========
+function applySeedData(){
+  const meta = getMeta();
+  if(!meta.bloques || !meta.bloques.length){meta.bloques = SEED_BLOQUES.map(b=>({...b}));}
+  if(!meta.oposicionStart){meta.oposicionStart = '2026-09-01';}
+  saveMeta(meta);
+
+  const data = getData();
+  const existingKey = new Set(data.map(s=>s.date+'|'+s.type));
+  let added = 0;
+  SEED_SESIONES.forEach(s=>{
+    const key = s.date+'|'+s.type;
+    if(existingKey.has(key))return;
+    data.push(JSON.parse(JSON.stringify(s)));
+    existingKey.add(key);
+    added++;
+  });
+  if(added)saveData(data);
+
+  const agenda = getAgenda();
+  let agendaAdded = 0;
+  Object.keys(SEED_AGENDA).forEach(date=>{
+    if(agenda[date])return;
+    agenda[date] = {...SEED_AGENDA[date]};
+    agendaAdded++;
+  });
+  if(agendaAdded)saveAgendaData(agenda);
+
+  return {added, agendaAdded};
+}
+function applySeedDataManual(){
+  const res = applySeedData();
+  renderAgendaScreen();renderHistory();renderProgreso();updateEntrenoHero();renderBloquesSettings();
+  showToast(`Recargado: ${res.added} sesiones · ${res.agendaAdded} agenda`, 'green');
+}
 
 // ========== MIGRATION ==========
 function migrateData(){
@@ -724,6 +903,11 @@ function getBaremoForTime(timeSecs){
   const zero = b.find(r=>r.pts===0);
   return zero || {pts:0,label:'> 4:00'};
 }
+function getObjetivoSecs(){
+  const b = getBaremo();
+  const maxPts = Math.max(...b.map(r=>r.pts));
+  return (b.find(r=>r.pts===maxPts)||{max:174}).max;
+}
 
 // ========== ENTRENO ==========
 // Cada tipo tiene un día fijo de la semana (miércoles=cortas, viernes=rodaje,
@@ -796,6 +980,17 @@ function updateEntrenoHero(){
   const lastTest = getData().filter(s=>s.type==='test').sort((a,b)=>b.date.localeCompare(a.date))[0];
   const baremoEl = document.getElementById('hero-baremo');
   baremoEl.textContent = (lastTest && lastTest.time!=null) ? getBaremoForTime(lastTest.time).pts+'/10' : '—';
+  const counterEl = document.getElementById('oposicion-counter');
+  if(counterEl){
+    const start = getMeta().oposicionStart || '2026-09-01';
+    const dias = daysBetween(start,today)+1;
+    if(dias>0){
+      const sem = Math.floor(dias/7), rem = dias%7;
+      counterEl.textContent = `Opositando: ${dias} días · ${sem} sem ${rem} d`;
+    } else {
+      counterEl.textContent = '';
+    }
+  }
 }
 function onDateChange(){
   currentSessionDate = document.getElementById('entreno-date-input').value || todayStr();
@@ -816,17 +1011,52 @@ function renderEntrenoContent(){
     </div>`;
   }
   if(currentType==='cortas'||currentType==='largas'){
-    container.innerHTML = refHtml + renderTramosBlock();
+    container.innerHTML = refHtml + renderTramosBlock() + renderExtraFieldsBlock(existing);
     tramoRowSeq = 0;
     document.getElementById('tramos-list').innerHTML = '';
     (existing?.tramos||[]).forEach(t=>addTramoRow(t.dist, formatTimeForInput(t.time), t.rec!=null?formatTimeForInput(t.rec):''));
+    attachExtraFieldsListeners();
   } else if(currentType==='rodaje'){
-    container.innerHTML = refHtml + renderRodajeBlock(existing);
+    container.innerHTML = refHtml + renderRodajeBlock(existing) + renderExtraFieldsBlock(existing);
     attachRodajeListeners();
+    attachExtraFieldsListeners();
   } else if(currentType==='test'){
-    container.innerHTML = refHtml + renderTestBlock(existing);
+    container.innerHTML = refHtml + renderTestBlock(existing) + renderExtraFieldsBlock(existing);
     attachTestListeners();
+    attachExtraFieldsListeners();
   }
+}
+
+// —— Campos compartidos: FC/cadencia/notas, iguales en los 3 tipos ——
+function renderExtraFieldsBlock(existing){
+  const fc = existing?.fcMedia!=null ? existing.fcMedia : '';
+  const fcMax = existing?.fcMax!=null ? existing.fcMax : '';
+  const cad = existing?.cadencia!=null ? existing.cadencia : '';
+  const notas = existing?.notas!=null ? existing.notas : '';
+  return `<div class="block-card">
+    <div class="block-header"><div class="block-title-group"><div class="block-title">Fisiología</div><div class="block-value">Opcional</div></div></div>
+    <div class="block-body">
+      <div class="simple-input-row"><span class="serie-label">FC media</span><input type="number" class="serie-input" id="extra-fcmedia" placeholder="ppm" value="${fc}"></div>
+      <div class="simple-input-row"><span class="serie-label">FC máx</span><input type="number" class="serie-input" id="extra-fcmax" placeholder="ppm" value="${fcMax}"></div>
+      <div class="simple-input-row"><span class="serie-label">Cadencia</span><input type="number" class="serie-input" id="extra-cadencia" placeholder="p/min" value="${cad}"></div>
+      <div id="rodaje-zone-out"></div>
+      <div class="simple-input-row" style="align-items:flex-start;margin-top:2px"><span class="serie-label" style="margin-top:9px">Notas</span><textarea class="modal-textarea" id="extra-notas" placeholder="Sensaciones, viento, terreno..." style="margin-bottom:0;min-height:56px;font-size:13px;flex:1">${notas}</textarea></div>
+    </div>
+  </div>`;
+}
+function attachExtraFieldsListeners(){
+  const out = document.getElementById('rodaje-zone-out');
+  if(currentType!=='rodaje'){if(out)out.innerHTML='';return;}
+  const el = document.getElementById('extra-fcmedia');
+  const upd=()=>{
+    const v = parseFloat(el.value);
+    if(isNaN(v)){out.innerHTML='';return;}
+    if(v>=135&&v<=150)out.innerHTML='<span class="zone-badge zone-green">● En zona 135-150</span>';
+    else if(v>150)out.innerHTML='<span class="zone-badge zone-orange">● Demasiado rápido</span>';
+    else out.innerHTML='<span class="zone-badge zone-blue">● Por debajo de zona</span>';
+  };
+  el.addEventListener('input',upd);
+  upd();
 }
 
 function renderTramosBlock(){
@@ -895,6 +1125,7 @@ function renderTestBlock(existing){
       <div class="simple-input-row"><span class="serie-label">Tiempo</span><input type="text" class="serie-input" id="test-time" placeholder="mm:ss" value="${timeVal}"></div>
       <div class="simple-input-row"><span class="serie-label">1º 500m</span><input type="text" class="serie-input" id="test-split1" placeholder="opcional" value="${s1}"></div>
       <div class="simple-input-row"><span class="serie-label">2º 500m</span><input type="text" class="serie-input" id="test-split2" placeholder="opcional" value="${s2}"></div>
+      <div class="simple-input-row"><span class="serie-label">Diferencia</span><span id="test-split-diff-out" style="font-weight:700;font-size:14px">—</span></div>
       <div class="simple-input-row"><span class="serie-label">Baremo</span><span id="test-baremo-out" style="font-weight:700;color:var(--amber);font-size:14px">—</span></div>
     </div>
   </div>`;
@@ -905,8 +1136,21 @@ function attachTestListeners(){
     const out = document.getElementById('test-baremo-out');
     if(t!=null){const b=getBaremoForTime(t);out.textContent=`${b.pts}/10 · ${b.label}`;}
     else out.textContent = '—';
+    const s1 = parseTime(document.getElementById('test-split1').value);
+    const s2 = parseTime(document.getElementById('test-split2').value);
+    const diffOut = document.getElementById('test-split-diff-out');
+    if(s1!=null && s2!=null){
+      const diff = s2-s1;
+      diffOut.textContent = (diff>=0?'+':'')+diff.toFixed(1)+'s';
+      diffOut.style.color = diff>5 ? 'var(--orange)' : 'var(--text)';
+    } else {
+      diffOut.textContent = '—';
+      diffOut.style.color = '';
+    }
   };
   document.getElementById('test-time').addEventListener('input',upd);
+  document.getElementById('test-split1').addEventListener('input',upd);
+  document.getElementById('test-split2').addEventListener('input',upd);
   upd();
 }
 
@@ -937,6 +1181,14 @@ function saveSession(){
     session.split1 = s1!=null?s1:null;
     session.split2 = s2!=null?s2:null;
   }
+  const fcMediaVal = document.getElementById('extra-fcmedia')?.value;
+  const fcMaxVal = document.getElementById('extra-fcmax')?.value;
+  const cadenciaVal = document.getElementById('extra-cadencia')?.value;
+  const notasVal = document.getElementById('extra-notas')?.value;
+  session.fcMedia = fcMediaVal ? parseFloat(fcMediaVal) : null;
+  session.fcMax = fcMaxVal ? parseFloat(fcMaxVal) : null;
+  session.cadencia = cadenciaVal ? parseFloat(cadenciaVal) : null;
+  session.notas = notasVal && notasVal.trim() ? notasVal.trim() : null;
   const data = getData();
   const idx = data.findIndex(s=>s.date===session.date && s.type===session.type);
   if(idx>=0)data[idx]=session; else data.push(session);
@@ -981,12 +1233,27 @@ function renderHistory(){
       bodyContent = `<div class="history-row"><span class="history-row-name">Tiempo${b?' · '+b.pts+'/10':''}</span><span class="history-row-val">${formatTime(s.time)}</span></div>`;
       if(s.split1!=null)bodyContent += `<div class="history-row"><span class="history-row-name">1º 500m</span><span class="history-row-val">${formatTime(s.split1)}</span></div>`;
       if(s.split2!=null)bodyContent += `<div class="history-row"><span class="history-row-name">2º 500m</span><span class="history-row-val">${formatTime(s.split2)}</span></div>`;
+      if(s.split1!=null && s.split2!=null){
+        const diff = s.split2-s.split1;
+        const warn = diff>5;
+        bodyContent += `<div class="history-row"><span class="history-row-name">Diferencia</span><span class="history-row-val" style="color:${warn?'var(--orange)':'var(--text)'}">${(diff>=0?'+':'')+diff.toFixed(1)}s${warn?' ⚠ mala dosificación':''}</span></div>`;
+      }
     }
+    if(s.type==='rodaje' && s.fcMedia!=null){
+      const zone = s.fcMedia>=135 && s.fcMedia<=150;
+      const over = s.fcMedia>150;
+      bodyContent += `<div class="history-row"><span class="history-row-name">Zona FC</span><span class="history-row-val"><span class="zone-badge ${zone?'zone-green':(over?'zone-orange':'zone-blue')}" style="margin:0">● ${zone?'En zona':(over?'Demasiado rápido':'Por debajo')}</span></span></div>`;
+    }
+    if(s.fcMedia!=null)bodyContent += `<div class="history-row"><span class="history-row-name">FC media</span><span class="history-row-val">${s.fcMedia} ppm</span></div>`;
+    if(s.fcMax!=null)bodyContent += `<div class="history-row"><span class="history-row-name">FC máx</span><span class="history-row-val">${s.fcMax} ppm</span></div>`;
+    if(s.cadencia!=null)bodyContent += `<div class="history-row"><span class="history-row-name">Cadencia</span><span class="history-row-val">${s.cadencia} p/min</span></div>`;
+    if(s.notas)bodyContent += `<div class="history-row"><span class="history-row-name">Notas</span><span class="history-row-val" style="text-align:left;font-family:var(--font-sans);font-weight:400;color:var(--text2)">${s.notas}</span></div>`;
+    const bloque = getBloqueForDate(s.date);
     return `<div class="history-session">
       <div class="history-session-header">
         <div onclick="toggleHist(${i})" style="flex:1;cursor:pointer">
           <div class="history-session-title">${formatDate(s.date)}</div>
-          <span class="type-badge ${s.type}">${TYPE_LABELS[s.type]}</span>
+          <span class="type-badge ${s.type}">${TYPE_LABELS[s.type]}</span>${bloque?`<span class="block-tag">${bloque.nombre}</span>`:''}
         </div>
         <div style="display:flex;align-items:center">
           <button class="del-btn" onclick="deleteSession('${s.date}','${s.type}')">✕</button>
@@ -1007,9 +1274,35 @@ function getAllDistances(){
   getData().forEach(s=>{if(s.tramos)s.tramos.forEach(t=>{if(t.dist)set.add(t.dist);});});
   return [...set].sort((a,b)=>a-b);
 }
+// Filtro combinado: periodo (pills) Y bloque (chips) — ambos se aplican a la vez.
+function getFilteredData(start){
+  return getData().filter(s=>{
+    if(s.date<start)return false;
+    if(currentProgressBloque!=='all'){
+      const b = getBloqueForDate(s.date);
+      if(!b || b.id!==currentProgressBloque)return false;
+    }
+    return true;
+  });
+}
+function renderBloqueFilterChips(){
+  const row = document.getElementById('bloque-filter-row');
+  if(!row)return;
+  const bloques = getBloques();
+  if(!bloques.length){row.innerHTML='';return;}
+  row.innerHTML = `<button class="filter-chip ${currentProgressBloque==='all'?'active':''}" onclick="setProgressBloque('all',this)">Todos</button>`
+    + bloques.map(b=>`<button class="filter-chip ${currentProgressBloque===b.id?'active':''}" onclick="setProgressBloque('${b.id}',this)">${b.nombre}</button>`).join('');
+}
+function setProgressBloque(id,el){
+  currentProgressBloque = id;
+  document.querySelectorAll('#bloque-filter-row .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderProgreso();
+}
 function renderProgreso(){
   const start = getStartDate(currentProgressPeriod);
-  const data = getData().filter(s=>s.date>=start);
+  renderBloqueFilterChips();
+  const data = getFilteredData(start);
 
   const sessions = data.length;
   let km = 0;
@@ -1043,6 +1336,99 @@ function renderProgreso(){
   renderActivityMap();
   renderDistanceSelector();
   renderProgresoCharts(start);
+  renderBaremoProgreso();
+  renderProyeccion();
+}
+
+// —— Baremo y nota: 100% reactivo a meta.baremo, nada hardcodeado ——
+function renderBaremoProgreso(){
+  const b = getBaremo();
+  const allTests = getData().filter(s=>s.type==='test'&&s.time!=null).sort((a,b)=>a.date.localeCompare(b.date));
+  const bestTime = allTests.length ? Math.min(...allTests.map(s=>s.time)) : null;
+  const lastTest = allTests[allTests.length-1] || null;
+
+  const notaActualEl = document.getElementById('baremo-nota-actual');
+  const notaUltimoWrap = document.getElementById('baremo-nota-ultimo-wrap');
+  const notaUltimoEl = document.getElementById('baremo-nota-ultimo');
+  const faltaEl = document.getElementById('baremo-falta');
+
+  let bestPts = null;
+  if(bestTime!=null){
+    const rec = getBaremoForTime(bestTime);
+    bestPts = rec.pts;
+    notaActualEl.textContent = rec.pts+'/10';
+  } else {
+    notaActualEl.textContent = '—';
+  }
+
+  if(lastTest && lastTest.time!=null && lastTest.time!==bestTime){
+    const rec = getBaremoForTime(lastTest.time);
+    notaUltimoEl.textContent = rec.pts+'/10';
+    notaUltimoWrap.style.display = '';
+  } else {
+    notaUltimoWrap.style.display = 'none';
+  }
+
+  const sorted = b.slice().sort((a,c)=>a.pts-c.pts);
+  if(bestPts!=null && bestPts<10){
+    const next = sorted.find(r=>r.pts===bestPts+1);
+    if(next){
+      const segsToLose = bestTime - next.max;
+      faltaEl.textContent = `${segsToLose.toFixed(0)}s más rápido · llegar a ${formatTimeForInput(next.max)}`;
+    } else {
+      faltaEl.textContent = '—';
+    }
+  } else if(bestPts===10){
+    faltaEl.textContent = 'Nota máxima alcanzada';
+  } else {
+    faltaEl.textContent = 'Sin tests registrados';
+  }
+
+  const nextPts = bestPts!=null && bestPts<10 ? bestPts+1 : null;
+  document.getElementById('baremo-table-progreso').innerHTML = b.map(r=>{
+    const cls = r.pts===bestPts ? 'current' : (r.pts===nextPts ? 'target' : '');
+    return `<tr class="${cls}"><td>${r.label}</td><td>${r.pts} pts</td></tr>`;
+  }).join('');
+}
+
+// —— Proyección: regresión lineal simple sobre los tests, orientativa ——
+function renderProyeccion(){
+  const body = document.getElementById('proyeccion-body');
+  if(!body)return;
+  const tests = getData().filter(s=>s.type==='test'&&s.time!=null).sort((a,b)=>a.date.localeCompare(b.date));
+  if(tests.length<2){
+    body.innerHTML = '<div class="empty-state" style="padding:20px 8px">Necesitas al menos 2 tests para estimar una tendencia</div>';
+    return;
+  }
+  const t0 = new Date(tests[0].date+'T12:00:00').getTime();
+  const pts = tests.map(s=>({x:(new Date(s.date+'T12:00:00').getTime()-t0)/(86400000), y:s.time}));
+  const n = pts.length;
+  const sumX = pts.reduce((a,p)=>a+p.x,0), sumY = pts.reduce((a,p)=>a+p.y,0);
+  const sumXY = pts.reduce((a,p)=>a+p.x*p.y,0), sumXX = pts.reduce((a,p)=>a+p.x*p.x,0);
+  const denom = (n*sumXX - sumX*sumX);
+  const slope = denom!==0 ? (n*sumXY - sumX*sumY)/denom : 0; // segundos por día
+  const lastTest = tests[tests.length-1];
+  const lastTime = lastTest.time;
+
+  if(slope>=0){
+    body.innerHTML = `<div class="test-info-card" style="margin-bottom:0;background:rgba(255,255,255,0.03)">
+      <div class="test-info-row"><span class="lbl">Tendencia</span><span class="val" style="color:var(--text3)">Sin mejora clara todavía</span></div>
+    </div>`;
+    return;
+  }
+  const secsPerMonth = -slope*30;
+  const etaDays = (targetSecs)=>{
+    if(lastTime<=targetSecs)return 0;
+    return Math.ceil((targetSecs-lastTime)/slope);
+  };
+  const eta306 = lastTime>186 ? addDays(lastTest.date, etaDays(186)) : null;
+  const eta254 = lastTime>174 ? addDays(lastTest.date, etaDays(174)) : null;
+  body.innerHTML = `<div class="test-info-card" style="margin-bottom:10px;background:rgba(255,255,255,0.03)">
+      <div class="test-info-row"><span class="lbl">Mejora media</span><span class="val" style="color:var(--green)">-${secsPerMonth.toFixed(1)} s/mes</span></div>
+      <div class="test-info-row"><span class="lbl">Estimado para 3:06 (8 pts)</span><span class="val">${eta306?formatDate(eta306):'ya alcanzado'}</span></div>
+      <div class="test-info-row"><span class="lbl">Estimado para 2:54 (10 pts)</span><span class="val">${eta254?formatDate(eta254):'ya alcanzado'}</span></div>
+    </div>
+    <div style="font-size:11px;color:var(--text3);line-height:1.4">Estimación orientativa basada en la tendencia de tus tests — no es una promesa, solo una proyección lineal simple.</div>`;
 }
 function renderDistanceSelector(){
   const dists = getAllDistances();
@@ -1090,15 +1476,18 @@ function renderBarChart(id, labels, data, color){
 }
 
 function renderProgresoCharts(start){
-  const testSessions = getData().filter(s=>s.type==='test'&&s.date>=start&&s.time!=null).sort((a,b)=>a.date.localeCompare(b.date));
+  const filtered = getFilteredData(start);
+  const objetivoSecs = getObjetivoSecs();
+
+  const testSessions = filtered.filter(s=>s.type==='test'&&s.time!=null).sort((a,b)=>a.date.localeCompare(b.date));
   renderLineChart('chart-1000',
     testSessions.map(s=>formatDate(s.date)),
     [
       {data:testSessions.map(s=>s.time), color:'#ffd60a', label:'Tiempo'},
-      {data:testSessions.map(()=>175), color:'#b6ff2e', dashed:true, label:'Objetivo 2:55'}
+      {data:testSessions.map(()=>objetivoSecs), color:'#b6ff2e', dashed:true, label:'Objetivo '+formatTimeForInput(objetivoSecs)}
     ], formatTime, true);
 
-  const distSessions = getData().filter(s=>(s.type==='cortas'||s.type==='largas')&&s.date>=start&&(s.tramos||[]).some(t=>t.dist===selectedDistance)).sort((a,b)=>a.date.localeCompare(b.date));
+  const distSessions = filtered.filter(s=>(s.type==='cortas'||s.type==='largas')&&(s.tramos||[]).some(t=>t.dist===selectedDistance)).sort((a,b)=>a.date.localeCompare(b.date));
   const bestVals = distSessions.map(s=>{const ts=s.tramos.filter(t=>t.dist===selectedDistance).map(t=>t.time);return Math.min(...ts);});
   const avgVals = distSessions.map(s=>{const ts=s.tramos.filter(t=>t.dist===selectedDistance).map(t=>t.time);return ts.reduce((a,b)=>a+b,0)/ts.length;});
   renderLineChart('chart-dist', distSessions.map(s=>formatDate(s.date)), [
@@ -1106,11 +1495,82 @@ function renderProgresoCharts(start){
     {data:avgVals, color:'#ff2d92', label:'Media'}
   ], formatTime, true);
 
-  const rodajeSessions = getData().filter(s=>s.type==='rodaje'&&s.date>=start&&s.time!=null&&s.distKm>0).sort((a,b)=>a.date.localeCompare(b.date));
+  const rodajeSessions = filtered.filter(s=>s.type==='rodaje'&&s.time!=null&&s.distKm>0).sort((a,b)=>a.date.localeCompare(b.date));
   renderLineChart('chart-rodaje-pace', rodajeSessions.map(s=>formatDate(s.date)), [
     {data:rodajeSessions.map(s=>s.time/s.distKm), color:'#b6ff2e', label:'Ritmo'}
   ], formatPace, true);
   renderBarChart('chart-rodaje-vol', rodajeSessions.map(s=>formatDate(s.date)), rodajeSessions.map(s=>s.distKm), '#b6ff2e');
+
+  renderFcRodajeChart(rodajeSessions);
+  renderWeeklyVolumeChart(filtered);
+  renderCadenciaChart(filtered);
+}
+
+// FC media en rodaje con banda sombreada 135-150 — construida con dos líneas
+// invisibles + fill:'-1' entre ellas (sin plugin de anotaciones externo).
+function renderFcRodajeChart(rodajeSessions){
+  const withFc = rodajeSessions.filter(s=>s.fcMedia!=null);
+  const id = 'chart-fc-rodaje';
+  if(charts[id])charts[id].destroy();
+  const ctx = document.getElementById(id).getContext('2d');
+  const labels = withFc.map(s=>formatDate(s.date));
+  charts[id] = new Chart(ctx,{
+    type:'line',
+    data:{labels, datasets:[
+      {label:'135',data:labels.map(()=>135),borderColor:'transparent',backgroundColor:'transparent',pointRadius:0,fill:false},
+      {label:'150',data:labels.map(()=>150),borderColor:'transparent',backgroundColor:'rgba(182,255,46,0.10)',pointRadius:0,fill:'-1'},
+      {label:'FC media',data:withFc.map(s=>s.fcMedia),borderColor:'#ffd60a',backgroundColor:'transparent',borderWidth:2,pointBackgroundColor:'#ffd60a',pointRadius:4,tension:0.35,fill:false}
+    ]},
+    options:{responsive:true,
+      plugins:{legend:{display:false},tooltip:{filter:ctx=>ctx.datasetIndex===2,callbacks:{label:ctx=>ctx.parsed.y+' ppm'}}},
+      scales:{x:{ticks:{color:'rgba(255,255,255,0.4)',font:{size:10}},grid:{color:'rgba(255,255,255,0.06)'}},
+        y:{ticks:{color:'rgba(255,255,255,0.4)',font:{size:10}},grid:{color:'rgba(255,255,255,0.06)'}}}}
+  });
+}
+
+// Volumen semanal en km, todas las sesiones (no solo rodaje), con el total dentro de la barra.
+function renderWeeklyVolumeChart(filtered){
+  const id = 'chart-volumen-semanal';
+  const weekKm = {};
+  filtered.forEach(s=>{
+    let km = 0;
+    if(s.type==='cortas'||s.type==='largas')km = (s.tramos||[]).reduce((a,t)=>a+(t.dist||0),0)/1000;
+    else if(s.type==='rodaje')km = s.distKm||0;
+    else if(s.type==='test')km = 1;
+    const wk = getWeekStart(s.date);
+    weekKm[wk] = (weekKm[wk]||0)+km;
+  });
+  const weeks = Object.keys(weekKm).sort();
+  if(charts[id])charts[id].destroy();
+  const ctx = document.getElementById(id).getContext('2d');
+  const data = weeks.map(w=>+weekKm[w].toFixed(1));
+  charts[id] = new Chart(ctx,{
+    type:'bar',
+    data:{labels:weeks.map(w=>formatDate(w)), datasets:[{data, backgroundColor:'#2979ff55', borderColor:'#2979ff', borderWidth:1, borderRadius:4}]},
+    options:{responsive:true,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:'rgba(255,255,255,0.4)',font:{size:10}},grid:{display:false}},y:{ticks:{color:'rgba(255,255,255,0.4)',font:{size:10}},grid:{color:'rgba(255,255,255,0.06)'}}}},
+    plugins:[{id:'weekTotal',afterDatasetsDraw(chart){
+      const {ctx} = chart;
+      ctx.save();ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='700 10px "SF Mono", ui-monospace, Menlo, monospace';ctx.textAlign='center';
+      chart.getDatasetMeta(0).data.forEach((bar,i)=>{ctx.fillText(data[i]+'km', bar.x, bar.y-6);});
+      ctx.restore();
+    }}]
+  });
+}
+
+// Cadencia media por sesión, separando rodaje de series.
+function renderCadenciaChart(filtered){
+  const withCad = filtered.filter(s=>s.cadencia!=null).sort((a,b)=>a.date.localeCompare(b.date));
+  const dates = [...new Set(withCad.map(s=>s.date))].sort();
+  const rodajeMap = {}, seriesMap = {};
+  withCad.forEach(s=>{
+    if(s.type==='rodaje')rodajeMap[s.date]=s.cadencia;
+    else if(s.type==='cortas'||s.type==='largas')seriesMap[s.date]=s.cadencia;
+  });
+  renderLineChart('chart-cadencia', dates.map(d=>formatDate(d)), [
+    {data:dates.map(d=>rodajeMap[d]!=null?rodajeMap[d]:null), color:'#b6ff2e', label:'Rodaje'},
+    {data:dates.map(d=>seriesMap[d]!=null?seriesMap[d]:null), color:'#2979ff', label:'Series'}
+  ], v=>v+' p/min', false);
 }
 
 function changeProgActMonth(delta){
@@ -1199,6 +1659,8 @@ function renderAgendaScreen(){
   renderAgendaWeek();
   renderNextTestInfo();
   renderBaremo();
+  const objEl = document.getElementById('objetivo-val-lbl');
+  if(objEl)objEl.textContent = formatTimeForInput(getObjetivoSecs());
 }
 function renderAgendaWeek(){
   const todayWeekStart = getWeekStart(todayStr());
@@ -1275,7 +1737,9 @@ function renderRecordsInfo(){
   document.getElementById('pr-1000').textContent = formatTime(record);
   const pace = getRecordRodajePace();
   document.getElementById('pr-rodaje').textContent = pace!=null ? formatPace(pace)+' /km' : '—';
-  const objetivo = 175; // 2:55, 10/10 baremo
+  const objetivo = getObjetivoSecs();
+  const lblEl = document.getElementById('pr-objetivo-lbl');
+  if(lblEl)lblEl.textContent = formatTimeForInput(objetivo);
   const pctEl = document.getElementById('pr-objetivo-pct');
   if(record!=null){
     const pct = (objetivo-record)/objetivo*100;
@@ -1340,7 +1804,65 @@ function saveBaremo(){
   });
   recomputeBaremoLabels(b);
   const meta = getMeta();meta.baremo=b;saveMeta(meta);
-  closeModal('baremo-modal');renderBaremo();showToast('Baremo guardado ✓','green');
+  closeModal('baremo-modal');renderBaremo();
+  if(document.getElementById('screen-progreso').classList.contains('active'))renderProgreso();
+  showToast('Baremo guardado ✓','green');
+}
+
+// ========== BLOQUES SETTINGS ==========
+let editingBloqueId = null;
+function renderBloquesSettings(){
+  const list = document.getElementById('bloques-settings-list');
+  if(!list)return;
+  const bloques = getBloques();
+  list.innerHTML = bloques.length ? bloques.map(b=>`<div class="settings-row" onclick="openBloqueEdit('${b.id}')">
+    <div class="settings-row-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>
+    <span style="flex:1">${b.nombre}<div style="font-size:10.5px;color:var(--text3);margin-top:2px;font-family:var(--font-mono);font-weight:500">desde ${formatDate(b.desde)}</div></span>
+  </div>`).join('') : '<div style="padding:13px 16px;font-size:12px;color:var(--text3)">Sin bloques</div>';
+}
+function openBloqueEdit(id){
+  editingBloqueId = id;
+  const b = id ? getBloques().find(x=>x.id===id) : null;
+  document.getElementById('bloque-modal-title').textContent = b ? 'Editar bloque' : 'Nuevo bloque';
+  document.getElementById('bloque-name-input').value = b ? b.nombre : '';
+  document.getElementById('bloque-date-input').value = b ? b.desde : todayStr();
+  document.getElementById('bloque-delete-btn').style.display = b ? 'block' : 'none';
+  document.getElementById('bloque-modal').classList.add('open');
+}
+function refreshAfterBloqueChange(){
+  renderBloquesSettings();
+  if(document.getElementById('screen-historial').classList.contains('active'))renderHistory();
+  if(document.getElementById('screen-progreso').classList.contains('active'))renderProgreso();
+}
+function saveBloqueEdit(){
+  const nombre = document.getElementById('bloque-name-input').value.trim();
+  const desde = document.getElementById('bloque-date-input').value;
+  if(!nombre || !desde){showToast('Completa nombre y fecha');return;}
+  const bloques = getBloques();
+  if(editingBloqueId){
+    const idx = bloques.findIndex(b=>b.id===editingBloqueId);
+    if(idx>=0){bloques[idx] = {...bloques[idx], nombre, desde};}
+  } else {
+    bloques.push({id:newBloqueId(), nombre, desde});
+  }
+  saveBloques(bloques);
+  closeModal('bloque-modal');
+  refreshAfterBloqueChange();
+  showToast('Bloque guardado ✓','green');
+}
+function deleteBloqueEdit(){
+  if(!editingBloqueId)return;
+  if(!confirm('¿Borrar este bloque?'))return;
+  saveBloques(getBloques().filter(b=>b.id!==editingBloqueId));
+  closeModal('bloque-modal');
+  refreshAfterBloqueChange();
+  showToast('Bloque borrado');
+}
+function updateOposicionStart(val){
+  if(!val)return;
+  const meta = getMeta();meta.oposicionStart = val;saveMeta(meta);
+  updateEntrenoHero();
+  showToast('Fecha actualizada ✓','green');
 }
 
 // ========== UI ==========
@@ -1363,6 +1885,12 @@ function showScreen(name,btn){
   if(name==='historial')renderHistory();
   if(name==='progreso')renderProgreso();
   if(name==='agenda')renderAgendaScreen();
+  if(name==='ajustes')renderAjustesScreen();
+}
+function renderAjustesScreen(){
+  renderBloquesSettings();
+  const el = document.getElementById('oposicion-start-input');
+  if(el)el.value = getMeta().oposicionStart || '2026-09-01';
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function showToast(msg,cls){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(cls||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
@@ -1408,6 +1936,10 @@ function clearAllData(){
 
 // ========== INIT ==========
 migrateData();
+if(!getMeta().seedAplicado){
+  applySeedData();
+  const m = getMeta();m.seedAplicado = true;saveMeta(m);
+}
 document.getElementById('entreno-date-input').value = todayStr();
 currentSessionDate = todayStr();
 updateSessionLabel();
