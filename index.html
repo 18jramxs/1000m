@@ -235,11 +235,11 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
 .zone-badge.zone-green{background:var(--green-bg);color:var(--green);}
 .zone-badge.zone-orange{background:var(--orange-bg);color:var(--orange);}
 .zone-badge.zone-blue{background:var(--blue-bg);color:var(--blue2);}
-.zone-badge.zone-1{background:var(--blue-bg);color:var(--blue2);}
-.zone-badge.zone-2{background:var(--green-bg);color:var(--green);}
-.zone-badge.zone-3{background:var(--amber-bg);color:var(--amber);}
-.zone-badge.zone-4{background:var(--orange-bg);color:var(--orange);}
-.zone-badge.zone-5{background:var(--red-bg);color:var(--red);}
+
+.baremo-collapse-body{display:none;}
+.baremo-collapse-body.open{display:block;}
+.baremo-collapse-header{cursor:pointer;}
+.baremo-collapse-chevron{font-size:18px;color:var(--text3);transition:transform 0.25s var(--ease-out-soft);}
 
 .block-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:0.2px;background:rgba(255,255,255,0.06);color:var(--text3);margin-left:6px;font-family:var(--font-mono);}
 
@@ -434,10 +434,6 @@ finish review, the verdict, and DESIGN.md.
         <div style="font-family:var(--font-disp);font-size:21px;line-height:1.15" id="etapa-progreso-dias">—</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
-      <span class="session-label" style="margin-bottom:0">Inicio oposición</span>
-      <input type="date" class="date-input" id="etapa-progreso-start-input" onchange="updateOposicionStart(this.value)">
-    </div>
   </div>
 
   <div class="pill-row">
@@ -453,23 +449,6 @@ finish review, the verdict, and DESIGN.md.
     <div class="stat-pill"><div class="stat-val" id="stat-sessions">0</div><div class="stat-lbl">Sesiones</div></div>
     <div class="stat-pill"><div class="stat-val" id="stat-distance">0</div><div class="stat-lbl">Km totales</div></div>
     <div class="stat-pill"><div class="stat-val" id="stat-best-1000">—</div><div class="stat-lbl">Mejor 1000 m</div></div>
-  </div>
-
-  <div class="fisico-card" style="overflow:hidden;">
-    <div class="section-header">
-      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
-      <div style="flex:1"><div class="section-title-text">Baremo y nota</div><div class="section-subtitle">Reactivo al baremo de Ajustes</div></div>
-    </div>
-    <div class="section-body">
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <div class="record-item" style="flex:1"><div class="record-val" id="baremo-nota-actual" style="font-size:30px;color:var(--amber)">—</div><div class="record-lbl">Nota actual</div></div>
-        <div class="record-item" style="flex:1" id="baremo-nota-ultimo-wrap"><div class="record-val" id="baremo-nota-ultimo" style="font-size:30px">—</div><div class="record-lbl">Último test</div></div>
-      </div>
-      <div class="test-info-card" style="margin-bottom:10px;background:rgba(255,255,255,0.03)">
-        <div class="test-info-row"><span class="lbl">Para subir un punto</span><span class="val" id="baremo-falta">—</span></div>
-      </div>
-      <table class="baremo-table" id="baremo-table-progreso"></table>
-    </div>
   </div>
 
   <div class="fisico-card" style="padding:14px;">
@@ -499,24 +478,13 @@ finish review, the verdict, and DESIGN.md.
   <div class="fisico-card" style="overflow:hidden;">
     <div class="section-header" style="padding-bottom:6px;">
       <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg></div>
-      <div style="flex:1"><div class="section-title-text">Marcas personales</div><div class="section-subtitle">Desliza para ver la evolución</div></div>
-      <div style="display:flex;gap:5px;padding-right:2px;" id="rec-dots">
-        <div class="corpo-dot active" onclick="goRecSlide(0)"></div>
-        <div class="corpo-dot" onclick="goRecSlide(1)"></div>
-      </div>
+      <div style="flex:1"><div class="section-title-text">Marcas personales</div></div>
     </div>
-    <div id="rec-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onRecScroll()">
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="records-grid">
-          <div class="record-item"><div class="record-val" id="pr-1000">—</div><div class="record-lbl">1000 m</div></div>
-          <div class="record-item"><div class="record-val" id="pr-rodaje">—</div><div class="record-lbl">Ritmo rodaje</div></div>
-        </div>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="section-subtitle" style="margin-bottom:8px;">% respecto al objetivo (<span id="pr-objetivo-lbl">—</span>)</div>
-        <div class="records-grid">
-          <div class="record-item"><div class="record-val" id="pr-objetivo-pct">—</div><div class="record-lbl">Marca actual</div></div>
-        </div>
+    <div class="section-body">
+      <div class="records-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="record-item"><div class="record-val" id="pr-1000" style="font-size:19px;">—</div><div class="record-lbl">Mejor 1000 m</div></div>
+        <div class="record-item"><div class="record-val" id="pr-objetivo-pct" style="font-size:19px;">—</div><div class="record-lbl">Cerca del 10</div></div>
+        <div class="record-item"><div class="record-val" id="pr-nota-actual" style="font-size:19px;">—</div><div class="record-lbl">Nota actual</div></div>
       </div>
     </div>
   </div>
@@ -529,38 +497,43 @@ finish review, the verdict, and DESIGN.md.
         <div class="corpo-dot" onclick="goProgSlide(1)"></div>
         <div class="corpo-dot" onclick="goProgSlide(2)"></div>
         <div class="corpo-dot" onclick="goProgSlide(3)"></div>
-        <div class="corpo-dot" onclick="goProgSlide(4)"></div>
-        <div class="corpo-dot" onclick="goProgSlide(5)"></div>
       </div>
     </div>
     <div id="prog-carousel" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;" onscroll="onProgScroll()">
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="chart-card-label">Evolución test 1000 m (objetivo 2:55)</div><canvas id="chart-1000" height="180"></canvas>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="chart-card-label">Ritmo medio rodaje (min/km)</div><canvas id="chart-rodaje-pace" height="180"></canvas>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="chart-card-label">Volumen rodaje (km por sesión)</div><canvas id="chart-rodaje-vol" height="180"></canvas>
-      </div>
-      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="chart-card-label">FC media en rodaje (banda <span id="fc-rodaje-band-lbl">Z2</span>)</div><canvas id="chart-fc-rodaje" height="180"></canvas>
+        <div class="chart-card-label">FC media en rodaje (banda <span id="fc-rodaje-band-lbl">—</span>)</div><canvas id="chart-fc-rodaje" height="180"></canvas>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
         <div class="chart-card-label">Volumen semanal (km, todas las sesiones)</div><canvas id="chart-volumen-semanal" height="180"></canvas>
       </div>
       <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
-        <div class="chart-card-label">Cadencia media (pasos/min)</div><canvas id="chart-cadencia" height="180"></canvas>
+        <div class="chart-card-label">Cadencia (pasos/min) — objetivo 165</div><canvas id="chart-cadencia" height="180"></canvas>
+      </div>
+      <div class="prog-slide" style="scroll-snap-align:start;min-width:100%;padding:0 16px 16px;">
+        <div class="chart-card-label">Proyección hacia el objetivo</div><canvas id="chart-proyeccion" height="180"></canvas>
+        <div id="proyeccion-body" style="margin-top:10px"></div>
       </div>
     </div>
   </div>
 
   <div class="fisico-card" style="overflow:hidden;">
-    <div class="section-header">
-      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><polyline points="4 18 9 13 13 16 20 7"/><polyline points="20 7 20 12"/><polyline points="20 7 15 7"/></svg></div>
-      <div style="flex:1"><div class="section-title-text">Proyección hacia el objetivo</div><div class="section-subtitle">Estimación orientativa, no una promesa</div></div>
+    <div class="section-header baremo-collapse-header" onclick="toggleBaremoProgreso()">
+      <div class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
+      <div style="flex:1"><div class="section-title-text">Baremo y nota</div><div class="section-subtitle">Reactivo al baremo de Ajustes</div></div>
+      <span class="baremo-collapse-chevron" id="baremo-progreso-chevron">›</span>
     </div>
-    <div class="section-body" id="proyeccion-body"></div>
+    <div class="baremo-collapse-body" id="baremo-progreso-body">
+      <div class="section-body" style="padding-top:0;">
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <div class="record-item" style="flex:1"><div class="record-val" id="baremo-nota-actual" style="font-size:30px;color:var(--amber)">—</div><div class="record-lbl">Nota actual</div></div>
+          <div class="record-item" style="flex:1" id="baremo-nota-ultimo-wrap"><div class="record-val" id="baremo-nota-ultimo" style="font-size:30px">—</div><div class="record-lbl">Último test</div></div>
+        </div>
+        <div class="test-info-card" style="margin-bottom:10px;background:rgba(255,255,255,0.03)">
+          <div class="test-info-row"><span class="lbl">Para subir un punto</span><span class="val" id="baremo-falta">—</span></div>
+        </div>
+        <table class="baremo-table" id="baremo-table-progreso"></table>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -635,6 +608,11 @@ finish review, the verdict, and DESIGN.md.
     </div>
     <div class="simple-input-row"><span class="serie-label">Peso</span><input type="number" step="0.1" min="0" class="serie-input" id="fisico-peso" placeholder="kg" onchange="updateFisico()"></div>
     <div class="simple-input-row"><span class="serie-label">FC máxima</span><input type="number" class="serie-input" id="fisico-fcmax" placeholder="ppm" onchange="updateFisico()"></div>
+    <div style="font-size:11px;color:var(--text3);line-height:1.4;margin-top:6px">Estimada: es una FC de trabajo, no hay test de FC máxima real. La máxima observada en entrenos hasta ahora es 183 ppm.</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+      <span class="session-label" style="margin-bottom:0">Inicio oposición</span>
+      <input type="date" class="date-input" id="fisico-oposicion-start-input" onchange="updateOposicionStart(this.value)">
+    </div>
   </div>
 
   <div class="fisico-card" style="overflow:hidden">
@@ -848,19 +826,18 @@ function newBloqueId(){return 'bl'+Date.now().toString(36)+Math.random().toStrin
 // ========== FÍSICO / ZONAS FC ==========
 function getFisico(){const m=getMeta();return m.fisico||{};}
 function saveFisico(f){const m=getMeta();m.fisico={...getFisico(),...f};saveMeta(m);}
+// Solo dos zonas de referencia, calculadas siempre desde la FC máxima de
+// Físico — nunca hardcodeadas. El resto de FC (series a tope, recuperación)
+// no tiene zona definida a propósito: no hace falta para el objetivo actual.
 const FC_ZONES = [
-  {z:1, from:0.50, to:0.60, label:'Z1 · Recuperación', color:'var(--blue2)'},
-  {z:2, from:0.60, to:0.70, label:'Z2 · Aeróbico suave', color:'var(--green)'},
-  {z:3, from:0.70, to:0.80, label:'Z3 · Aeróbico', color:'var(--amber)'},
-  {z:4, from:0.80, to:0.90, label:'Z4 · Umbral', color:'var(--orange)'},
-  {z:5, from:0.90, to:2.00, label:'Z5 · Máximo', color:'var(--red)'}
+  {key:'facil', from:0.70, to:0.79, label:'Rodaje fácil', badgeCls:'zone-green'},
+  {key:'umbral', from:0.84, to:0.90, label:'Tempo / umbral', badgeCls:'zone-orange'}
 ];
 function getFcZone(fc){
   const fcMax = getFisico().fcMax;
   if(!fcMax || fc==null || isNaN(fc))return null;
   const pct = fc/fcMax;
-  for(const zone of FC_ZONES){if(pct<zone.to || zone.z===5)return zone;}
-  return FC_ZONES[FC_ZONES.length-1];
+  return FC_ZONES.find(zone=>pct>=zone.from && pct<=zone.to) || null;
 }
 
 // ========== SEED APPLY (histórico, idempotente) ==========
@@ -1111,7 +1088,10 @@ function renderEntrenoContent(){
     container.innerHTML = refHtml + renderTramosBlock() + renderExtraFieldsBlock(existing);
     tramoRowSeq = 0;
     document.getElementById('tramos-list').innerHTML = '';
-    (existing?.tramos||[]).forEach(t=>addTramoRow(t.dist, formatTimeForInput(t.time), t.rec!=null?formatTimeForInput(t.rec):''));
+    (existing?.tramos||[]).forEach(t=>{
+      const paceSecs = (t.dist>0 && t.time!=null) ? t.time/(t.dist/1000) : null;
+      addTramoRow(t.dist, paceSecs!=null?formatPace(paceSecs):'', t.rec!=null?formatTimeForInput(t.rec):'');
+    });
     attachExtraFieldsListeners();
   } else if(currentType==='rodaje'){
     container.innerHTML = refHtml + renderRodajeBlock(existing) + renderExtraFieldsBlock(existing);
@@ -1141,15 +1121,23 @@ function renderExtraFieldsBlock(existing){
     </div>
   </div>`;
 }
+// El indicador verde/naranja solo tiene sentido en rodaje (es la única zona
+// de FC definida como "fácil"); en series/test la FC de esfuerzo no cae en
+// ninguna de las dos zonas de Físico a propósito, así que no se muestra.
 function attachExtraFieldsListeners(){
   const out = document.getElementById('fc-zone-out');
   const el = document.getElementById('extra-fcmedia');
   if(!out||!el)return;
   const upd=()=>{
+    if(currentType!=='rodaje'){out.innerHTML='';return;}
     const v = parseFloat(el.value);
+    if(isNaN(v)){out.innerHTML='';return;}
+    const fcMax = getFisico().fcMax;
+    if(!fcMax){out.innerHTML = '<span style="font-size:11px;color:var(--text3)">Configura tu FC máx en Físico para ver la zona</span>';return;}
     const zone = getFcZone(v);
-    if(!zone){out.innerHTML = isNaN(v) ? '' : '<span style="font-size:11px;color:var(--text3)">Configura tu FC máx en Físico para ver la zona</span>';return;}
-    out.innerHTML = `<span class="zone-badge zone-${zone.z}">● ${zone.label}</span>`;
+    out.innerHTML = zone
+      ? `<span class="zone-badge zone-green">● ${zone.label}</span>`
+      : `<span class="zone-badge zone-orange">● Fuera de zona fácil</span>`;
   };
   el.addEventListener('input',upd);
   upd();
@@ -1165,14 +1153,14 @@ function renderTramosBlock(){
     </div>
     <div class="block-body">
       <div style="display:flex;gap:8px;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">
-        <span style="width:64px">Dist (m)</span><span style="width:76px">Tiempo</span><span style="width:66px">Rec</span>
+        <span style="width:64px">Dist (m)</span><span style="width:76px">Ritmo /km</span><span style="width:66px">Rec</span>
       </div>
       <div id="tramos-list"></div>
       <button class="add-btn" onclick="addTramoRow()">+ Añadir tramo</button>
     </div>
   </div>`;
 }
-function addTramoRow(dist,time,rec){
+function addTramoRow(dist,pace,rec){
   const list = document.getElementById('tramos-list');
   const rowId = 'tramo-'+(tramoRowSeq++);
   const div = document.createElement('div');
@@ -1180,7 +1168,7 @@ function addTramoRow(dist,time,rec){
   div.id = rowId;
   div.innerHTML = `
     <input type="number" class="serie-input" style="width:64px" placeholder="m" value="${dist!=null?dist:''}" onblur="this.value=this.value?roundDist100(parseFloat(this.value)):''">
-    <input type="text" class="serie-input" style="width:76px" placeholder="mm:ss" value="${time!=null?time:''}">
+    <input type="text" class="serie-input" style="width:76px" placeholder="mm:ss" value="${pace!=null?pace:''}">
     <input type="text" class="serie-input" style="width:66px" placeholder="rec" value="${rec!=null?rec:''}">
     <button class="del-btn" onclick="document.getElementById('${rowId}').remove()">✕</button>
   `;
@@ -1189,27 +1177,16 @@ function addTramoRow(dist,time,rec){
 
 function renderRodajeBlock(existing){
   const distVal = existing?.distKm!=null ? existing.distKm : '';
-  const timeVal = existing?.time!=null ? formatTimeForInput(existing.time) : '';
+  const paceVal = (existing?.distKm>0 && existing?.time!=null) ? formatPace(existing.time/existing.distKm) : '';
   return `<div class="block-card">
     <div class="block-header"><div class="block-title-group"><div class="block-title">Rodaje</div><div class="block-value">Tirada continua</div></div></div>
     <div class="block-body">
       <div class="simple-input-row"><span class="serie-label">Distancia</span><input type="number" step="0.1" min="0" class="serie-input" id="rodaje-dist" placeholder="km" value="${distVal}"></div>
-      <div class="simple-input-row"><span class="serie-label">Tiempo</span><input type="text" class="serie-input" id="rodaje-time" placeholder="mm:ss" value="${timeVal}"></div>
-      <div class="simple-input-row"><span class="serie-label">Ritmo</span><span id="rodaje-pace-out" style="font-weight:700;color:var(--accent);font-size:14px">—</span></div>
+      <div class="simple-input-row"><span class="serie-label">Ritmo</span><input type="text" class="serie-input" id="rodaje-pace" placeholder="mm:ss /km" value="${paceVal}"></div>
     </div>
   </div>`;
 }
-function attachRodajeListeners(){
-  const upd = ()=>{
-    const dist = parseFloat(document.getElementById('rodaje-dist').value);
-    const time = parseTime(document.getElementById('rodaje-time').value);
-    const out = document.getElementById('rodaje-pace-out');
-    out.textContent = (dist>0 && time!=null) ? formatPace(time/dist)+' /km' : '—';
-  };
-  document.getElementById('rodaje-dist').addEventListener('input',upd);
-  document.getElementById('rodaje-time').addEventListener('input',upd);
-  upd();
-}
+function attachRodajeListeners(){}
 
 function renderTestBlock(existing){
   const timeVal = existing?.time!=null ? formatTimeForInput(existing.time) : '';
@@ -1258,16 +1235,17 @@ function saveSession(){
     session.tramos = rows.map(r=>{
       const inputs = r.querySelectorAll('input');
       const dist = roundDist100(parseFloat(inputs[0].value));
-      const time = parseTime(inputs[1].value);
+      const pace = parseTime(inputs[1].value); // ritmo mm:ss /km introducido
       const rec = inputs[2].value ? parseTime(inputs[2].value) : null;
+      const time = (dist>0 && pace!=null) ? Math.round(pace*dist/1000) : null;
       return {dist,time,rec};
     }).filter(t=>t.dist>0 && t.time!=null);
     if(!session.tramos.length){showToast('Añade al menos un tramo');return;}
   } else if(currentType==='rodaje'){
     const dist = parseFloat(document.getElementById('rodaje-dist').value);
-    const time = parseTime(document.getElementById('rodaje-time').value);
-    if(!(dist>0)||time==null){showToast('Completa distancia y tiempo');return;}
-    session.distKm = dist; session.time = time;
+    const pace = parseTime(document.getElementById('rodaje-pace').value);
+    if(!(dist>0)||pace==null){showToast('Completa distancia y ritmo');return;}
+    session.distKm = dist; session.time = Math.round(pace*dist);
   } else if(currentType==='test'){
     const time = parseTime(document.getElementById('test-time').value);
     if(time==null){showToast('Introduce el tiempo');return;}
@@ -1303,10 +1281,6 @@ function getRecordTestTime(){
   const all = getData().filter(s=>s.type==='test').map(s=>s.time).filter(t=>t!=null);
   return all.length?Math.min(...all):null;
 }
-function getRecordRodajePace(){
-  const all = getData().filter(s=>s.type==='rodaje' && s.distKm>0 && s.time!=null).map(s=>s.time/s.distKm);
-  return all.length?Math.min(...all):null;
-}
 
 // ========== HISTORIAL ==========
 function filterHistory(t,el){historyFilter=t;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderHistory();}
@@ -1338,8 +1312,11 @@ function renderHistory(){
       }
     }
     if(s.fcMedia!=null){
-      const zone = getFcZone(s.fcMedia);
-      const zoneHtml = zone ? ` · <span class="zone-badge zone-${zone.z}" style="margin:0">${zone.label}</span>` : '';
+      let zoneHtml = '';
+      if(s.type==='rodaje' && getFisico().fcMax){
+        const zone = getFcZone(s.fcMedia);
+        zoneHtml = zone ? ` · <span class="zone-badge zone-green" style="margin:0">${zone.label}</span>` : ` · <span class="zone-badge zone-orange" style="margin:0">Fuera de zona fácil</span>`;
+      }
       bodyContent += `<div class="history-row"><span class="history-row-name">FC media</span><span class="history-row-val">${s.fcMedia} ppm${zoneHtml}</span></div>`;
     }
     if(s.fcMax!=null)bodyContent += `<div class="history-row"><span class="history-row-name">FC máx</span><span class="history-row-val">${s.fcMax} ppm</span></div>`;
@@ -1394,7 +1371,6 @@ function setProgressBloque(id,el){
 function renderEtapaProgreso(){
   const bloqueEl = document.getElementById('etapa-progreso-bloque');
   const diasEl = document.getElementById('etapa-progreso-dias');
-  const inputEl = document.getElementById('etapa-progreso-start-input');
   if(!bloqueEl)return;
   const today = todayStr();
   const bloque = getBloqueForDate(today);
@@ -1408,7 +1384,6 @@ function renderEtapaProgreso(){
   } else {
     diasEl.textContent = '—';
   }
-  if(inputEl)inputEl.value = start;
 }
 function renderProgreso(){
   renderEtapaProgreso();
@@ -1436,6 +1411,14 @@ function renderProgreso(){
   renderProgresoCharts(start);
   renderBaremoProgreso();
   renderProyeccion();
+}
+
+// —— Baremo y nota: desplegable colapsado por defecto, altura 0 cuando cerrado ——
+function toggleBaremoProgreso(){
+  const body = document.getElementById('baremo-progreso-body');
+  const chevron = document.getElementById('baremo-progreso-chevron');
+  const open = body.classList.toggle('open');
+  if(chevron)chevron.style.transform = open ? 'rotate(90deg)' : '';
 }
 
 // —— Baremo y nota: 100% reactivo a meta.baremo, nada hardcodeado ——
@@ -1492,12 +1475,17 @@ function renderBaremoProgreso(){
 // —— Proyección: regresión lineal simple sobre los tests, orientativa ——
 function renderProyeccion(){
   const body = document.getElementById('proyeccion-body');
-  if(!body)return;
   const tests = getData().filter(s=>s.type==='test'&&s.time!=null).sort((a,b)=>a.date.localeCompare(b.date));
+  renderProyeccionChart(tests);
+  if(!body)return;
+  const disclaimer = '<div style="font-size:11px;color:var(--text3);line-height:1.4;margin-top:8px">Estimación orientativa basada en la tendencia de tus tests — no es una promesa, solo una proyección lineal simple.'
+    + (tests.length<4 ? ' Con menos de 4 tests todavía no es fiable.' : '') + '</div>';
   if(tests.length<2){
-    body.innerHTML = '<div class="empty-state" style="padding:20px 8px">Necesitas al menos 2 tests para estimar una tendencia</div>';
+    body.innerHTML = '<div class="empty-state" style="padding:20px 8px">Necesitas al menos 2 tests para estimar una tendencia</div>' + disclaimer;
     return;
   }
+  const b = getBaremo();
+  const pts8 = b.find(r=>r.pts===8);
   const t0 = new Date(tests[0].date+'T12:00:00').getTime();
   const pts = tests.map(s=>({x:(new Date(s.date+'T12:00:00').getTime()-t0)/(86400000), y:s.time}));
   const n = pts.length;
@@ -1511,7 +1499,7 @@ function renderProyeccion(){
   if(slope>=0){
     body.innerHTML = `<div class="test-info-card" style="margin-bottom:0;background:rgba(255,255,255,0.03)">
       <div class="test-info-row"><span class="lbl">Tendencia</span><span class="val" style="color:var(--text3)">Sin mejora clara todavía</span></div>
-    </div>`;
+    </div>` + disclaimer;
     return;
   }
   const secsPerMonth = -slope*30;
@@ -1519,14 +1507,47 @@ function renderProyeccion(){
     if(lastTime<=targetSecs)return 0;
     return Math.ceil((targetSecs-lastTime)/slope);
   };
-  const eta306 = lastTime>186 ? addDays(lastTest.date, etaDays(186)) : null;
-  const eta254 = lastTime>174 ? addDays(lastTest.date, etaDays(174)) : null;
-  body.innerHTML = `<div class="test-info-card" style="margin-bottom:10px;background:rgba(255,255,255,0.03)">
+  const eta8 = pts8 && lastTime>pts8.max ? addDays(lastTest.date, etaDays(pts8.max)) : null;
+  const objetivo10 = getObjetivoSecs();
+  const eta10 = lastTime>objetivo10 ? addDays(lastTest.date, etaDays(objetivo10)) : null;
+  body.innerHTML = `<div class="test-info-card" style="margin-bottom:0;background:rgba(255,255,255,0.03)">
       <div class="test-info-row"><span class="lbl">Mejora media</span><span class="val" style="color:var(--green)">-${secsPerMonth.toFixed(1)} s/mes</span></div>
-      <div class="test-info-row"><span class="lbl">Estimado para 3:06 (8 pts)</span><span class="val">${eta306?formatDate(eta306):'ya alcanzado'}</span></div>
-      <div class="test-info-row"><span class="lbl">Estimado para 2:54 (10 pts)</span><span class="val">${eta254?formatDate(eta254):'ya alcanzado'}</span></div>
-    </div>
-    <div style="font-size:11px;color:var(--text3);line-height:1.4">Estimación orientativa basada en la tendencia de tus tests — no es una promesa, solo una proyección lineal simple.</div>`;
+      <div class="test-info-row"><span class="lbl">Estimado para ${pts8?formatTimeForInput(pts8.max):'—'} (8 pts)</span><span class="val">${eta8?formatDate(eta8):'ya alcanzado'}</span></div>
+      <div class="test-info-row"><span class="lbl">Estimado para ${formatTimeForInput(objetivo10)} (10 pts)</span><span class="val">${eta10?formatDate(eta10):'ya alcanzado'}</span></div>
+    </div>` + disclaimer;
+}
+// Chart de la proyección: tests reales + línea de tendencia (regresión lineal)
+// + dos referencias horizontales (8 y 10 puntos, leídas del baremo).
+function renderProyeccionChart(tests){
+  const id = 'chart-proyeccion';
+  const canvas = document.getElementById(id);
+  if(!canvas)return;
+  if(tests.length<2){
+    if(charts[id]){charts[id].destroy();delete charts[id];}
+    canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
+    return;
+  }
+  const t0 = new Date(tests[0].date+'T12:00:00').getTime();
+  const xs = tests.map(s=>(new Date(s.date+'T12:00:00').getTime()-t0)/86400000);
+  const ys = tests.map(s=>s.time);
+  const n = xs.length;
+  const sumX = xs.reduce((a,x)=>a+x,0), sumY = ys.reduce((a,y)=>a+y,0);
+  const sumXY = xs.reduce((a,x,i)=>a+x*ys[i],0), sumXX = xs.reduce((a,x)=>a+x*x,0);
+  const denom = n*sumXX - sumX*sumX;
+  const slope = denom!==0 ? (n*sumXY - sumX*sumY)/denom : 0;
+  const intercept = (sumY - slope*sumX)/n;
+  const trend = xs.map(x=>slope*x+intercept);
+  const b = getBaremo();
+  const pts8 = b.find(r=>r.pts===8);
+  const val10 = getObjetivoSecs();
+  const labels = tests.map(s=>formatDate(s.date));
+  const datasets = [
+    {data:ys, color:'#ffd60a', label:'Tiempo'},
+    {data:trend, color:'#6ea8ff', dashed:true, label:'Tendencia'}
+  ];
+  if(pts8)datasets.push({data:labels.map(()=>pts8.max), color:'#ff6b00', dashed:true, label:'8 pts'});
+  datasets.push({data:labels.map(()=>val10), color:'#b6ff2e', dashed:true, label:'10 pts'});
+  renderLineChart(id, labels, datasets, formatTime, true);
 }
 const cOpts = (tickFormatter,reverseY,showLegend)=>({
   responsive:true,
@@ -1567,31 +1588,17 @@ function renderBarChart(id, labels, data, color){
 
 function renderProgresoCharts(start){
   const filtered = getFilteredData(start);
-  const objetivoSecs = getObjetivoSecs();
-
-  const testSessions = filtered.filter(s=>s.type==='test'&&s.time!=null).sort((a,b)=>a.date.localeCompare(b.date));
-  renderLineChart('chart-1000',
-    testSessions.map(s=>formatDate(s.date)),
-    [
-      {data:testSessions.map(s=>s.time), color:'#ffd60a', label:'Tiempo'},
-      {data:testSessions.map(()=>objetivoSecs), color:'#b6ff2e', dashed:true, label:'Objetivo '+formatTimeForInput(objetivoSecs)}
-    ], formatTime, true);
-
   const rodajeSessions = filtered.filter(s=>s.type==='rodaje'&&s.time!=null&&s.distKm>0).sort((a,b)=>a.date.localeCompare(b.date));
-  renderLineChart('chart-rodaje-pace', rodajeSessions.map(s=>formatDate(s.date)), [
-    {data:rodajeSessions.map(s=>s.time/s.distKm), color:'#b6ff2e', label:'Ritmo'}
-  ], formatPace, true);
-  renderBarChart('chart-rodaje-vol', rodajeSessions.map(s=>formatDate(s.date)), rodajeSessions.map(s=>s.distKm), '#b6ff2e');
 
   renderFcRodajeChart(rodajeSessions);
   renderWeeklyVolumeChart(filtered);
   renderCadenciaChart(filtered);
 }
 
-// FC media en rodaje con banda sombreada de la zona 2 (aeróbico suave, 60-70%
-// FCmax) — construida con dos líneas invisibles + fill:'-1' entre ellas (sin
-// plugin de anotaciones externo). Sin FC máx configurada en Físico, cae al
-// rango 135-150 del plan original como referencia razonable.
+// FC media en rodaje con banda sombreada de la zona "Rodaje fácil" (70-79%
+// FCmax, ver FC_ZONES) — construida con dos líneas invisibles + fill:'-1'
+// entre ellas (sin plugin de anotaciones externo). Sin FC máx configurada en
+// Físico, cae al rango 135-150 del plan original como referencia razonable.
 function renderFcRodajeChart(rodajeSessions){
   const withFc = rodajeSessions.filter(s=>s.fcMedia!=null);
   const id = 'chart-fc-rodaje';
@@ -1599,10 +1606,11 @@ function renderFcRodajeChart(rodajeSessions){
   const ctx = document.getElementById(id).getContext('2d');
   const labels = withFc.map(s=>formatDate(s.date));
   const fcMax = getFisico().fcMax;
-  const bandLow = fcMax ? Math.round(fcMax*0.60) : 135;
-  const bandHigh = fcMax ? Math.round(fcMax*0.70) : 150;
+  const facil = FC_ZONES.find(z=>z.key==='facil');
+  const bandLow = fcMax ? Math.round(fcMax*facil.from) : 135;
+  const bandHigh = fcMax ? Math.round(fcMax*facil.to) : 150;
   const lblEl = document.getElementById('fc-rodaje-band-lbl');
-  if(lblEl)lblEl.textContent = `Z2 · ${bandLow}-${bandHigh}`;
+  if(lblEl)lblEl.textContent = `${facil.label} · ${bandLow}-${bandHigh}`;
   charts[id] = new Chart(ctx,{
     type:'line',
     data:{labels, datasets:[
@@ -1647,7 +1655,9 @@ function renderWeeklyVolumeChart(filtered){
   });
 }
 
-// Cadencia media por sesión, separando rodaje de series.
+// Cadencia media por sesión, separando rodaje de series, con línea de
+// referencia horizontal en 165 pasos/min (objetivo) para leer la tendencia
+// de un vistazo.
 function renderCadenciaChart(filtered){
   const withCad = filtered.filter(s=>s.cadencia!=null).sort((a,b)=>a.date.localeCompare(b.date));
   const dates = [...new Set(withCad.map(s=>s.date))].sort();
@@ -1658,7 +1668,8 @@ function renderCadenciaChart(filtered){
   });
   renderLineChart('chart-cadencia', dates.map(d=>formatDate(d)), [
     {data:dates.map(d=>rodajeMap[d]!=null?rodajeMap[d]:null), color:'#b6ff2e', label:'Rodaje'},
-    {data:dates.map(d=>seriesMap[d]!=null?seriesMap[d]:null), color:'#2979ff', label:'Series'}
+    {data:dates.map(d=>seriesMap[d]!=null?seriesMap[d]:null), color:'#2979ff', label:'Series'},
+    {data:dates.map(()=>165), color:'#ffffff88', dashed:true, label:'Objetivo 165'}
   ], v=>v+' p/min', false);
 }
 
@@ -1704,20 +1715,6 @@ function onProgScroll(){
 }
 function updateProgDots(idx){
   document.querySelectorAll('#prog-dots .corpo-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
-}
-
-function goRecSlide(idx){
-  const c=document.getElementById('rec-carousel');
-  c.scrollTo({left:c.offsetWidth*idx,behavior:'smooth'});
-  updateRecDots(idx);
-}
-function onRecScroll(){
-  const c=document.getElementById('rec-carousel');
-  const idx=Math.round(c.scrollLeft/c.offsetWidth);
-  updateRecDots(idx);
-}
-function updateRecDots(idx){
-  document.querySelectorAll('#rec-dots .corpo-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
 }
 
 function goObjSlide(idx){
@@ -1821,22 +1818,22 @@ function renderNextTestInfo(){
     document.getElementById('last-test-result').textContent = 'Sin tests aún';
   }
 }
+// Marcas personales: solo 3 datos de un vistazo. El % de cercanía y la nota
+// se leen siempre de meta.baremo (nunca hardcodeados), así que si se edita
+// el baremo en Ajustes estos números cambian solos.
 function renderRecordsInfo(){
   const record = getRecordTestTime();
   document.getElementById('pr-1000').textContent = formatTime(record);
-  const pace = getRecordRodajePace();
-  document.getElementById('pr-rodaje').textContent = pace!=null ? formatPace(pace)+' /km' : '—';
-  const objetivo = getObjetivoSecs();
-  const lblEl = document.getElementById('pr-objetivo-lbl');
-  if(lblEl)lblEl.textContent = formatTimeForInput(objetivo);
+  const objetivoSecs = getObjetivoSecs(); // segundos del 10, leídos del baremo
   const pctEl = document.getElementById('pr-objetivo-pct');
+  const notaEl = document.getElementById('pr-nota-actual');
   if(record!=null){
-    const pct = (objetivo-record)/objetivo*100;
-    pctEl.textContent = (pct>=0?'+':'')+pct.toFixed(1)+'%';
-    pctEl.style.color = pct>=0 ? 'var(--green)' : 'var(--red)';
+    const pct = Math.round(objetivoSecs/record*100);
+    pctEl.textContent = pct+'%';
+    notaEl.textContent = getBaremoForTime(record).pts+'/10';
   } else {
     pctEl.textContent = '—';
-    pctEl.style.color = '';
+    notaEl.textContent = '—';
   }
 }
 function renderBaremo(){
@@ -1992,8 +1989,10 @@ function renderFisicoScreen(){
   const f = getFisico();
   const pesoEl = document.getElementById('fisico-peso');
   const fcMaxEl = document.getElementById('fisico-fcmax');
+  const startEl = document.getElementById('fisico-oposicion-start-input');
   if(pesoEl)pesoEl.value = f.peso!=null ? f.peso : '';
   if(fcMaxEl)fcMaxEl.value = f.fcMax!=null ? f.fcMax : '';
+  if(startEl)startEl.value = getMeta().oposicionStart || '2026-09-01';
   renderFisicoZonas();
 }
 function renderFisicoZonas(){
@@ -2045,8 +2044,11 @@ function exportCSV(){
   const rows=[['Fecha','Tipo','Datos']];
   getData().forEach(s=>{
     let info='';
-    if(s.type==='cortas'||s.type==='largas')info=(s.tramos||[]).map(t=>`${t.dist}m:${formatTime(t.time)}${t.rec!=null?`(rec ${formatTime(t.rec)})`:''}`).join(' / ');
-    else if(s.type==='rodaje')info=`${s.distKm!=null?s.distKm:'—'}km en ${formatTime(s.time)}`;
+    if(s.type==='cortas'||s.type==='largas')info=(s.tramos||[]).map(t=>{
+      const pace=(t.dist>0&&t.time!=null)?formatPace(t.time/(t.dist/1000))+'/km':'—';
+      return `${t.dist}m:${pace}${t.rec!=null?`(rec ${formatTime(t.rec)})`:''}`;
+    }).join(' / ');
+    else if(s.type==='rodaje')info=`${s.distKm!=null?s.distKm:'—'}km @ ${(s.distKm>0&&s.time!=null)?formatPace(s.time/s.distKm)+'/km':'—'}`;
     else if(s.type==='test'){
       const b=s.time!=null?getBaremoForTime(s.time):null;
       info=`${formatTime(s.time)}${b?` (${b.pts}/10)`:''}${s.split1!=null?` · 1º:${formatTime(s.split1)}`:''}${s.split2!=null?` · 2º:${formatTime(s.split2)}`:''}`;
@@ -2069,6 +2071,17 @@ migrateData();
 if(!getMeta().seedAplicado){
   applySeedData();
   const m = getMeta();m.seedAplicado = true;saveMeta(m);
+}
+// Peso 73 kg / FC máx 190 ppm de partida — solo rellena lo que falte, nunca
+// pisa lo que el usuario ya haya editado en Físico.
+{
+  const finit = getFisico();
+  if(finit.peso==null || finit.fcMax==null){
+    saveFisico({
+      peso: finit.peso!=null ? finit.peso : 73,
+      fcMax: finit.fcMax!=null ? finit.fcMax : 190
+    });
+  }
 }
 document.getElementById('entreno-date-input').value = todayStr();
 currentSessionDate = todayStr();
