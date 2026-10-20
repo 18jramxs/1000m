@@ -314,6 +314,16 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
 .modal-btn:active{transform:scale(0.97);}
 .modal-btn.primary{background:#fff;color:#000;box-shadow:0 6px 14px rgba(255,255,255,0.10);}
 .modal-btn.secondary{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text2);}
+.modal-note{font-size:12.5px;color:var(--text2);line-height:1.5;margin-bottom:14px;}
+
+/* —— AVISOS DE SISTEMA (actualización, recordatorio de backup) —— */
+.sys-banner-top,.sys-banner-bottom{position:fixed;left:50%;width:calc(100% - 32px);max-width:420px;z-index:300;background:rgba(14,14,18,0.82);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);border:1px solid var(--border-2);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;font-size:12.5px;font-weight:600;color:var(--text2);box-shadow:var(--shadow-card);opacity:0;pointer-events:none;transition:opacity 0.3s var(--ease-out-soft), transform 0.3s var(--ease-out-soft);}
+.sys-banner-top{top:calc(env(safe-area-inset-top) + 10px);transform:translateX(-50%) translateY(-14px);}
+.sys-banner-bottom{bottom:86px;transform:translateX(-50%) translateY(14px);}
+.sys-banner-top.show,.sys-banner-bottom.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+.sys-banner-text{flex:1;min-width:0;}
+.sys-banner-btn{background:#fff;color:#000;border:none;border-radius:var(--r-xs);padding:7px 12px;font-size:11.5px;font-weight:800;cursor:pointer;flex-shrink:0;font-family:inherit;}
+.sys-banner-close{background:none;border:none;color:var(--text3);font-size:15px;cursor:pointer;padding:2px 4px;flex-shrink:0;line-height:1;}
 
 /* —— SETTINGS —— */
 .settings-group{margin-bottom:12px;overflow:hidden;}
@@ -723,9 +733,158 @@ finish review, the verdict, and DESIGN.md.
   </div>
 </div>
 
+<div class="sys-banner-top" id="export-reminder-banner">
+  <span class="sys-banner-text" id="export-reminder-text"></span>
+  <button class="sys-banner-btn" onclick="exportFromReminder()">EXPORTAR</button>
+  <button class="sys-banner-close" onclick="dismissExportReminder()" aria-label="Cerrar">✕</button>
+</div>
+
+<div class="sys-banner-bottom" id="update-banner">
+  <span class="sys-banner-text">Hay una versión nueva</span>
+  <button class="sys-banner-btn" onclick="reloadForUpdate()">ACTUALIZAR</button>
+</div>
+
+<div class="modal-bg" id="restore-backup-modal">
+  <div class="modal">
+    <div class="modal-title">Backup disponible</div>
+    <div class="modal-note">No hay datos, pero hay una copia de seguridad del <span id="restore-backup-stamp"></span>.</div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="dismissRestoreOffer()">Empezar vacío</button>
+      <button class="modal-btn primary" onclick="restoreFromBackup()">Restaurar</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+// ========== VERSIÓN Y BACKUPS ==========
+const APP_VERSION = 1;
+const APP_BUILD_DATE = '20 oct 2026 14:01';
+
+const IDB_NAME = 'm1000_backups_db';
+const IDB_STORE = 'snapshots';
+const IDB_MAX = 10;
+const MONTH_ABBR_LC = ['ene','feb','mar','abr','may','jun','jul','ago','sept','oct','nov','dic'];
+
+function openBackupDB(){
+  return new Promise((resolve,reject)=>{
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = ()=>{
+      const db = req.result;
+      if(!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE,{keyPath:'id',autoIncrement:true});
+    };
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+function snapshotAllLocalStorage(){
+  const data = {};
+  for(let i=0;i<localStorage.length;i++){ const k = localStorage.key(i); data[k] = localStorage.getItem(k); }
+  return data;
+}
+// Guarda una copia completa de localStorage en IndexedDB. Llamar con un motivo
+// descriptivo antes de cualquier migración futura que toque la forma de los datos
+// (p.ej. writeBackupSnapshot('antes-de-migracion-x')) para poder deshacerla si falla.
+function writeBackupSnapshot(reason){
+  return openBackupDB().then(db=>new Promise(resolve=>{
+    const snapshot = { ts: Date.now(), reason: reason||'auto', data: snapshotAllLocalStorage() };
+    const tx = db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).add(snapshot);
+    tx.oncomplete = ()=>pruneOldBackups(db).then(resolve).catch(resolve);
+    tx.onerror = ()=>resolve();
+  })).catch(()=>{});
+}
+function pruneOldBackups(db){
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_STORE,'readwrite');
+    const store = tx.objectStore(IDB_STORE);
+    const req = store.getAll();
+    req.onsuccess = ()=>{
+      const all = req.result || [];
+      if(all.length > IDB_MAX){
+        all.sort((a,b)=>a.ts-b.ts);
+        all.slice(0, all.length-IDB_MAX).forEach(item=>store.delete(item.id));
+      }
+      resolve();
+    };
+    req.onerror = ()=>reject(req.error);
+  });
+}
+function getLatestBackup(){
+  return openBackupDB().then(db=>new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_STORE,'readonly');
+    const req = tx.objectStore(IDB_STORE).getAll();
+    req.onsuccess = ()=>{
+      const all = req.result || [];
+      if(!all.length) return resolve(null);
+      all.sort((a,b)=>b.ts-a.ts);
+      resolve(all[0]);
+    };
+    req.onerror = ()=>reject(req.error);
+  })).catch(()=>null);
+}
+function formatBackupStamp(ts){
+  const d = new Date(ts);
+  const pad = n=>String(n).padStart(2,'0');
+  return `${d.getDate()} ${MONTH_ABBR_LC[d.getMonth()]} a las ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// Cada escritura en localStorage programa (con un pequeño debounce) una copia
+// completa en IndexedDB, un almacén aparte que sobrevive aunque localStorage
+// se borre (p.ej. al reinstalar la PWA en iOS, que fue la causa de la pérdida
+// de datos que motivó todo este sistema).
+(function setupAutoBackup(){
+  const proto = Object.getPrototypeOf(localStorage);
+  const nativeSetItem = proto.setItem;
+  let timer = null;
+  proto.setItem = function(key, value){
+    nativeSetItem.call(this, key, value);
+    clearTimeout(timer);
+    timer = setTimeout(()=>writeBackupSnapshot('auto'), 800);
+  };
+})();
+
+function checkBackupRestoreOffer(){
+  if(localStorage.length > 0) return;
+  getLatestBackup().then(backup=>{
+    if(!backup) return;
+    document.getElementById('restore-backup-stamp').textContent = formatBackupStamp(backup.ts);
+    window._pendingRestoreBackup = backup;
+    document.getElementById('restore-backup-modal').classList.add('open');
+  });
+}
+function restoreFromBackup(){
+  const backup = window._pendingRestoreBackup;
+  if(!backup) return;
+  Object.keys(backup.data).forEach(k=>localStorage.setItem(k, backup.data[k]));
+  closeModal('restore-backup-modal');
+  location.reload();
+}
+function dismissRestoreOffer(){
+  closeModal('restore-backup-modal');
+}
+
+function checkExportReminder(){
+  const lastTs = parseInt(localStorage.getItem('m1000_last_export_ts')||'0',10);
+  const days = lastTs ? Math.floor((Date.now()-lastTs)/86400000) : null;
+  if(days !== null && days < 7) return;
+  const today = todayStr();
+  if(localStorage.getItem('m1000_export_reminder_seen') === today) return;
+  const msg = days===null ? 'Nunca se ha hecho un backup' : `Hace ${days} días del último backup`;
+  document.getElementById('export-reminder-text').textContent = msg;
+  document.getElementById('export-reminder-banner').classList.add('show');
+}
+function dismissExportReminder(){
+  localStorage.setItem('m1000_export_reminder_seen', todayStr());
+  document.getElementById('export-reminder-banner').classList.remove('show');
+}
+function exportFromReminder(){
+  dismissExportReminder();
+  exportJSON();
+}
+function reloadForUpdate(){ location.reload(); }
+
 // ========== CONFIG ==========
 // Baremo Promo 42 — editable
 const BAREMO_DEFAULT = [
@@ -2040,17 +2199,38 @@ function updateFisico(){
 function showToast(msg,cls){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(cls||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
 
 // ========== I/O ==========
-function exportJSON(){const all={sessions:getData(),meta:getMeta(),agenda:getAgenda()};const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='1000m-backup.json';a.click();showToast('Backup exportado ✓','green');}
+function exportJSON(){
+  const payload = { app:'1000m', appVersion:APP_VERSION, exportedAt:new Date().toISOString(), data:snapshotAllLocalStorage() };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+  const d = new Date();
+  const pad = n=>String(n).padStart(2,'0');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `1000m-backup-${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}.json`;
+  a.click();
+  localStorage.setItem('m1000_last_export_ts', String(Date.now()));
+  showToast('Backup exportado ✓','green');
+}
 function handleImport(e){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
     try{
       const p=JSON.parse(ev.target.result);
-      if(p.sessions){saveData(p.sessions);saveMeta(p.meta||{});if(p.agenda)saveAgendaData(p.agenda);}
-      else saveData(p);
+      let data = p.data;
+      if(!data && (p.sessions || Array.isArray(p))){
+        // Compatibilidad con el formato de export antiguo (solo sessions/meta/agenda).
+        const sessions = p.sessions || p;
+        data = { m1000_sessions: JSON.stringify(sessions) };
+        if(p.meta) data.m1000_meta = JSON.stringify(p.meta);
+        if(p.agenda) data.m1000_agenda = JSON.stringify(p.agenda);
+      }
+      if(!data) throw new Error('formato desconocido');
+      if(!confirm('Esto sobrescribirá todos los datos actuales con los del archivo importado. ¿Continuar?')) return;
+      Object.keys(data).forEach(k=>localStorage.setItem(k, data[k]));
       migrateData();
-      showToast('Importado ✓','green');renderHistory();
+      showToast('Importado ✓','green');
+      setTimeout(()=>location.reload(), 500);
     }catch{showToast('Error al importar');}
   };
   r.readAsText(f);e.target.value='';
@@ -2078,10 +2258,13 @@ function clearAllData(){
   localStorage.removeItem('m1000_sessions');
   localStorage.removeItem('m1000_meta');
   localStorage.removeItem('m1000_agenda');
+  // Marca explícita para no ofrecer restaurar el backup justo después de un borrado intencional.
+  localStorage.setItem('m1000_cleared_at', String(Date.now()));
   showToast('Datos borrados');setTimeout(()=>location.reload(),700);
 }
 
 // ========== INIT ==========
+checkBackupRestoreOffer();
 migrateData();
 if(!getMeta().seedAplicado){
   applySeedData();
@@ -2110,15 +2293,21 @@ if(suggested){
   if(btn)setTimeout(()=>btn.click(),80);
 }
 
-// document.lastModified es la fecha de mtime del archivo servido — sin
-// llevar la cuenta a mano, y sirve para detectar una copia cacheada vieja.
+checkExportReminder();
+
 const luEl = document.getElementById('app-last-updated');
-if(luEl){
-  const lm = new Date(document.lastModified);
-  if(!isNaN(lm)){
-    const pad = n=>String(n).padStart(2,'0');
-    luEl.textContent = `Actualizado ${pad(lm.getDate())}/${pad(lm.getMonth()+1)}/${lm.getFullYear()} · ${pad(lm.getHours())}:${pad(lm.getMinutes())}`;
-  }
+if(luEl) luEl.textContent = `v${APP_VERSION} · ${APP_BUILD_DATE}`;
+
+// ========== SERVICE WORKER ==========
+if('serviceWorker' in navigator){
+  let hadController = !!navigator.serviceWorker.controller;
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(!hadController){ hadController = true; return; }
+    document.getElementById('update-banner').classList.add('show');
+  });
 }
 </script>
 </body>
