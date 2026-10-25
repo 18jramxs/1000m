@@ -11,7 +11,10 @@
       "green": { "role": "secondary", "displayName": "Rodaje Volt Lime", "canonical": "#b6ff2e", "tonalRamp": ["#2e3a08","#465609","#5f720c","#7f9613","#a3c11c","#b6ff2e","#c8ff5e","#e0ffa0"] },
       "orange": { "role": "tertiary", "displayName": "Velocidad Orange", "canonical": "#ff6b00", "tonalRamp": ["#4d2000","#662b00","#803600","#994100","#cc5700","#ff6b00","#ff8f3d","#ffbf8a"] },
       "amber": { "role": "tertiary", "displayName": "Test Amber", "canonical": "#ffd60a", "tonalRamp": ["#4d4000","#665500","#806a00","#998000","#cca800","#ffd60a","#ffe14d","#fff0a3"] },
-      "red": { "role": "negative", "displayName": "Danger Red", "canonical": "#ff453a", "tonalRamp": ["#4d1512","#661c17","#80231d","#992a23","#cc3830","#ff453a","#ff7169","#ffaba6"] }
+      "red": { "role": "negative", "displayName": "Danger Red", "canonical": "#ff453a", "tonalRamp": ["#4d1512","#661c17","#80231d","#992a23","#cc3830","#ff453a","#ff7169","#ffaba6"] },
+      "ink-black": { "role": "neutral", "displayName": "Ink Black", "canonical": "#000000", "tonalRamp": ["#000000","#000000","#000000","#000000","#1a1a1a","#333333","#4d4d4d","#666666"] },
+      "overlay-black": { "role": "neutral", "displayName": "Overlay Black", "canonical": "rgba(0,0,0,0.6)" },
+      "shadow-black": { "role": "neutral", "displayName": "Shadow Black", "canonical": "rgba(0,0,0,0.3)" }
     },
     "typographyMeta": {
       "display": { "displayName": "Display (Bebas Neue)", "purpose": "Today-hero title, PR/stat values, plan-day titles, few-points big numbers — oversized Bebas Neue, never dense data." },

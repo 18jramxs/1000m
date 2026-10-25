@@ -16,6 +16,9 @@ colors:
   red: "#ff453a"
   amber: "#ffd60a"
   orange: "#ff6b00"
+  ink-black: "#000000"
+  overlay-black: "rgba(0,0,0,0.6)"
+  shadow-black: "rgba(0,0,0,0.3)"
 typography:
   display:
     fontFamily: "Bebas Neue, Anton, SF Pro Display, system-ui, sans-serif"
@@ -43,6 +46,9 @@ rounded:
   md: "20px"
   lg: "26px"
   pill: "100px"
+  chip: "6px"
+  icon-tile: "11px"
+  tip: "2px-5px"
 spacing:
   screen-pad: "0 16px 8px"
   header-height: "56px"
@@ -98,6 +104,11 @@ The material is near-black frosted glass everywhere: translucent white-on-black 
 - **Amber** (`#ffd60a`): test 1.000 — same roles; the test-evolution chart's line and target marker.
 - **Red** (`#ff453a`): the one negative/destructive color — delete actions, the Peligro section, negative resumen deltas. This is the one color explicitly carried over from the estudio-style build rather than re-derived, because gym-tracker's own red is the same hue family and the user specifically named "el rojo de ELIMINAR" as worth keeping.
 - **Void** (`#050507`) / **Card glass** (`rgba(255,255,255,0.045)`) / **Text ladder** (`#fff` / `.62` / `.54`): identical to gym-tracker's own tokens, unmodified.
+- **Ink black** (`#000000`): the text color on every inverted "selected/active/primary" surface — `.save-btn`, `.metric-btn.active`, `.hist-tab.active`, `.toggle-row button[aria-pressed="true"]`, `.sheet-actions .primary`. Always paired with a white fill, never used standalone; this is gym-tracker's own invert-to-white convention, reproduced verbatim at every one of its call sites.
+- **Overlay black** (`rgba(0,0,0,0.6)`) / **Shadow black** (`rgba(0,0,0,0.3)`): the bottom-sheet backdrop and the nav-indicator's ambient shadow component respectively — both literal gym-tracker values, not new additions.
+
+### Named Rules
+**The Invert-to-White Rule.** Every selected/active/primary surface (segmented control, filter pills, toggle rows, the save CTA, the primary sheet action) inverts to solid white fill + ink-black text rather than tinting toward an accent color — ported verbatim from gym-tracker, where this is the one universal "this is chosen/primary" signal.
 
 ### Named Rules
 **The One-Header Rule.** Exactly one `.app-header` exists per screen render, `position:fixed`, solid `var(--bg)` fill, sized by `env(safe-area-inset-top)`. Any title that lives inside scrolling content (settings-group eyebrows, chart labels) is never fixed or sticky — it scrolls normally. Two headers fighting for the same strip of screen is the defect this rule exists to prevent.
@@ -127,11 +138,11 @@ Single-column mobile stack (`.wrap`, `max-width:460px`), top-padded by `env(safe
 
 ## Elevation & Depth
 
-Tonal glass layering plus a small shadow vocabulary, identical to gym-tracker: `shadow-card` (default card rest state), `shadow-card-lg` (today-hero, bottom sheet, toast), `shadow-nav` (the floating bottom-nav only). The bottom-nav's sliding indicator carries an intentional colored glow (`0 0 16px -6px rgba(182,255,46,0.16)`) — a verbatim port of gym-tracker's own nav-indicator treatment, not a generic "AI glow" to be flattened.
+Tonal glass layering plus a small shadow vocabulary, identical to gym-tracker: `shadow-card` (default card rest state), `shadow-card-lg` (today-hero, bottom sheet, toast), `shadow-nav` (the floating bottom-nav only). The bottom-nav's sliding indicator carries an intentional colored glow (`0 0 16px -6px rgba(182,255,46,0.16)`) — a verbatim port of gym-tracker's own nav-indicator treatment, not a generic "AI glow" to be flattened. That same indicator also transitions its `width` alongside `transform` (`cubic-bezier(0.34,1.56,0.64,1)`, a deliberately springy/bounce curve) — both the bounce easing and the width animation are literal gym-tracker source, needed because the pill must resize to match whichever nav button it's sliding under, not just translate. The faint fixed dot-grain (`body::after`, `radial-gradient(... 1px, transparent 1px)` tiled `3px 3px`) is gym-tracker's own "kill the banding" texture, also ported verbatim — not a decorative grid to be removed.
 
 ## Shapes
 
-Four radius steps, identical values and names to gym-tracker: `10px` (`--r-xs`, inputs), `14px` (`--r-sm`, small buttons/toggles), `20px` (`--r`, default cards and the primary CTA), `26px` (`--r-lg`, today-hero and the bottom-sheet's top corners), plus a `100px` pill for the nav and segmented controls. Borders are always 1px hairlines at `.08–.14` opacity.
+Four radius steps, identical values and names to gym-tracker: `10px` (`--r-xs`, inputs), `14px` (`--r-sm`, small buttons/toggles), `20px` (`--r`, default cards and the primary CTA), `26px` (`--r-lg`, today-hero and the bottom-sheet's top corners), plus a `100px` pill for the nav and segmented controls. Borders are always 1px hairlines at `.08–.14` opacity. Three more values are literal gym-tracker tokens kept outside that main scale because gym-tracker itself keeps them outside it: `6px` (`.hist-chip`, the small meta-chip inside a collapsible session/week header), `11px` (the settings-row icon-tile square), and a `2px–5px` "tip" range for the few decorative micro-details sized to their own element's height rather than the card/button scale — the bar-chart taper (`6px 6px 2px 2px`), the caída-de-series progress-pill (`5px`, half its own `10px` height), and the bottom-sheet's drag handle (`3px` on a `36×5px` bar).
 
 ## Components
 
