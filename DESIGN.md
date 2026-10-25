@@ -56,6 +56,7 @@ rounded:
   lg: "22px"
   md: "18px"
   sm: "12px"
+  tip: "3px"
 spacing:
   screen-gap: "22px"
   card-pad: "15px-17px"
@@ -142,7 +143,7 @@ Flat glass + blur does all the depth work; there is no separate drop-shadow voca
 
 ## Shapes
 
-Four radius steps, all larger than the retired system's: `12px` (inputs, small chips), `18px` (buttons, icon tiles), `22px` (default cards), `28px` (the bottom sheet's top corners), plus a `999px` pill for the tab bar and segmented controls. Borders are always 1px hairlines at `.085` opacity.
+Four radius steps, all larger than the retired system's: `12px` (inputs, small chips), `18px` (buttons, icon tiles), `22px` (default cards), `28px` (the bottom sheet's top corners), plus a `999px` pill for the tab bar and segmented controls. Borders are always 1px hairlines at `.085` opacity. A fifth, much smaller `3px` "tip" radius is used only for two decorative micro-details ported verbatim from `kit-componentes.html`'s own `.bar`/drag-handle recipes: the tapered bottom corners of a bar-chart bar (`7px 7px 3px 3px` — the top stays on the card-shape scale, only the resting-on-the-axis bottom corners get the tiny taper) and the bottom-sheet's pill-shaped drag handle (`36×5px` bar). This is not a card/button radius and isn't meant to join that scale — it's a fixed micro-detail, same as in the ported kit.
 
 ## Components
 
