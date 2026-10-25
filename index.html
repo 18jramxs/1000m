@@ -71,6 +71,11 @@ body::before{
     radial-gradient(58% 32% at 112% 20%, color-mix(in srgb,var(--halo) 12%,transparent), transparent 70%);
   transition:background .5s var(--ease);
 }
+/* tapa sólida de la franja de la barra de estado — nada debe pintarse por encima */
+body::after{
+  content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
+  background:var(--bg);z-index:50;pointer-events:none;
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 .wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:22px;}
@@ -80,6 +85,8 @@ body::before{
 
 .label{font-size:var(--t-label);font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--fg-3);margin:0;}
 h2.sec{font-size:var(--t-label);font-weight:600;letter-spacing:.17em;text-transform:uppercase;color:var(--fg-3);margin:0;}
+/* cabecera de pantalla — pegada bajo la barra de estado, nunca debajo */
+.scr-head{position:sticky;top:env(safe-area-inset-top,0px);padding:12px 0 2px;background:var(--bg);z-index:10;}
 
 .glass{
   position:relative;background:var(--glass-bg);
@@ -119,6 +126,11 @@ button{font-family:inherit;}
 .hoy-head{position:relative;padding:4px 2px 0;}
 .hoy-tipo{font-family:var(--font-cond);font-weight:700;font-size:clamp(30px,9vw,40px);
   letter-spacing:-.01em;line-height:1.02;margin-top:6px;text-transform:uppercase;color:var(--c);}
+.hoy-tipo-sm{font-family:var(--font-cond);font-weight:700;font-size:22px;
+  letter-spacing:-.005em;line-height:1.1;margin-top:4px;text-transform:uppercase;color:var(--c);}
+.proximo-box{padding:15px 17px;}
+.proximo-dia{font-size:14px;font-weight:700;color:var(--fg);margin-top:7px;}
+.proximo-notacion{margin-top:4px;font-size:13px;color:var(--fg-2);font-family:var(--font-cond);font-weight:600;}
 .notacion{margin-top:10px;font-family:var(--font-cond);font-weight:600;font-size:19px;
   color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
 .notacion svg{width:15px;height:15px;color:var(--fg-3);flex:none;}
@@ -252,15 +264,33 @@ button{font-family:inherit;}
 .zona-warn{font-size:11.5px;color:#FFB020;margin-top:6px;line-height:1.45;}
 
 /* ---- AJUSTES ---- */
-.plan-week{padding:13px 17px;}
+.plan-week{padding:14px 17px 16px;}
 .plan-week+.plan-week{border-top:1px solid var(--glass-border);}
-.plan-week-lbl{font-size:11px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
-.plan-row{display:flex;align-items:center;gap:7px;margin-bottom:6px;flex-wrap:wrap;}
-.plan-row .pd{font-size:11px;color:var(--fg-3);width:62px;flex:none;}
-.settings-row{display:flex;align-items:center;gap:12px;padding:14px 17px;cursor:pointer;}
+.plan-week-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.plan-week-lbl{font-size:11px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;}
+.plan-del-btn{font-size:10.5px;color:var(--c-danger);background:none;border:0;cursor:pointer;
+  font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px;flex:none;}
+.plan-type-row{display:flex;align-items:flex-end;gap:10px;margin-top:13px;}
+.plan-type-row:first-of-type{margin-top:0;}
+.plan-type-lbl{font-size:12.5px;font-weight:700;color:var(--fg-2);width:66px;flex:none;padding-bottom:9px;}
+.plan-fields{display:flex;gap:6px;flex-wrap:wrap;}
+.plan-field{display:flex;flex-direction:column;gap:4px;}
+.plan-field-lbl{font-size:8.5px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.06em;font-weight:700;text-align:center;}
+.plan-field-row{display:flex;align-items:center;gap:3px;}
+.plan-field input{width:52px;text-align:center;padding:8px 2px;font-size:13px;}
+.plan-field .unit{font-size:10px;color:var(--fg-3);flex:none;}
+.plan-notacion{margin:7px 0 0 76px;font-size:12px;color:var(--fg-3);font-family:var(--font-cond);font-weight:600;}
+.settings-group{margin-bottom:12px;}
+.settings-group-title{font-size:10px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.09em;padding:0 2px 8px;font-weight:800;}
+.settings-row{display:flex;align-items:center;gap:12px;padding:13px 17px;cursor:pointer;}
 .settings-row+.settings-row{border-top:1px solid var(--glass-border);}
 .settings-row span{flex:1;font-size:14px;font-weight:600;}
 .settings-row.danger span{color:var(--c-danger);}
+.settings-row .state{flex:none;font-size:11.5px;color:var(--fg-3);font-variant-numeric:tabular-nums;font-weight:600;}
+.settings-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);}
+.settings-footer{text-align:center;padding:22px 0 6px;font-size:10.5px;color:var(--fg-3);letter-spacing:.04em;}
+.settings-footer div{margin-top:4px;font-size:9.5px;opacity:.7;}
 
 /* ---- INPUTS ---- */
 .campo,select.campo,textarea.campo{
@@ -344,6 +374,7 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-variant-nume
   box-shadow:0 0 20px -4px color-mix(in srgb,var(--halo) 80%,transparent),inset 0 1px 0 rgba(255,255,255,.22);}
 
 .empty{padding:28px 16px;text-align:center;color:var(--fg-3);font-size:13px;}
+.empty-mini{padding:2px 0 4px;font-size:12.5px;color:var(--fg-3);line-height:1.4;}
 </style>
 </head>
 <body>
@@ -355,14 +386,14 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-variant-nume
 
   <!-- HISTORIAL -->
   <section id="screen-historial" class="screen">
-    <h2 class="sec">Historial</h2>
+    <div class="scr-head"><h2 class="sec">Historial</h2></div>
     <div class="glass seg" id="hist-filter"></div>
     <div class="glass" id="hist-list"></div>
   </section>
 
   <!-- PROGRESO -->
   <section id="screen-progreso" class="screen">
-    <h2 class="sec">Progreso</h2>
+    <div class="scr-head"><h2 class="sec">Progreso</h2></div>
     <div class="glass pr-grid" id="pr-grid" style="display:grid"></div>
     <div id="chart-test"></div>
     <div id="chart-caida"></div>
@@ -375,7 +406,7 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-variant-nume
 
   <!-- FISICO -->
   <section id="screen-fisico" class="screen">
-    <h2 class="sec">Físico</h2>
+    <div class="scr-head"><h2 class="sec">Físico</h2></div>
     <div id="fisico-fcmax"></div>
     <div id="fisico-fcreposo"></div>
     <div id="fisico-peso"></div>
@@ -384,9 +415,12 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-variant-nume
 
   <!-- AJUSTES -->
   <section id="screen-ajustes" class="screen">
-    <h2 class="sec">Ajustes</h2>
+    <div class="scr-head"><h2 class="sec">Ajustes</h2></div>
     <div id="ajustes-plan"></div>
-    <div class="glass" id="ajustes-datos"></div>
+    <div id="ajustes-datos"></div>
+    <div id="ajustes-prefs"></div>
+    <div id="ajustes-peligro"></div>
+    <div class="settings-footer">1000 M TRACKER · POR JO$E<div id="app-version"></div></div>
   </section>
 
 </div>
@@ -503,6 +537,9 @@ function persist(){
   saveJSON('m1000_peso', DB.peso);
   saveJSON('m1000_pref', DB.pref);
 }
+
+const APP_VERSION = 1;
+const APP_BUILD_DATE = '25 oct 2026';
 
 const TIPOS = {
   series:{label:'Series de ritmo', color:'var(--c-series)', dot:'#2E8BFF'},
@@ -647,17 +684,19 @@ function renderHoy(){
   const tipoMeta = TIPOS[def.tipo];
 
   if(def.tipo==='descanso'){
-    const ayerDef = getSessionDef(addDays(fecha,-1));
-    const mananaDef = getSessionDef(addDays(fecha,1));
+    const next = nextTrainingDate(fecha);
+    const nextMeta = TIPOS[next.def.tipo];
     el.innerHTML = `
+      <div class="scr-head"><p class="label">${fmtDateLong(fecha)}</p></div>
       <div class="hoy-head">
-        <p class="label">${fmtDateLong(fecha)}</p>
-        <h1 class="hoy-tipo" style="--c:var(--c-neutral)">Descanso</h1>
+        <h1 class="hoy-tipo-sm" style="--c:var(--c-neutral)">Descanso</h1>
       </div>
-      <div class="glass descanso-box">
-        <div>Ayer: ${compactNotation(ayerDef)}</div>
-        <div>Mañana: ${compactNotation(mananaDef)}</div>
+      <div class="glass proximo-box">
+        <div class="label">Próximo entreno</div>
+        <div class="proximo-dia">${fmtDateLong(next.fecha)} · ${nextMeta.label}</div>
+        <div class="proximo-notacion">${compactNotation(next.def)}</div>
       </div>
+      ${renderEstaSemanaBox(fecha)}
       ${renderAgendaSection()}
     `;
     bindAgendaToggle();
@@ -666,8 +705,8 @@ function renderHoy(){
 
   const pitidos = (def.tipo==='series'||def.tipo==='velocidad') ? pitidoSeg(def) : null;
   el.innerHTML = `
+    <div class="scr-head"><p class="label">${fmtDateLong(fecha)}</p></div>
     <div class="hoy-head">
-      <p class="label">${fmtDateLong(fecha)}</p>
       <h1 class="hoy-tipo" style="--c:${tipoMeta.color}">${tipoMeta.label}</h1>
       <div class="notacion" onclick="toggleRitmoView()">
         <span>${compactNotation(def)}</span>
@@ -725,6 +764,36 @@ function renderAgendaSection(){
       <div class="agenda-body" id="agenda-body">${weeks}</div>
     </div>
   `;
+}
+function nextTrainingDate(fromDate){
+  let d = addDays(fromDate,1);
+  for(let i=0;i<14;i++){
+    const def = getSessionDef(d);
+    if(def.tipo!=='descanso') return {fecha:d, def};
+    d = addDays(d,1);
+  }
+  return {fecha:d, def:{tipo:'descanso'}};
+}
+function renderEstaSemanaBox(fecha){
+  const week = getWeekForDate(fecha);
+  if(!week) return '';
+  const today = fecha;
+  const dias = [['Lun', week.lunes], ['Mié', addDays(week.lunes,2)], ['Vie', addDays(week.lunes,4)]];
+  const rows = dias.map(([lbl,d])=>{
+    const def = getSessionDef(d);
+    const meta = TIPOS[def.tipo] || {dot:'var(--fg-3)', label:'—'};
+    const done = DB.sesiones.some(s=>s.fecha===d && s.tipo===def.tipo);
+    let status;
+    if(d===today) status='HOY';
+    else if(d>today) status='';
+    else status = done ? 'Hecho' : 'Sin registrar';
+    return `<div class="agenda-day ${d===today?'today':''}">
+      <span class="dot" style="background:${meta.dot}"></span>
+      <span class="t">${lbl} · ${meta.label}</span>
+      <span class="st">${status}</span>
+    </div>`;
+  }).join('');
+  return `<div class="glass" style="padding:15px 17px"><div class="label">Esta semana</div><div style="margin-top:8px">${rows}</div></div>`;
 }
 
 /* ============================================================
@@ -1069,7 +1138,7 @@ function svgLine(points, opts){
 function fewPointsHTML(points, opts){
   opts = opts||{};
   const fmt = opts.fmt || (v=>v);
-  if(points.length===0) return `<div class="empty">Sin datos todavía</div>`;
+  if(points.length===0) return `<div class="empty-mini">${opts.emptyText||'Aparece con tu primer registro'}</div>`;
   if(points.length===1){
     return `<div class="few-points"><div class="fp-item"><b>${fmt(points[0].y)}</b><span>${points[0].label}</span></div></div>`;
   }
@@ -1145,7 +1214,7 @@ function renderChartTest(){
 }
 function renderChartCaida(){
   const sesiones = DB.sesiones.filter(s=>s.tipo==='series' && s.tiempos && s.tiempos.length>1).sort((a,b)=>a.fecha<b.fecha?-1:1).slice(-6);
-  if(!sesiones.length){ document.getElementById('chart-caida').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Caída de series</span></div><div class="empty">Sin datos todavía</div></div>`; return; }
+  if(!sesiones.length){ document.getElementById('chart-caida').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Caída de series</span></div><div class="empty-mini">Aparece con tu primera sesión de series</div></div>`; return; }
   const vals = sesiones.map(s=>s.tiempos[0]-s.tiempos[s.tiempos.length-1]);
   const max = Math.max(...vals, 1);
   const rows = sesiones.map((s,i)=>{
@@ -1169,7 +1238,7 @@ function renderChartCaida(){
 function renderChartRitmo130(){
   const sesiones = DB.sesiones.filter(s=>s.tipo==='rodaje' && s.ritmo130!=null).sort((a,b)=>a.fecha<b.fecha?-1:1);
   const points = sesiones.map(s=>({y:s.ritmo130, label:fmtDateShort(s.fecha)}));
-  const chart = adaptiveChart(points, {fmt:v=>secToPace(v), betterLower:true, color:'#22D37A', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s'});
+  const chart = adaptiveChart(points, {fmt:v=>secToPace(v), betterLower:true, color:'#22D37A', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s', emptyText:'Aparece con tu primer rodaje'});
   document.getElementById('chart-ritmo130').innerHTML = `
     <div class="glass chart-card">
       <div class="chead"><span class="ct">Ritmo a 130 ppm</span><span class="cs">motor aeróbico</span></div>
@@ -1179,7 +1248,7 @@ function renderChartRitmo130(){
 function renderChartVelocidad(){
   const sesiones = DB.sesiones.filter(s=>s.tipo==='velocidad' && s.tiempos && s.tiempos.length).sort((a,b)=>a.fecha<b.fecha?-1:1);
   const points = sesiones.map(s=>({y:Math.min(...s.tiempos), media:s.tiempos.reduce((a,b)=>a+b,0)/s.tiempos.length, label:fmtDateShort(s.fecha)}));
-  const chart = adaptiveChart(points, {fmt:secToTime, betterLower:true, color:'#FF9F1C', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s'});
+  const chart = adaptiveChart(points, {fmt:secToTime, betterLower:true, color:'#FF9F1C', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s', emptyText:'Aparece con tu primera sesión de 200'});
   const list = points.slice(-5).reverse().map(p=>`<div class="detail-row"><span class="k">${p.label}</span><span class="v">mejor ${secToTime(p.y)} · media ${secToTime(p.media)}</span></div>`).join('');
   document.getElementById('chart-velocidad').innerHTML = `
     <div class="glass chart-card">
@@ -1196,7 +1265,7 @@ function renderChartCadencia(){
   }));
   const totalPts = series.reduce((a,s)=>a+s.points.length,0);
   if(totalPts<2){
-    document.getElementById('chart-cadencia').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Cadencia</span></div><div class="empty">Sin datos todavía</div></div>`;
+    document.getElementById('chart-cadencia').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Cadencia</span></div><div class="empty-mini">Aparece cuando registres la primera sesión</div></div>`;
     return;
   }
   const w=320,h=130,pad=14,min=140,max=200;
@@ -1238,7 +1307,7 @@ function renderChartCarga(){
     return {lbl:fmtDateShort(w.lunes).split(' ')[0], volumen, densidad};
   });
   if(!data.some(d=>d.volumen>0)){
-    document.getElementById('chart-carga').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Carga</span></div><div class="empty">Sin datos todavía</div></div>`;
+    document.getElementById('chart-carga').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Carga</span></div><div class="empty-mini">Aparece con tu primera sesión de series</div></div>`;
     return;
   }
   const maxVol = Math.max(...data.map(d=>d.volumen),1);
@@ -1337,7 +1406,7 @@ function renderFisico(){
   document.getElementById('fisico-peso').innerHTML = fisicoBlock('peso','Peso','kg');
 
   const fcmax = DB.fcmax.length ? DB.fcmax[DB.fcmax.length-1].valor : null;
-  let zonasHTML = `<div class="empty">Añade una FC máxima para calcular las zonas</div>`;
+  let zonasHTML = `<div class="empty-mini" style="padding:14px 17px">Añade una FC máxima para calcular las zonas</div>`;
   if(fcmax){
     const ranges = zonasFromFCMax(fcmax);
     const names = ['Recuperación','Rodaje fácil','Medio','Umbral','Máximo'];
@@ -1380,40 +1449,100 @@ function removePlanWeek(idx){
   persist();
   renderAjustes();
 }
+function planField(idx, field, sub, value, width, onchangeType){
+  const parse = onchangeType==='int' ? 'parseInt(this.value,10)' : (onchangeType==='float' ? 'parseFloat(this.value)' : 'this.value');
+  const inputType = onchangeType==='text' ? '' : 'type="number"';
+  return `<input class="campo" style="width:${width}px" ${inputType} value="${value}" onchange="planUpdate(${idx},'${field}','${sub}',${parse})">`;
+}
 function renderAjustes(){
   document.getElementById('ajustes-plan').innerHTML = `
-    <div class="glass">
-      ${DB.plan.map((w,i)=>`
-        <div class="plan-week">
-          <div class="plan-week-lbl">Semana del ${fmtDateShort(w.lunes)}</div>
-          <div class="plan-row"><span class="pd">Series</span>
-            <input class="campo" style="width:50px" type="number" value="${w.series.n}" onchange="planUpdate(${i},'series','n',parseInt(this.value,10))">
-            <input class="campo" style="width:60px" type="number" value="${w.series.dist}" onchange="planUpdate(${i},'series','dist',parseFloat(this.value))">
-            <input class="campo" style="width:60px" value="${w.series.ritmo}" onchange="planUpdate(${i},'series','ritmo',this.value)">
-            <input class="campo" style="width:60px" value="${w.series.rec}" onchange="planUpdate(${i},'series','rec',this.value)">
+    <div class="settings-group">
+      <div class="settings-group-title">Plan</div>
+      <div class="glass">
+        ${DB.plan.map((w,i)=>`
+          <div class="plan-week">
+            <div class="plan-week-top">
+              <div class="plan-week-lbl">Semana del ${fmtDateShort(w.lunes)}</div>
+              <button class="plan-del-btn" onclick="removePlanWeek(${i})">Eliminar</button>
+            </div>
+
+            <div class="plan-type-row">
+              <div class="plan-type-lbl">Series</div>
+              <div class="plan-fields">
+                <div class="plan-field"><span class="plan-field-lbl">Series</span>${planField(i,'series','n',w.series.n,46,'int')}</div>
+                <div class="plan-field"><span class="plan-field-lbl">Dist</span><div class="plan-field-row">${planField(i,'series','dist',w.series.dist,50,'float')}<i class="unit">m</i></div></div>
+                <div class="plan-field"><span class="plan-field-lbl">Ritmo</span><div class="plan-field-row">${planField(i,'series','ritmo',w.series.ritmo,50,'text')}<i class="unit">/km</i></div></div>
+                <div class="plan-field"><span class="plan-field-lbl">Rec</span>${planField(i,'series','rec',w.series.rec,50,'text')}</div>
+              </div>
+            </div>
+            <div class="plan-notacion">${compactNotation({tipo:'series', ...w.series})}</div>
+
+            <div class="plan-type-row">
+              <div class="plan-type-lbl">Rodaje</div>
+              <div class="plan-fields">
+                <div class="plan-field"><span class="plan-field-lbl">Min</span><div class="plan-field-row">${planField(i,'rodaje','dur',w.rodaje.dur,46,'float')}<i class="unit">'</i></div></div>
+                <div class="plan-field"><span class="plan-field-lbl">Rectas</span>${planField(i,'rodaje','rectas',w.rodaje.rectas,46,'int')}</div>
+              </div>
+            </div>
+            <div class="plan-notacion">${compactNotation({tipo:'rodaje', ...w.rodaje})}</div>
+
+            <div class="plan-type-row">
+              <div class="plan-type-lbl">Velocidad</div>
+              <div class="plan-fields">
+                <div class="plan-field"><span class="plan-field-lbl">Series</span>${planField(i,'velocidad','n',w.velocidad.n,46,'int')}</div>
+                <div class="plan-field"><span class="plan-field-lbl">Dist</span><div class="plan-field-row">${planField(i,'velocidad','dist',w.velocidad.dist,50,'float')}<i class="unit">m</i></div></div>
+                <div class="plan-field"><span class="plan-field-lbl">Ritmo</span><div class="plan-field-row">${planField(i,'velocidad','ritmo',w.velocidad.ritmo,50,'text')}<i class="unit">/km</i></div></div>
+                <div class="plan-field"><span class="plan-field-lbl">Rec</span>${planField(i,'velocidad','rec',w.velocidad.rec,50,'text')}</div>
+              </div>
+            </div>
+            <div class="plan-notacion">${compactNotation({tipo:'velocidad', ...w.velocidad})}</div>
           </div>
-          <div class="plan-row"><span class="pd">Rodaje</span>
-            <input class="campo" style="width:60px" type="number" value="${w.rodaje.dur}" onchange="planUpdate(${i},'rodaje','dur',parseFloat(this.value))">
-            <input class="campo" style="width:60px" type="number" value="${w.rodaje.rectas}" onchange="planUpdate(${i},'rodaje','rectas',parseInt(this.value,10))">
-          </div>
-          <div class="plan-row"><span class="pd">Velocidad</span>
-            <input class="campo" style="width:50px" type="number" value="${w.velocidad.n}" onchange="planUpdate(${i},'velocidad','n',parseInt(this.value,10))">
-            <input class="campo" style="width:60px" type="number" value="${w.velocidad.dist}" onchange="planUpdate(${i},'velocidad','dist',parseFloat(this.value))">
-            <input class="campo" style="width:60px" value="${w.velocidad.ritmo}" onchange="planUpdate(${i},'velocidad','ritmo',this.value)">
-            <input class="campo" style="width:60px" value="${w.velocidad.rec}" onchange="planUpdate(${i},'velocidad','rec',this.value)">
-          </div>
-          <button class="btn-ghost tap" style="margin-top:8px;padding:8px 12px;border-radius:var(--r-sm);font-size:12px" onclick="removePlanWeek(${i})">Eliminar semana</button>
-        </div>
-      `).join('')}
-      <div style="padding:13px 17px"><button class="btn-glow tap" style="--c:var(--c-ajustes);width:100%;padding:12px;border-radius:var(--r-md);font-weight:700;font-size:13px" onclick="addPlanWeek()">Añadir semana</button></div>
+        `).join('')}
+        <div style="padding:13px 17px"><button class="btn-glow tap" style="--c:var(--c-ajustes);width:100%;padding:12px;border-radius:var(--r-md);font-weight:700;font-size:13px" onclick="addPlanWeek()">Añadir semana</button></div>
+      </div>
     </div>
   `;
   document.getElementById('ajustes-datos').innerHTML = `
-    <div class="settings-row tap" onclick="exportData()"><span>Exportar datos</span></div>
-    <div class="settings-row tap" onclick="document.getElementById('import-file').click()"><span>Importar datos</span></div>
-    <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importData(this.files[0])">
-    <div class="settings-row danger tap" onclick="resetData()"><span>Borrar todos los datos</span></div>
+    <div class="settings-group">
+      <div class="settings-group-title">Datos</div>
+      <div class="glass">
+        <div class="settings-row tap" onclick="exportData()">
+          <div class="settings-icon" style="background:rgba(46,139,255,.08);border-color:rgba(46,139,255,.22)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-series)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+          <span>Exportar datos</span>
+        </div>
+        <div class="settings-row tap" onclick="document.getElementById('import-file').click()">
+          <div class="settings-icon" style="background:rgba(34,211,122,.08);border-color:rgba(34,211,122,.22)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-rodaje)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <span>Importar datos</span>
+        </div>
+        <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importData(this.files[0])">
+      </div>
+    </div>
   `;
+  document.getElementById('ajustes-prefs').innerHTML = `
+    <div class="settings-group">
+      <div class="settings-group-title">Preferencias</div>
+      <div class="glass">
+        <div class="settings-row tap" onclick="toggleRitmoView()">
+          <div class="settings-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg></div>
+          <span>Mostrar ritmo como</span>
+          <span class="state">${DB.pref.ritmo==='pace'?'Ritmo':'Tiempo'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('ajustes-peligro').innerHTML = `
+    <div class="settings-group">
+      <div class="settings-group-title">Peligro</div>
+      <div class="glass">
+        <div class="settings-row danger tap" onclick="resetData()">
+          <div class="settings-icon" style="background:rgba(255,59,78,.08);border-color:rgba(255,59,78,.22)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-danger)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></div>
+          <span>Borrar todos los datos</span>
+        </div>
+      </div>
+    </div>
+  `;
+  const verEl = document.getElementById('app-version');
+  if(verEl) verEl.textContent = `v${APP_VERSION} · ${APP_BUILD_DATE}`;
 }
 function exportData(){
   const blob = new Blob([JSON.stringify({sesiones:DB.sesiones, plan:DB.plan, fcmax:DB.fcmax, fcreposo:DB.fcreposo, peso:DB.peso, pref:DB.pref}, null, 2)], {type:'application/json'});
