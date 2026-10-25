@@ -7,393 +7,409 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="1000 m Tracker">
-<meta name="theme-color" content="#030304">
+<meta name="theme-color" content="#050507">
 <title>1000 m Tracker</title>
+
+<!-- Bebas Neue — mismo sistema visual que gym-tracker -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
 <style>
 /* ============================================================
-   1000 M TRACKER — v4
-   Noviembre en adelante: tres sesiones fijas (series/rodaje/velocidad)
-   + test el primer viernes de mes. Sistema visual portado de
-   kit-componentes.html (estudio tracker): negro profundo, cristal
-   con filo de luz, halo de color por sección, número grande sobre
-   el fondo, tab bar flotante.
+   1000 M TRACKER — v5
+   Tema portado tal cual del gym-tracker (Liquid Glass × Apple
+   Fitness × Nike): mismos tokens, mismos componentes. De la etapa
+   "estudio" solo se conservan tres cosas, re-tematizadas: las
+   tarjetas de Físico, las filas de Historial (punto + chevron) y
+   el rojo de ELIMINAR en Ajustes.
    ============================================================ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
 
 :root{
-  --bg:#030304;
-  --glass-bg:rgba(255,255,255,.035);
-  --glass-bg-hi:rgba(255,255,255,.07);
-  --glass-border:rgba(255,255,255,.085);
-  --glass-blur:blur(30px) saturate(118%);
+  --bg:#050507; --bg-2:#0a0a0c; --bg-3:#131318;
+  --bg-card:rgba(255,255,255,0.045); --bg-card-2:rgba(255,255,255,0.07);
+  --bg-input:rgba(255,255,255,0.06); --bg-glass-strong:rgba(20,20,26,0.55);
 
-  --c-series:#2E8BFF;
-  --c-rodaje:#22D37A;
-  --c-velocidad:#FF9F1C;
-  --c-test:#FFD60A;
-  --c-danger:#FF3B4E;
-  --c-neutral:#8E9BAE;
-  --c-ajustes:#6C7A89;
+  --border:rgba(255,255,255,0.08); --border-2:rgba(255,255,255,0.14); --border-3:rgba(255,255,255,0.22);
 
-  --fg:#FFFFFF;
-  --fg-2:rgba(255,255,255,.60);
-  --fg-3:rgba(255,255,255,.34);
+  --text:#ffffff; --text-2:rgba(255,255,255,0.62); --text-3:rgba(255,255,255,0.54); --text-4:rgba(255,255,255,0.18);
 
-  --r-xl:28px; --r-lg:22px; --r-md:18px; --r-sm:12px; --r-pill:999px;
+  --blue:#2979ff; --blue2:#6ea8ff; --blue-bg:rgba(41,121,255,0.13);
+  --green:#b6ff2e; --green-bg:rgba(182,255,46,0.12);
+  --red:#ff453a; --red-bg:rgba(255,69,58,0.12);
+  --amber:#ffd60a; --amber-bg:rgba(255,214,10,0.12);
+  --orange:#ff6b00; --orange-bg:rgba(255,107,0,0.13);
+  --pink:#ff2d92; --cyan:#5ac8fa;
 
-  --font:'Archivo',system-ui,-apple-system,sans-serif;
-  --font-cond:'Archivo Narrow','Archivo',system-ui,sans-serif;
-  --t-label:11px;
+  /* tipos de sesión — mapeados a los acentos del gym-tracker */
+  --c-series:var(--blue); --c-rodaje:var(--green); --c-velocidad:var(--orange); --c-test:var(--amber); --c-danger:var(--red);
 
-  --ease:cubic-bezier(.32,.72,0,1);
-  --halo:var(--c-series);
+  --glass:blur(28px) saturate(180%); --glass-strong:blur(44px) saturate(200%);
+
+  --r-xs:10px; --r-sm:14px; --r:20px; --r-lg:26px; --r-pill:100px;
+
+  --shadow-card:0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+  --shadow-card-lg:0 18px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);
+  --shadow-nav:0 14px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);
+
+  --font-sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Segoe UI",sans-serif;
+  --font-disp:"Bebas Neue","Anton","SF Pro Display",system-ui,sans-serif;
+  --font-mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,monospace;
+
+  --ease-out-soft:cubic-bezier(0.22,1,0.36,1); --ease-pop:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1); --ease-drawer:cubic-bezier(0.32,0.72,0,1);
   color-scheme:dark;
 }
 
-html{overflow-x:hidden;}
+html,body{background:var(--bg);}
 body{
-  background:var(--bg);color:var(--fg);
-  font-family:var(--font);min-height:100vh;line-height:1.5;
-  overflow-x:hidden;max-width:100vw;
-  padding-left:max(18px,env(safe-area-inset-left,0px));
-  padding-right:max(18px,env(safe-area-inset-right,0px));
-  padding-block:20px 130px;
-  -webkit-font-smoothing:antialiased;
-  position:relative;
+  color:var(--text);font-family:var(--font-sans);font-size:15px;min-height:100vh;
+  padding-bottom:100px;-webkit-font-smoothing:antialiased;position:relative;
 }
+
+/* mesh de fondo estático — igual que gym-tracker, sin recolor por pestaña */
 body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  content:"";position:fixed;inset:-4%;
   background:
-    radial-gradient(100% 48% at 50% -14%, color-mix(in srgb,var(--halo) 26%,transparent), transparent 66%),
-    radial-gradient(58% 32% at 112% 20%, color-mix(in srgb,var(--halo) 12%,transparent), transparent 70%);
-  transition:background .5s var(--ease);
+    radial-gradient(ellipse 100% 60% at 80% -10%, rgba(41,121,255,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 50% at 0% 100%, rgba(182,255,46,0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 60% 110%, rgba(255,107,0,0.10) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+  animation:meshDrift 54s ease-in-out infinite alternate;will-change:transform;
 }
-/* tapa sólida de la franja de la barra de estado — nada debe pintarse por encima */
-body::after{
-  content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
-  background:var(--bg);z-index:50;pointer-events:none;
-}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@keyframes meshDrift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-1.5%,1%,0) scale(1.035)}100%{transform:translate3d(1%,-1.2%,0) scale(1.015)}}
+body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px);background-size:3px 3px;pointer-events:none;z-index:0;opacity:0.4;}
 
-.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:22px;}
+.screen,.app-header,.bottom-nav,.toast{position:relative;z-index:1;}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}}
+
+/* —— CABECERA — una sola, fija, nada se ve por encima —— */
+.app-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding-top:calc(env(safe-area-inset-top,0px) + 10px);
+  padding-bottom:10px;padding-left:20px;padding-right:20px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+}
+.app-header h1{font-size:12.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text);}
+
+.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;
+  padding:calc(env(safe-area-inset-top,0px) + 56px) 16px 8px;}
 .screen{display:none;}
-.screen.active{display:flex;flex-direction:column;gap:22px;animation:pageIn .36s var(--ease) both;}
-@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.screen.active{display:flex;flex-direction:column;gap:14px;animation:pageIn 0.36s var(--ease-out-soft) both;}
+@keyframes pageIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
 
-.label{font-size:var(--t-label);font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--fg-3);margin:0;}
-h2.sec{font-size:var(--t-label);font-weight:600;letter-spacing:.17em;text-transform:uppercase;color:var(--fg-3);margin:0;}
-/* cabecera de pantalla — pegada bajo la barra de estado, nunca debajo */
-.scr-head{position:sticky;top:env(safe-area-inset-top,0px);padding:12px 0 2px;background:var(--bg);z-index:10;}
+h2.sec{font-size:16px;font-weight:700;color:var(--text);}
+.label{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.6px;font-weight:600;}
 
-.glass{
-  position:relative;background:var(--glass-bg);
-  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
-  border:1px solid var(--glass-border);border-radius:var(--r-lg);overflow:hidden;
+/* —— tarjeta compartida (recipe del gym-tracker) —— */
+.glass,.fisico-block,.chart-wrap,.bars{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);
+  backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);
+  box-shadow:var(--shadow-card);
 }
-.glass::before{content:"";position:absolute;inset:0 0 auto;height:1px;z-index:3;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);}
 
-.tap{cursor:pointer;transition:transform .12s var(--ease);}
+.tap{cursor:pointer;transition:transform 0.16s var(--ease-pop);}
 .tap:active{transform:scale(.97);}
 
-.btn-glow{
-  --c:var(--c-series);position:relative;overflow:hidden;
-  background:rgba(255,255,255,.075);
-  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
-  border:1px solid color-mix(in srgb,var(--c) 48%,transparent);
-  box-shadow:0 0 26px -2px color-mix(in srgb,var(--c) 45%,transparent),
-             0 0 10px -2px color-mix(in srgb,var(--c) 70%,transparent),
-             inset 0 1px 0 rgba(255,255,255,.22);
-  color:#fff;transition:transform .12s var(--ease),box-shadow .22s var(--ease);
-}
-.btn-glow::before{content:"";position:absolute;inset:0 0 auto;height:1px;z-index:3;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);}
-.btn-glow:active{transform:scale(.97);
-  box-shadow:0 0 36px 0 color-mix(in srgb,var(--c) 60%,transparent),
-             0 0 14px -2px color-mix(in srgb,var(--c) 85%,transparent),
-             inset 0 1px 0 rgba(255,255,255,.3);}
-.btn-ghost{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.085);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1);color:var(--fg-2);}
-
 button{font-family:inherit;}
-.icon-btn{display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;color:var(--fg-3);cursor:pointer;padding:4px;}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;color:var(--text-3);cursor:pointer;padding:4px;}
 .icon-btn svg{width:18px;height:18px;display:block;}
 
-/* ---- HOY ---- */
-.hoy-head{position:relative;padding:4px 2px 0;}
-.hoy-tipo{font-family:var(--font-cond);font-weight:700;font-size:clamp(30px,9vw,40px);
-  letter-spacing:-.01em;line-height:1.02;margin-top:6px;text-transform:uppercase;color:var(--c);}
-.hoy-tipo-sm{font-family:var(--font-cond);font-weight:700;font-size:22px;
-  letter-spacing:-.005em;line-height:1.1;margin-top:4px;text-transform:uppercase;color:var(--c);}
-.proximo-box{padding:15px 17px;}
-.proximo-dia{font-size:14px;font-weight:700;color:var(--fg);margin-top:7px;}
-.proximo-notacion{margin-top:4px;font-size:13px;color:var(--fg-2);font-family:var(--font-cond);font-weight:600;}
-.notacion{margin-top:10px;font-family:var(--font-cond);font-weight:600;font-size:19px;
-  color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
-.notacion svg{width:15px;height:15px;color:var(--fg-3);flex:none;}
-.pitidos-row{margin-top:14px;}
-.pitidos-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);
-  border:1px solid var(--glass-border);border-radius:var(--r-pill);padding:7px 13px;
-  font-size:12.5px;font-weight:600;color:var(--fg-2);}
+/* —— BOTÓN PRINCIPAL (save-btn) —— */
+.cta,.save-btn{
+  width:100%;display:block;text-align:center;background:#fff;color:#000;border:none;
+  border-radius:var(--r);padding:16px;font-family:var(--font-disp);font-size:18px;font-weight:400;
+  letter-spacing:1px;cursor:pointer;box-shadow:0 12px 28px rgba(255,255,255,0.08);
+  transition:transform 0.18s,box-shadow 0.18s;text-transform:uppercase;
+}
+.cta:active,.save-btn:active{transform:scale(0.985);box-shadow:0 6px 14px rgba(255,255,255,0.06);}
+.btn-ghost{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text-2);
+  border-radius:var(--r-sm);padding:10px 14px;font-size:12.5px;font-weight:600;cursor:pointer;}
+
+/* —— HOY: today-hero (ported) —— */
+.today-hero{
+  position:relative;border-radius:var(--r-lg);
+  background:linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025));
+  border:1px solid var(--border-2);backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);
+  padding:22px;overflow:hidden;box-shadow:var(--shadow-card-lg);
+}
+.today-hero::before{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;
+  background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+  transform:translateX(-100%);animation:shine 2.4s ease-out 0.4s both;pointer-events:none;}
+@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.today-bg-text{position:absolute;font-family:var(--font-disp);font-size:54px;font-weight:400;
+  color:rgba(255,255,255,0.05);text-transform:uppercase;letter-spacing:-0.5px;line-height:0.85;
+  white-space:nowrap;top:14px;right:-8px;pointer-events:none;user-select:none;}
+.today-title{font-family:var(--font-disp);font-size:40px;font-weight:400;letter-spacing:0;line-height:1;
+  color:var(--text);margin-bottom:6px;text-transform:uppercase;position:relative;}
+.notacion{margin-top:8px;font-family:var(--font-mono);font-weight:500;font-size:14px;color:var(--text-2);
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;position:relative;}
+.notacion svg{width:14px;height:14px;color:var(--text-3);flex:none;}
+.pitidos-row{margin-top:14px;position:relative;}
+.pitidos-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);
+  border:1px solid var(--border);border-radius:var(--r-pill);padding:6px 12px;
+  font-size:12px;font-weight:600;color:var(--text-2);}
 .pitidos-btn svg{width:14px;height:14px;}
-.pitidos-line{margin-top:8px;font-size:12.5px;color:var(--fg-3);font-variant-numeric:tabular-nums;}
+.pitidos-line{margin-top:8px;font-size:12px;color:var(--text-3);font-family:var(--font-mono);}
 
-.cta{width:100%;display:block;text-align:center;padding:16px;border-radius:var(--r-md);
-  font-family:var(--font-cond);font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase;}
+.hoy-tipo-sm{font-family:var(--font-disp);font-size:28px;letter-spacing:0.4px;text-transform:uppercase;color:var(--text);margin-top:4px;}
 
-.ultima-vez{padding:15px 17px;}
+.ultima-vez{padding:14px 16px;}
 .ultima-vez .tiempos{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
-.ultima-vez .tiempos span{font-size:13px;font-variant-numeric:tabular-nums;color:var(--fg-2);
-  background:rgba(255,255,255,.05);border-radius:7px;padding:3px 8px;}
-.ultima-vez .caida{margin-top:8px;font-size:12.5px;color:var(--fg-3);}
-.ultima-vez .caida b{color:var(--fg);}
+.ultima-vez .tiempos span{font-size:12.5px;font-family:var(--font-mono);color:var(--text-2);
+  background:rgba(255,255,255,0.05);border-radius:6px;padding:3px 8px;}
+.ultima-vez .caida{margin-top:8px;font-size:12.5px;color:var(--text-3);font-family:var(--font-mono);}
+.ultima-vez .caida b{color:var(--text);}
+
+.proximo-box{padding:14px 16px;}
+.proximo-dia{font-size:14px;font-weight:700;color:var(--text);margin-top:7px;}
+.proximo-notacion{margin-top:4px;font-size:12.5px;color:var(--text-2);font-family:var(--font-mono);}
 
 .agenda-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;
-  padding:13px 17px;background:transparent;border:0;cursor:pointer;color:var(--fg);}
-.agenda-toggle span{font-size:var(--t-label);font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--fg-2);}
-.agenda-toggle svg{width:16px;height:16px;color:var(--fg-3);transition:transform .25s var(--ease);}
+  padding:13px 16px;background:transparent;border:0;cursor:pointer;color:var(--text);}
+.agenda-toggle span{font-size:10px;font-weight:700;letter-spacing:0.7px;text-transform:uppercase;color:var(--text-2);}
+.agenda-toggle svg{width:16px;height:16px;color:var(--text-3);transition:transform 0.25s var(--ease-out-soft);}
 .agenda-toggle.open svg{transform:rotate(180deg);}
-.agenda-body{display:none;padding:0 17px 16px;}
+.agenda-body{display:none;padding:0 16px 14px;}
 .agenda-body.open{display:block;}
-.agenda-week{padding:10px 0;border-top:1px solid var(--glass-border);}
+.agenda-week{padding:10px 0;border-top:1px solid var(--border);}
 .agenda-week:first-child{border-top:none;}
-.agenda-week-lbl{font-size:11px;color:var(--fg-3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.agenda-week-lbl{font-size:10px;color:var(--text-3);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;font-family:var(--font-mono);}
 .agenda-day{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:13px;}
 .agenda-day .dot{width:7px;height:7px;border-radius:50%;flex:none;}
-.agenda-day .t{flex:1;min-width:0;color:var(--fg-2);}
-.agenda-day .st{font-size:11px;color:var(--fg-3);font-weight:600;flex:none;}
-.agenda-day.today .t{color:var(--fg);font-weight:700;}
+.agenda-day .t{flex:1;min-width:0;color:var(--text-2);}
+.agenda-day .st{font-size:11px;color:var(--text-3);font-weight:600;flex:none;font-family:var(--font-mono);}
+.agenda-day.today .t{color:var(--text);font-weight:700;}
 
-.descanso-box{padding:15px 17px;font-size:13.5px;color:var(--fg-2);}
-.descanso-box div+div{margin-top:6px;}
+.descanso-card{padding:16px;}
 
-/* ---- SEG / FILTROS ---- */
-.seg{display:flex;gap:5px;padding:5px;border-radius:var(--r-pill);flex-wrap:wrap;}
-.seg button{flex:1;border:1px solid transparent;background:transparent;color:var(--fg-3);
-  font-family:var(--font);font-weight:600;font-size:12.5px;letter-spacing:.05em;
-  padding:9px 6px;border-radius:var(--r-pill);cursor:pointer;white-space:nowrap;
-  transition:all .2s var(--ease);}
-.seg button[aria-pressed="true"]{--c:var(--halo);background:rgba(255,255,255,.075);
-  border-color:color-mix(in srgb,var(--c) 48%,transparent);
-  box-shadow:0 0 26px -2px color-mix(in srgb,var(--c) 45%,transparent),
-             0 0 10px -2px color-mix(in srgb,var(--c) 70%,transparent),
-             inset 0 1px 0 rgba(255,255,255,.22);color:#fff;}
+/* —— SEGMENTED CONTROL / PILLS (ported) —— */
+.metric-row{display:flex;gap:6px;margin-bottom:0;}
+.metric-btn{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);
+  padding:10px;border-radius:var(--r-sm);font-size:12.5px;cursor:pointer;text-align:center;font-weight:600;font-family:inherit;}
+.metric-btn.active{background:#fff;border-color:#fff;color:#000;}
 
-/* ---- HISTORIAL ---- */
-.hist-row{display:flex;align-items:center;gap:12px;padding:14px 16px;}
-.hist-row+.hist-row{border-top:1px solid var(--glass-border);}
+.hist-tabs{display:flex;gap:6px;margin-bottom:0;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.hist-tabs::-webkit-scrollbar{display:none;}
+.hist-tab{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);
+  padding:8px 16px;border-radius:var(--r-pill);font-family:var(--font-disp);font-size:14px;letter-spacing:0.6px;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;text-transform:uppercase;}
+.hist-tab.active{background:#fff;border-color:#fff;color:#000;font-weight:400;}
+
+/* —— HISTORIAL rows (conservado de estudio: punto + chevron) —— */
+.hist-row{display:flex;align-items:center;gap:12px;padding:13px 15px;}
+.hist-row+.hist-row{border-top:1px solid var(--border);}
 .hist-dot{width:8px;height:8px;border-radius:50%;flex:none;}
 .hist-main{flex:1;min-width:0;}
-.hist-title{font-size:13.5px;font-weight:700;color:var(--fg);}
-.hist-sub{font-size:12px;color:var(--fg-3);margin-top:2px;font-variant-numeric:tabular-nums;}
-.hist-ch{color:var(--fg-3);flex:none;}
+.hist-title{font-size:13.5px;font-weight:700;color:var(--text);}
+.hist-sub{font-size:12px;color:var(--text-3);margin-top:2px;font-family:var(--font-mono);}
+.hist-ch{color:var(--text-3);flex:none;font-size:18px;}
 
-/* ---- PR GRID ---- */
-.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.pr-item{padding:15px 6px;text-align:center;}
-.pr-val{font-family:var(--font-cond);font-weight:700;font-size:21px;color:var(--fg);
-  transition:text-shadow .3s ease;}
-.pr-val.flash{text-shadow:0 0 18px var(--c-test),0 0 6px var(--c-test);}
-.pr-lbl{font-size:10px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.09em;margin-top:5px;font-weight:600;}
-.pr-date{font-size:9.5px;color:var(--fg-3);margin-top:2px;}
+/* —— sesiones colapsables (planificación) — patrón hist-session/hist-hdr/hist-body —— */
+.hist-session{margin-bottom:10px;}
+.hist-hdr{padding:13px 15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.hist-date{font-size:15px;font-weight:700;color:var(--text);letter-spacing:0.2px;}
+.hist-meta{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap;}
+.hist-chip{font-size:11px;color:var(--text-2);background:rgba(255,255,255,0.05);border-radius:6px;padding:2px 8px;font-family:var(--font-mono);letter-spacing:0.2px;}
+.hist-body{padding:10px 15px 12px;display:none;border-top:1px solid var(--border);}
+.hist-body.open{display:block;}
+.hist-controls{display:flex;align-items:center;gap:6px;}
+.toggle-btn{background:none;border:none;color:var(--text-3);font-size:22px;cursor:pointer;padding:0 4px;line-height:1;}
 
-/* ---- CHART ---- */
-.chart-card{padding:16px 15px 13px;}
-.chart-card .chead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:8px;}
-.chart-card .chead .ct{font-size:12.5px;font-weight:700;color:var(--fg);}
-.chart-card .chead .cs{font-size:10.5px;color:var(--fg-3);}
+/* —— plan: bloques de día dentro de una semana —— */
+.plan-day{margin-top:14px;}
+.plan-day:first-of-type{margin-top:0;}
+.plan-day-title{font-family:var(--font-disp);font-size:16px;letter-spacing:0.5px;text-transform:uppercase;color:var(--text);margin-bottom:8px;}
+.pf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.pf-cell{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.pf-lbl{font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.3px;font-weight:700;text-align:center;}
+.pf-cell .f-input{font-size:13px;padding:8px 2px;text-align:center;min-width:0;width:100%;}
+.plan-notacion{margin-top:7px;font-size:12px;color:var(--text-3);font-family:var(--font-mono);}
+.plan-del-link{background:none;border:0;color:var(--red);font-size:11px;font-weight:700;letter-spacing:0.3px;
+  text-transform:uppercase;cursor:pointer;padding:4px;display:block;margin:10px 0 0 auto;}
+
+/* —— PR / stats (reuso de stats-row/stat-pill) —— */
+.stats-row,.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.stat-pill,.pr-item{padding:14px 8px;text-align:center;}
+.stat-val,.pr-val{font-family:var(--font-disp);font-size:24px;color:var(--text);line-height:1;transition:text-shadow 0.3s ease;}
+.pr-val.flash{text-shadow:0 0 18px var(--amber),0 0 6px var(--amber);}
+.stat-lbl,.pr-lbl{font-size:10px;color:var(--text-3);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
+.pr-date{font-size:9.5px;color:var(--text-3);margin-top:2px;font-family:var(--font-mono);}
+
+/* —— CHART cards —— */
+.chart-wrap{padding:16px;}
+.chart-lbl{font-size:10px;color:var(--text-3);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.7px;font-weight:700;}
+.chart-sub{font-size:10px;color:var(--text-3);font-family:var(--font-mono);}
 .few-points{display:flex;align-items:center;gap:14px;padding:6px 0;flex-wrap:wrap;}
 .fp-item{text-align:center;}
-.fp-item b{display:block;font-family:var(--font-cond);font-weight:700;font-size:26px;color:var(--fg);}
-.fp-item span{display:block;font-size:10.5px;color:var(--fg-3);margin-top:3px;}
-.fp-arrow{color:var(--fg-3);font-size:16px;}
-.fp-delta{margin-left:auto;font-family:var(--font-cond);font-weight:700;font-size:16px;padding:5px 10px;border-radius:var(--r-pill);}
-.fp-delta.good{color:#7AD854;background:rgba(122,216,84,.14);}
-.fp-delta.bad{color:var(--c-danger);background:rgba(255,59,78,.14);}
-.chart-note{margin-top:8px;font-size:11.5px;color:var(--fg-3);}
-.chart-note.warn{color:#FFB020;}
+.fp-item b{display:block;font-family:var(--font-disp);font-size:26px;color:var(--text);}
+.fp-item span{display:block;font-size:10.5px;color:var(--text-3);margin-top:3px;font-family:var(--font-mono);}
+.fp-arrow{color:var(--text-3);font-size:16px;}
+.fp-delta{margin-left:auto;font-family:var(--font-disp);font-size:16px;padding:5px 10px;border-radius:var(--r-pill);}
+.fp-delta.good{color:var(--green);background:var(--green-bg);}
+.fp-delta.bad{color:var(--red);background:var(--red-bg);}
+.chart-note{margin-top:8px;font-size:11.5px;color:var(--text-3);font-family:var(--font-mono);}
+.chart-note.warn{color:var(--orange);}
 .chart-legend{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;}
-.chart-legend span{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--fg-3);font-weight:600;letter-spacing:.03em;text-transform:uppercase;}
+.chart-legend span{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-3);font-weight:600;text-transform:uppercase;font-family:var(--font-mono);}
 .chart-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;}
 
-/* ---- BARRAS ---- */
-.bars{padding:16px 15px 12px;}
+.bars{padding:16px;}
 .bars-grid{display:flex;align-items:flex-end;gap:7px;height:110px;}
-.bar{flex:1;border-radius:7px 7px 3px 3px;position:relative;min-height:3px;
-  transform-origin:bottom;animation:grow .5s var(--ease) backwards;}
+.bar{flex:1;border-radius:6px 6px 2px 2px;position:relative;min-height:3px;transform-origin:bottom;animation:grow 0.5s var(--ease-out-soft) backwards;}
 @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-.bar b{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:9.5px;font-weight:700;
-  font-variant-numeric:tabular-nums;color:var(--fg-2);}
+.bar b{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:9.5px;font-weight:700;font-family:var(--font-mono);color:var(--text-2);}
 .bars-axis{display:flex;gap:7px;margin-top:8px;}
-.bars-axis span{flex:1;text-align:center;font-size:9.5px;color:var(--fg-3);letter-spacing:.04em;}
+.bars-axis span{flex:1;text-align:center;font-size:9.5px;color:var(--text-3);font-family:var(--font-mono);}
 
-/* ---- RESUMEN ---- */
 .resumen-grid{display:grid;grid-template-columns:repeat(3,1fr);}
-.resumen-item{padding:16px 6px;text-align:center;}
-.resumen-item+.resumen-item{border-left:1px solid var(--glass-border);}
-.resumen-val{font-family:var(--font-cond);font-weight:700;font-size:22px;}
-.resumen-delta{font-size:10.5px;margin-top:3px;font-weight:700;}
-.resumen-delta.good{color:#7AD854;}
-.resumen-delta.bad{color:var(--c-danger);}
-.resumen-delta.neutral{color:var(--fg-3);}
-.resumen-lbl{font-size:9.5px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;font-weight:600;}
+.resumen-item{padding:14px 6px;text-align:center;}
+.resumen-item+.resumen-item{border-left:1px solid var(--border);}
+.resumen-val{font-family:var(--font-disp);font-size:22px;color:var(--text);}
+.resumen-delta{font-size:10.5px;margin-top:3px;font-weight:700;font-family:var(--font-mono);}
+.resumen-delta.good{color:var(--green);}
+.resumen-delta.bad{color:var(--red);}
+.resumen-delta.neutral{color:var(--text-3);}
+.resumen-lbl{font-size:9.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-top:6px;font-weight:600;}
 
-/* ---- FISICO ---- */
-.fisico-block{padding:16px 17px;}
+/* —— FÍSICO (conservado de estudio: cómo reparte el contenido) —— */
+.fisico-block{padding:16px;}
 .fisico-block .fh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
-.fisico-block .fh .ft{font-size:13px;font-weight:700;}
-.fisico-current{font-family:var(--font-cond);font-weight:700;font-size:30px;}
-.fisico-current small{font-size:.5em;color:var(--fg-3);margin-left:4px;font-weight:600;}
+.fisico-block .ft{font-size:13px;font-weight:700;color:var(--text);}
+.fisico-current{font-family:var(--font-disp);font-size:30px;color:var(--text);}
+.fisico-current small{font-size:0.4em;color:var(--text-3);margin-left:4px;font-weight:600;font-family:var(--font-sans);}
 .fisico-hist{margin-top:10px;display:flex;flex-direction:column;gap:5px;}
-.fisico-hist-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--fg-3);
-  padding:4px 0;border-top:1px solid var(--glass-border);}
+.fisico-hist-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-3);padding:4px 0;border-top:1px solid var(--border);font-family:var(--font-mono);}
 .fisico-hist-row:first-child{border-top:none;}
-.fisico-hist-row b{color:var(--fg-2);font-variant-numeric:tabular-nums;}
+.fisico-hist-row b{color:var(--text-2);}
 .fisico-add{display:flex;gap:7px;margin-top:10px;}
 .fisico-add input{flex:1;min-width:0;}
 
-.zona-row{padding:13px 17px;}
-.zona-row+.zona-row{border-top:1px solid var(--glass-border);}
+.zona-row{padding:13px 16px;}
+.zona-row+.zona-row{border-top:1px solid var(--border);}
 .zona-top{display:flex;align-items:baseline;gap:9px;}
-.zona-nombre{font-weight:700;font-size:13.5px;}
-.zona-rango{font-size:12px;color:var(--fg-3);font-variant-numeric:tabular-nums;margin-left:auto;}
-.zona-uso{font-size:12px;color:var(--fg-3);margin-top:4px;line-height:1.45;}
-.zona-warn{font-size:11.5px;color:#FFB020;margin-top:6px;line-height:1.45;}
+.zona-nombre{font-weight:700;font-size:13.5px;color:var(--text);}
+.zona-rango{font-size:12px;color:var(--text-3);font-family:var(--font-mono);margin-left:auto;}
+.zona-uso{font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.45;}
+.zona-warn{font-size:11.5px;color:var(--orange);margin-top:6px;line-height:1.45;}
 
-/* ---- AJUSTES ---- */
-.plan-week{padding:14px 17px 16px;}
-.plan-week+.plan-week{border-top:1px solid var(--glass-border);}
-.plan-week-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;}
-.plan-week-lbl{font-size:11px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;}
-.plan-del-btn{font-size:10.5px;color:var(--c-danger);background:none;border:0;cursor:pointer;
-  font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px;flex:none;}
-.plan-type-row{display:flex;align-items:flex-end;gap:10px;margin-top:13px;}
-.plan-type-row:first-of-type{margin-top:0;}
-.plan-type-lbl{font-size:12.5px;font-weight:700;color:var(--fg-2);width:66px;flex:none;padding-bottom:9px;}
-.plan-fields{display:flex;gap:6px;flex-wrap:wrap;}
-.plan-field{display:flex;flex-direction:column;gap:4px;}
-.plan-field-lbl{font-size:8.5px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.06em;font-weight:700;text-align:center;}
-.plan-field-row{display:flex;align-items:center;gap:3px;}
-.plan-field input{width:52px;text-align:center;padding:8px 2px;font-size:13px;}
-.plan-field .unit{font-size:10px;color:var(--fg-3);flex:none;}
-.plan-notacion{margin:7px 0 0 76px;font-size:12px;color:var(--fg-3);font-family:var(--font-cond);font-weight:600;}
-.settings-group{margin-bottom:12px;}
-.settings-group-title{font-size:10px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.09em;padding:0 2px 8px;font-weight:800;}
-.settings-row{display:flex;align-items:center;gap:12px;padding:13px 17px;cursor:pointer;}
-.settings-row+.settings-row{border-top:1px solid var(--glass-border);}
-.settings-row span{flex:1;font-size:14px;font-weight:600;}
-.settings-row.danger span{color:var(--c-danger);}
-.settings-row .state{flex:none;font-size:11.5px;color:var(--fg-3);font-variant-numeric:tabular-nums;font-weight:600;}
-.settings-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);}
-.settings-footer{text-align:center;padding:22px 0 6px;font-size:10.5px;color:var(--fg-3);letter-spacing:.04em;}
-.settings-footer div{margin-top:4px;font-size:9.5px;opacity:.7;}
+/* —— SETTINGS (ported) —— */
+.sett-group{margin-bottom:12px;overflow:hidden;}
+.sett-group-title{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.7px;padding:14px 16px 6px;font-weight:800;}
+.sett-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
+.sett-row:first-of-type{border-top:none;}
+.sett-row:active{background:rgba(255,255,255,0.04);}
+.sett-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid var(--border);}
+.sett-row span{font-size:14px;font-weight:600;color:var(--text);}
+.sett-row.danger span{color:var(--red);}
 
-/* ---- INPUTS ---- */
-.campo,select.campo,textarea.campo{
-  width:100%;box-sizing:border-box;padding:11px 13px;border-radius:var(--r-md);
-  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);
-  color:var(--fg);font-family:var(--font);font-size:14px;outline:none;
-  -webkit-appearance:none;font-variant-numeric:tabular-nums;
+/* —— INPUTS (ported: ex-input/f-input) —— */
+.campo,.f-input,select.campo,textarea.campo{
+  background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-xs);
+  color:var(--text);font-size:14px;padding:9px 11px;width:100%;outline:none;
+  -webkit-appearance:none;font-family:var(--font-mono);transition:border-color 0.18s,background 0.18s;
 }
-.campo:focus,select.campo:focus,textarea.campo:focus{border-color:color-mix(in srgb,var(--halo) 55%,transparent);}
-.campo::placeholder{color:var(--fg-3);}
-textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-variant-numeric:normal;}
-.field-lbl{font-size:10.5px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:5px;display:block;}
+.campo:focus,.f-input:focus,select.campo:focus,textarea.campo:focus{border-color:var(--border-3);background:rgba(255,255,255,0.09);}
+.campo::placeholder,.f-input::placeholder{color:var(--text-3);font-family:var(--font-sans);}
+textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(--font-sans);}
+.field-lbl{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:5px;display:block;}
 .field{margin-bottom:11px;}
 .field-row{display:flex;gap:9px;}
 .field-row .field{flex:1;}
 .ritmo-field{display:flex;align-items:center;gap:8px;}
 .ritmo-field .campo{flex:1;}
-.swap-btn{flex:none;width:38px;height:38px;border-radius:var(--r-sm);background:rgba(255,255,255,.06);
-  border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:var(--fg-2);}
+.swap-btn{flex:none;width:38px;height:38px;border-radius:var(--r-sm);background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-2);}
 .swap-btn svg{width:17px;height:17px;}
 .tiempos-grid{display:flex;flex-wrap:wrap;gap:7px;}
 .tiempos-grid .campo{width:62px;flex:none;text-align:center;padding:10px 4px;}
 .toggle-row{display:flex;gap:7px;}
 .toggle-row button{flex:1;padding:10px;border-radius:var(--r-sm);font-size:13px;font-weight:600;
-  background:rgba(255,255,255,.04);border:1px solid var(--glass-border);color:var(--fg-2);cursor:pointer;}
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);cursor:pointer;}
 .toggle-row button[aria-pressed="true"]{background:#fff;color:#000;border-color:#fff;}
 .sub-field{margin-top:8px;}
 
-/* ---- SHEET (modal inferior) ---- */
-.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;
-  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;
-  transition:opacity .3s var(--ease);}
-.sheet-bg.open{opacity:1;pointer-events:auto;}
-.sheet{width:100%;max-width:460px;background:linear-gradient(165deg,rgba(26,26,32,.92),rgba(10,10,13,.96));
-  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
-  border:1px solid var(--glass-border);border-bottom:none;
-  border-radius:var(--r-xl) var(--r-xl) 0 0;
-  padding:16px 20px calc(env(safe-area-inset-bottom,0px) + 22px);
-  max-height:85vh;overflow-y:auto;transform:translateY(100%);
-  transition:transform .4s var(--ease);position:relative;}
-.sheet-bg.open .sheet{transform:translateY(0);}
-.sheet::before{content:"";display:block;width:36px;height:5px;background:rgba(255,255,255,.18);
-  border-radius:3px;margin:0 auto 16px;}
-.sheet-title{font-family:var(--font-cond);font-weight:700;font-size:21px;text-transform:uppercase;margin-bottom:14px;}
-.sheet-actions{display:flex;gap:9px;margin-top:14px;}
-.sheet-actions button{flex:1;padding:13px;border-radius:var(--r-md);font-weight:700;font-size:13.5px;
-  border:0;cursor:pointer;}
-.sheet-actions .primary{background:#fff;color:#000;}
-.sheet-actions .secondary{background:rgba(255,255,255,.06);border:1px solid var(--glass-border);color:var(--fg-2);}
-.detail-row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;font-size:13.5px;
-  border-top:1px solid var(--glass-border);}
+/* —— BOTTOM SHEET (modal-shroud/modal-sheet, ported) —— */
+.modal-shroud{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:flex-end;opacity:0;transition:opacity 0.3s ease;}
+.modal-shroud.open{display:flex;opacity:1;}
+.modal-sheet{width:100%;background:linear-gradient(165deg, rgba(30,30,37,0.82), rgba(14,14,18,0.92));
+  backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);
+  border:1px solid var(--border-2);border-bottom:none;border-radius:var(--r-lg) var(--r-lg) 0 0;
+  padding:22px 20px 40px;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-card-lg);
+  transform:translateY(100%);transition:transform 0.4s var(--ease-drawer);}
+.modal-shroud.open .modal-sheet{transform:translateY(0);}
+.modal-grab{width:38px;height:5px;background:rgba(255,255,255,0.18);border-radius:3px;margin:0 auto 18px;}
+.sheet-title{font-family:var(--font-disp);font-size:22px;font-weight:400;letter-spacing:0.4px;text-transform:uppercase;margin-bottom:14px;color:var(--text);}
+.sheet-actions{display:flex;gap:8px;margin-top:14px;}
+.sheet-actions button{flex:1;padding:13px;border-radius:var(--r-sm);font-weight:700;font-size:13.5px;border:none;cursor:pointer;font-family:inherit;transition:transform 0.16s var(--ease-pop);}
+.sheet-actions button:active{transform:scale(0.97);}
+.sheet-actions .primary{background:#fff;color:#000;box-shadow:0 6px 14px rgba(255,255,255,0.10);}
+.sheet-actions .secondary{background:none;border:1px solid var(--border-2);color:var(--text-2);}
+.detail-row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;font-size:13.5px;border-top:1px solid var(--border);}
 .detail-row:first-child{border-top:none;}
-.detail-row .k{color:var(--fg-3);}
-.detail-row .v{color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums;text-align:right;}
+.detail-row .k{color:var(--text-3);}
+.detail-row .v{color:var(--text);font-weight:500;font-family:var(--font-mono);font-size:12.5px;text-align:right;}
 
-/* ---- TOAST ---- */
-.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 100px);left:50%;
-  transform:translateX(-50%) translateY(10px);background:rgba(20,20,26,.94);
-  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
-  border:1px solid var(--glass-border);color:var(--fg);padding:11px 20px;border-radius:var(--r-pill);
-  font-size:13px;font-weight:600;opacity:0;transition:opacity .3s var(--ease),transform .3s var(--ease);
-  z-index:1200;pointer-events:none;white-space:nowrap;}
+/* —— TOAST (ported) —— */
+.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:rgba(20,20,26,0.94);backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);
+  border:1px solid var(--border-2);color:var(--text);padding:11px 22px;border-radius:var(--r-pill);
+  font-size:13.5px;font-weight:600;opacity:0;transition:opacity 0.32s var(--ease-out-soft),transform 0.32s var(--ease-out-soft);
+  z-index:999;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-card-lg);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ---- TAB BAR ---- */
-.tabbar{position:fixed;z-index:20;
-  left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px));
-  bottom:calc(env(safe-area-inset-bottom,0px) + 14px);max-width:420px;margin:0 auto;
-  display:flex;justify-content:space-around;align-items:center;padding:7px;border-radius:var(--r-pill);
-  background:rgba(255,255,255,.055);-webkit-backdrop-filter:blur(34px) saturate(175%);
-  backdrop-filter:blur(34px) saturate(175%);border:1px solid var(--glass-border);
-  box-shadow:0 16px 44px -12px rgba(0,0,0,.85);}
-.tabbar::before{content:"";position:absolute;inset:0 0 auto;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);}
-.tabbar button{border:0;background:transparent;padding:10px 13px;border-radius:var(--r-pill);
-  color:var(--fg-3);cursor:pointer;display:grid;place-items:center;transition:all .2s var(--ease);position:relative;}
-.tabbar button svg{width:20px;height:20px;display:block;}
-.tabbar button[aria-current="page"]{color:var(--fg);
-  background:linear-gradient(90deg,color-mix(in srgb,var(--halo) 34%,transparent),rgba(255,255,255,.07));
-  box-shadow:0 0 20px -4px color-mix(in srgb,var(--halo) 80%,transparent),inset 0 1px 0 rgba(255,255,255,.22);}
+/* —— BOTTOM NAV (ported) —— */
+.bottom-nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;
+  background:rgba(14,14,18,0.6);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);
+  border:1px solid var(--border-2);border-radius:var(--r-pill);display:flex;padding:6px;gap:2px;box-shadow:var(--shadow-nav);z-index:100;}
+.nav-btn{flex:1;background:none;border:none;color:var(--text-3);padding:9px 4px 7px;font-size:9.5px;font-family:inherit;
+  font-weight:600;letter-spacing:0.4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;
+  border-radius:var(--r-pill);position:relative;z-index:1;transition:color 0.2s;}
+.nav-btn.active{color:#fff;}
+.nav-indicator{position:absolute;top:6px;bottom:6px;left:0;border-radius:var(--r-pill);
+  background:linear-gradient(160deg, rgba(255,255,255,0.14), rgba(255,255,255,0.05));
+  border:1px solid rgba(255,255,255,0.2);
+  box-shadow:0 2px 12px rgba(0,0,0,0.3), 0 0 16px -6px rgba(182,255,46,0.16), inset 0 1px 0 rgba(255,255,255,0.16);
+  transition:transform 0.5s var(--ease-spring), width 0.5s var(--ease-spring);will-change:transform;pointer-events:none;z-index:0;}
+.nav-icon svg{display:block;}
 
-.empty{padding:28px 16px;text-align:center;color:var(--fg-3);font-size:13px;}
-.empty-mini{padding:2px 0 4px;font-size:12.5px;color:var(--fg-3);line-height:1.4;}
+.empty{padding:28px 16px;text-align:center;color:var(--text-3);font-size:13px;font-family:var(--font-mono);}
+.empty-mini{padding:2px 0 4px;font-size:12.5px;color:var(--text-3);line-height:1.4;font-family:var(--font-mono);}
 </style>
 </head>
 <body>
+
+<!-- ───── CABECERA ÚNICA Y FIJA ───── -->
+<div class="app-header">
+  <h1 id="app-header-title">Hoy</h1>
+</div>
 
 <div class="wrap">
 
   <!-- HOY -->
   <section id="screen-hoy" class="screen active"></section>
 
-  <!-- HISTORIAL -->
+  <!-- HISTORIAL + PLANIFICACIÓN -->
   <section id="screen-historial" class="screen">
-    <div class="scr-head"><h2 class="sec">Historial</h2></div>
-    <div class="glass seg" id="hist-filter"></div>
-    <div class="glass" id="hist-list"></div>
+    <div class="metric-row" id="hist-switch">
+      <button class="metric-btn" data-sub="historial" onclick="setHistorialSub('historial')">Historial</button>
+      <button class="metric-btn" data-sub="planificacion" onclick="setHistorialSub('planificacion')">Planificación</button>
+    </div>
+    <div id="historial-sub-historial">
+      <div class="hist-tabs" id="hist-filter"></div>
+      <div id="hist-list"></div>
+    </div>
+    <div id="historial-sub-planificacion" style="display:none">
+      <div id="plan-weeks"></div>
+    </div>
   </section>
 
   <!-- PROGRESO -->
   <section id="screen-progreso" class="screen">
-    <div class="scr-head"><h2 class="sec">Progreso</h2></div>
     <div class="glass pr-grid" id="pr-grid" style="display:grid"></div>
     <div id="chart-test"></div>
     <div id="chart-caida"></div>
@@ -406,7 +422,6 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-variant-nume
 
   <!-- FISICO -->
   <section id="screen-fisico" class="screen">
-    <div class="scr-head"><h2 class="sec">Físico</h2></div>
     <div id="fisico-fcmax"></div>
     <div id="fisico-fcreposo"></div>
     <div id="fisico-peso"></div>
@@ -415,36 +430,38 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-variant-nume
 
   <!-- AJUSTES -->
   <section id="screen-ajustes" class="screen">
-    <div class="scr-head"><h2 class="sec">Ajustes</h2></div>
-    <div id="ajustes-plan"></div>
     <div id="ajustes-datos"></div>
     <div id="ajustes-prefs"></div>
     <div id="ajustes-peligro"></div>
-    <div class="settings-footer">1000 M TRACKER · POR JO$E<div id="app-version"></div></div>
+    <div style="text-align:center;padding:22px 0 6px;font-size:11px;color:var(--text-4);font-family:var(--font-mono);letter-spacing:0.4px;">
+      1000 M TRACKER · POR JO$E
+      <div id="app-version" style="margin-top:5px;font-size:9.5px;opacity:0.6;"></div>
+    </div>
   </section>
 
 </div>
 
-<nav class="tabbar">
-  <button aria-current="page" data-tab="hoy" data-c="--c-series" aria-label="Hoy">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.2V12l3.2 2"/></svg>
+<nav class="bottom-nav">
+  <span class="nav-indicator" id="nav-indicator" aria-hidden="true"></span>
+  <button class="nav-btn active" data-tab="hoy">
+    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.2V12l3.2 2"/></svg></span>Hoy
   </button>
-  <button data-tab="historial" data-c="--c-neutral" aria-label="Historial">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+  <button class="nav-btn" data-tab="historial">
+    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="14" y2="17"/></svg></span>Historial
   </button>
-  <button data-tab="progreso" data-c="--c-test" aria-label="Progreso">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 19.5V11M12 19.5V4.5M19 19.5v-6.5"/></svg>
+  <button class="nav-btn" data-tab="progreso">
+    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><polyline points="4 18 9 13 13 16 20 7"/></svg></span>Progreso
   </button>
-  <button data-tab="fisico" data-c="--c-danger" aria-label="Físico">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.3 4.6 13c-2-2-2-5.2 0-7.2a5.1 5.1 0 0 1 7.2 0l.2.2.2-.2a5.1 5.1 0 0 1 7.2 7.2z"/></svg>
+  <button class="nav-btn" data-tab="fisico">
+    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="7" r="3"/><path d="M5 21v-2a7 7 0 0114 0v2"/></svg></span>Físico
   </button>
-  <button data-tab="ajustes" data-c="--c-ajustes" aria-label="Ajustes">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.1 14.4a1.5 1.5 0 0 0 .3 1.65l.05.06a1.84 1.84 0 1 1-2.6 2.6l-.06-.05a1.5 1.5 0 0 0-1.65-.3 1.5 1.5 0 0 0-.9 1.37v.16a1.84 1.84 0 1 1-3.68 0v-.09a1.5 1.5 0 0 0-.98-1.37 1.5 1.5 0 0 0-1.65.3l-.06.05a1.84 1.84 0 1 1-2.6-2.6l.05-.06a1.5 1.5 0 0 0 .3-1.65 1.5 1.5 0 0 0-1.37-.9h-.16a1.84 1.84 0 1 1 0-3.68h.09a1.5 1.5 0 0 0 1.37-.98 1.5 1.5 0 0 0-.3-1.65l-.05-.06a1.84 1.84 0 1 1 2.6-2.6l.06.05a1.5 1.5 0 0 0 1.65.3h.07a1.5 1.5 0 0 0 .9-1.37v-.16a1.84 1.84 0 1 1 3.68 0v.09a1.5 1.5 0 0 0 .9 1.37 1.5 1.5 0 0 0 1.65-.3l.06-.05a1.84 1.84 0 1 1 2.6 2.6l-.05.06a1.5 1.5 0 0 0-.3 1.65v.07a1.5 1.5 0 0 0 1.37.9h.16a1.84 1.84 0 1 1 0 3.68h-.09a1.5 1.5 0 0 0-1.37.9z"/></svg>
+  <button class="nav-btn" data-tab="ajustes">
+    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 018.4 12 3.6 3.6 0 0112 8.4a3.6 3.6 0 013.6 3.6 3.6 3.6 0 01-3.6 3.6z" stroke="none" fill="currentColor"/></svg></span>Ajustes
   </button>
 </nav>
 
-<div class="sheet-bg" id="sheet-bg" onclick="if(event.target===this)closeSheet()">
-  <div class="sheet" id="sheet"></div>
+<div class="modal-shroud" id="sheet-bg" onclick="if(event.target===this)closeSheet()">
+  <div class="modal-sheet" id="sheet"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -542,10 +559,10 @@ const APP_VERSION = 1;
 const APP_BUILD_DATE = '25 oct 2026';
 
 const TIPOS = {
-  series:{label:'Series de ritmo', color:'var(--c-series)', dot:'#2E8BFF'},
-  rodaje:{label:'Rodaje base', color:'var(--c-rodaje)', dot:'#22D37A'},
-  velocidad:{label:'Velocidad', color:'var(--c-velocidad)', dot:'#FF9F1C'},
-  test:{label:'Test 1.000', color:'var(--c-test)', dot:'#FFD60A'},
+  series:{label:'Series de ritmo', color:'var(--c-series)', dot:'var(--blue)'},
+  rodaje:{label:'Rodaje base', color:'var(--c-rodaje)', dot:'var(--green)'},
+  velocidad:{label:'Velocidad', color:'var(--c-velocidad)', dot:'var(--orange)'},
+  test:{label:'Test 1.000', color:'var(--c-test)', dot:'var(--amber)'},
 };
 
 /* ============================================================
@@ -595,19 +612,31 @@ function pitidoSeg(def){
    NAVEGACIÓN
    ============================================================ */
 let currentTab = 'hoy';
+let historialSub = 'historial';
+const HEADER_TITLES = {hoy:'Hoy', progreso:'Progreso', fisico:'Físico', ajustes:'Ajustes'};
+function updateAppHeader(){
+  const t = currentTab==='historial' ? (historialSub==='planificacion' ? 'Planificación' : 'Historial') : HEADER_TITLES[currentTab];
+  document.getElementById('app-header-title').textContent = t;
+}
 function showTab(tab){
   currentTab = tab;
   document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.id==='screen-'+tab));
-  document.querySelectorAll('.tabbar button').forEach(b=>{
-    const active = b.dataset.tab===tab;
-    if(active){ b.setAttribute('aria-current','page'); document.documentElement.style.setProperty('--halo','var('+b.dataset.c+')'); }
-    else b.removeAttribute('aria-current');
-  });
+  const btn = document.querySelector(`.nav-btn[data-tab="${tab}"]`);
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn){ btn.classList.add('active'); updateNavIndicator(btn); }
+  updateAppHeader();
   renderCurrent();
 }
-document.querySelectorAll('.tabbar button').forEach(b=>{
+document.querySelectorAll('.nav-btn').forEach(b=>{
   b.addEventListener('click', ()=>{ showTab(b.dataset.tab); if(navigator.vibrate) navigator.vibrate(10); });
 });
+function updateNavIndicator(btn){
+  const ind = document.getElementById('nav-indicator');
+  if(!ind||!btn) return;
+  ind.style.width = btn.offsetWidth+'px';
+  ind.style.transform = 'translateX('+btn.offsetLeft+'px)';
+}
+window.addEventListener('resize', ()=>{ const a=document.querySelector('.nav-btn.active'); if(a) updateNavIndicator(a); });
 function renderCurrent(){
   if(currentTab==='hoy') renderHoy();
   else if(currentTab==='historial') renderHistorial();
@@ -632,7 +661,7 @@ function toast(msg){
    SHEET (modal)
    ============================================================ */
 function openSheet(html){
-  document.getElementById('sheet').innerHTML = html;
+  document.getElementById('sheet').innerHTML = `<div class="modal-grab"></div>` + html;
   document.getElementById('sheet-bg').classList.add('open');
 }
 function closeSheet(){
@@ -664,7 +693,7 @@ function lastSessionOfType(tipo, beforeFecha){
 }
 function renderUltimaVez(tipo, fecha){
   const prev = lastSessionOfType(tipo, fecha);
-  if(!prev) return `<div class="glass ultima-vez"><div class="label">Última vez</div><div style="margin-top:6px;color:var(--fg-3);font-size:13px">Sin registros previos</div></div>`;
+  if(!prev) return `<div class="glass ultima-vez"><div class="label">Última vez</div><div style="margin-top:6px;color:var(--text-3);font-size:13px;font-family:var(--font-mono)">Sin registros previos</div></div>`;
   let body = '';
   if(prev.tiempos && prev.tiempos.length){
     const caida = prev.tiempos[0]-prev.tiempos[prev.tiempos.length-1];
@@ -687,9 +716,9 @@ function renderHoy(){
     const next = nextTrainingDate(fecha);
     const nextMeta = TIPOS[next.def.tipo];
     el.innerHTML = `
-      <div class="scr-head"><p class="label">${fmtDateLong(fecha)}</p></div>
-      <div class="hoy-head">
-        <h1 class="hoy-tipo-sm" style="--c:var(--c-neutral)">Descanso</h1>
+      <div class="glass descanso-card">
+        <div class="label">${fmtDateLong(fecha)}</div>
+        <h1 class="hoy-tipo-sm">Descanso</h1>
       </div>
       <div class="glass proximo-box">
         <div class="label">Próximo entreno</div>
@@ -705,9 +734,10 @@ function renderHoy(){
 
   const pitidos = (def.tipo==='series'||def.tipo==='velocidad') ? pitidoSeg(def) : null;
   el.innerHTML = `
-    <div class="scr-head"><p class="label">${fmtDateLong(fecha)}</p></div>
-    <div class="hoy-head">
-      <h1 class="hoy-tipo" style="--c:${tipoMeta.color}">${tipoMeta.label}</h1>
+    <div class="today-hero">
+      <div class="today-bg-text">${tipoMeta.label.split(' ')[0]}</div>
+      <div class="label" style="position:relative">${fmtDateLong(fecha)}</div>
+      <div class="today-title">${tipoMeta.label}</div>
       <div class="notacion" onclick="toggleRitmoView()">
         <span>${compactNotation(def)}</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg>
@@ -721,7 +751,7 @@ function renderHoy(){
         <div class="pitidos-line" id="pitidos-line" style="display:none">Pitido cada ${pitidos} s · un pitido por cada 100 m</div>
       </div>` : ''}
     </div>
-    <button class="cta tap btn-glow" style="--c:${tipoMeta.color}" onclick="openRegistro('${fecha}')">Registrar</button>
+    <button class="cta tap" onclick="openRegistro('${fecha}')">Registrar</button>
     ${renderUltimaVez(def.tipo, fecha)}
     ${renderAgendaSection()}
   `;
@@ -741,7 +771,7 @@ function renderAgendaSection(){
     const defLun = getSessionDef(dLun), defMie = getSessionDef(dMie), defVie = getSessionDef(dVie);
     const rango = `${fmtDateShort(dLun)} – ${fmtDateShort(addDays(w.lunes,6))}`;
     const rows = [[dLun,defLun],[dMie,defMie],[dVie,defVie]].map(([fecha,def])=>{
-      const meta = TIPOS[def.tipo] || {dot:'var(--fg-3)'};
+      const meta = TIPOS[def.tipo] || {dot:'var(--text-3)'};
       const done = DB.sesiones.some(s=>s.fecha===fecha && s.tipo===def.tipo);
       let status;
       if(fecha===today) status='HOY';
@@ -781,7 +811,7 @@ function renderEstaSemanaBox(fecha){
   const dias = [['Lun', week.lunes], ['Mié', addDays(week.lunes,2)], ['Vie', addDays(week.lunes,4)]];
   const rows = dias.map(([lbl,d])=>{
     const def = getSessionDef(d);
-    const meta = TIPOS[def.tipo] || {dot:'var(--fg-3)', label:'—'};
+    const meta = TIPOS[def.tipo] || {dot:'var(--text-3)', label:'—'};
     const done = DB.sesiones.some(s=>s.fecha===d && s.tipo===def.tipo);
     let status;
     if(d===today) status='HOY';
@@ -793,7 +823,7 @@ function renderEstaSemanaBox(fecha){
       <span class="st">${status}</span>
     </div>`;
   }).join('');
-  return `<div class="glass" style="padding:15px 17px"><div class="label">Esta semana</div><div style="margin-top:8px">${rows}</div></div>`;
+  return `<div class="glass" style="padding:14px 16px"><div class="label">Esta semana</div><div style="margin-top:8px">${rows}</div></div>`;
 }
 
 /* ============================================================
@@ -840,7 +870,7 @@ function tiemposInputsHTML(){
 }
 function renderRegistroSheet(){
   const tipo = reg.tipo;
-  const meta = TIPOS[tipo] || {label:'Descanso', color:'var(--fg-3)'};
+  const meta = TIPOS[tipo] || {label:'Descanso', color:'var(--text-3)'};
   let body = '';
   if(tipo==='series' || tipo==='velocidad'){
     body = `
@@ -853,7 +883,7 @@ function renderRegistroSheet(){
       <div class="field"><label class="field-lbl">Ritmo</label>
         <div class="ritmo-field">
           <input class="campo" id="reg-ritmo" value="${ritmoFieldDisplay()}" oninput="regOnRitmoInput(this.value)">
-          <span id="reg-ritmo-unit" style="color:var(--fg-3);font-size:12px">/km</span>
+          <span id="reg-ritmo-unit" style="color:var(--text-3);font-size:12px">/km</span>
           <button class="swap-btn" type="button" onclick="regToggleRitmoMode()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg>
           </button>
@@ -1000,14 +1030,30 @@ function checkPRUpdate(distLabel, value){
 }
 
 /* ============================================================
-   HISTORIAL
+   HISTORIAL / PLANIFICACIÓN (segunda pestaña, dos apartados)
    ============================================================ */
-let histFilter = 'all';
-function filterHistorial(tipo){ histFilter = tipo; renderHistorial(); }
+function setHistorialSub(sub){
+  historialSub = sub;
+  document.querySelectorAll('#hist-switch .metric-btn').forEach(b=>b.classList.toggle('active', b.dataset.sub===sub));
+  document.getElementById('historial-sub-historial').style.display = sub==='historial' ? 'block' : 'none';
+  document.getElementById('historial-sub-planificacion').style.display = sub==='planificacion' ? 'block' : 'none';
+  updateAppHeader();
+  if(sub==='planificacion') renderPlanificacion();
+  else renderHistorialList();
+}
 function renderHistorial(){
+  document.querySelectorAll('#hist-switch .metric-btn').forEach(b=>b.classList.toggle('active', b.dataset.sub===historialSub));
+  document.getElementById('historial-sub-historial').style.display = historialSub==='historial' ? 'block' : 'none';
+  document.getElementById('historial-sub-planificacion').style.display = historialSub==='planificacion' ? 'block' : 'none';
+  if(historialSub==='planificacion') renderPlanificacion();
+  else renderHistorialList();
+}
+let histFilter = 'all';
+function filterHistorial(tipo){ histFilter = tipo; renderHistorialList(); }
+function renderHistorialList(){
   const filterEl = document.getElementById('hist-filter');
   const filtros = [['all','Todo'],['series','Series'],['rodaje','Rodaje'],['velocidad','Velocidad'],['test','Test']];
-  filterEl.innerHTML = filtros.map(([k,l])=>`<button aria-pressed="${histFilter===k}" onclick="filterHistorial('${k}')">${l}</button>`).join('');
+  filterEl.innerHTML = filtros.map(([k,l])=>`<button class="hist-tab ${histFilter===k?'active':''}" onclick="filterHistorial('${k}')">${l}</button>`).join('');
 
   const list = DB.sesiones
     .filter(s=>histFilter==='all' || s.tipo===histFilter)
@@ -1015,7 +1061,7 @@ function renderHistorial(){
 
   const listEl = document.getElementById('hist-list');
   if(!list.length){ listEl.innerHTML = `<div class="empty">Sin sesiones todavía</div>`; return; }
-  listEl.innerHTML = list.map(s=>{
+  listEl.innerHTML = `<div class="glass">` + list.map(s=>{
     const meta = TIPOS[s.tipo];
     let sub = '';
     if(s.tipo==='series' || s.tipo==='velocidad'){
@@ -1033,7 +1079,7 @@ function renderHistorial(){
       <div class="hist-main"><div class="hist-title">${fmtDateLong(s.fecha)} · ${meta.label}</div><div class="hist-sub">${sub}</div></div>
       <span class="hist-ch">›</span>
     </div>`;
-  }).join('');
+  }).join('') + `</div>`;
 }
 function findSesion(key){
   return DB.sesiones.find(s=>(s.id||s.fecha+s.tipo)===key);
@@ -1090,6 +1136,95 @@ function deleteSesion(key){
   persist();
   closeSheet();
   renderCurrent();
+}
+
+/* ============================================================
+   PLANIFICACIÓN — semanas colapsables
+   ============================================================ */
+let planOpenIdx = null;
+function getCurrentWeekIndex(){
+  const today = todayISO();
+  let idx = DB.plan.findIndex(w => today>=w.lunes && today<=addDays(w.lunes,6));
+  if(idx>=0) return idx;
+  idx = DB.plan.findIndex(w => w.lunes>=today);
+  return idx>=0 ? idx : 0;
+}
+function togglePlanWeek(i){
+  planOpenIdx = (planOpenIdx===i) ? null : i;
+  renderPlanificacion();
+}
+function planUpdate(idx, field, sub, value){
+  const w = DB.plan[idx];
+  if(!w[field]) w[field] = {};
+  w[field][sub] = value;
+  persist();
+}
+function updatePlanNotacion(idx, dayKey){
+  const w = DB.plan[idx];
+  const el = document.getElementById(`pn-${idx}-${dayKey}`);
+  if(el) el.textContent = compactNotation({tipo:dayKey, ...w[dayKey]});
+  const chip = document.getElementById(`wk-chip-${idx}`);
+  if(chip) {/* el nº de sesiones es siempre 3, no depende de los campos */}
+}
+function addPlanWeek(){
+  const last = DB.plan[DB.plan.length-1];
+  const nuevoLunes = addDays(last.lunes, 7);
+  DB.plan.push({lunes:nuevoLunes, series:{...last.series}, rodaje:{...last.rodaje}, velocidad:{...last.velocidad}});
+  persist();
+  planOpenIdx = DB.plan.length-1;
+  renderPlanificacion();
+}
+function removePlanWeekConfirm(i){
+  if(!confirm('¿Eliminar esta semana del plan?')) return;
+  DB.plan.splice(i,1);
+  persist();
+  planOpenIdx = null;
+  renderPlanificacion();
+}
+function planFieldCell(idx, dayKey, field, sub, value, lbl, type){
+  const parse = type==='int' ? 'parseInt(this.value,10)||0' : (type==='float' ? 'parseFloat(this.value)||0' : 'this.value');
+  const inputAttrs = type==='text' ? '' : 'type="number" inputmode="decimal"';
+  return `<div class="pf-cell"><span class="pf-lbl">${lbl}</span><input class="f-input" ${inputAttrs} value="${value}" onchange="planUpdate(${idx},'${field}','${sub}',${parse});updatePlanNotacion(${idx},'${dayKey}')"></div>`;
+}
+function planDayBlock(idx, dayKey, dayLabel, tipoLabel, data){
+  let cells;
+  if(dayKey==='rodaje'){
+    cells = planFieldCell(idx,dayKey,'rodaje','dur',data.dur,'MIN','float')
+          + planFieldCell(idx,dayKey,'rodaje','rectas',data.rectas,'RECTAS','int')
+          + '<div class="pf-cell"></div><div class="pf-cell"></div>';
+  } else {
+    cells = planFieldCell(idx,dayKey,dayKey,'n',data.n,'SERIES','int')
+          + planFieldCell(idx,dayKey,dayKey,'dist',data.dist,'DIST M','float')
+          + planFieldCell(idx,dayKey,dayKey,'ritmo',data.ritmo,'RITMO /KM','text')
+          + planFieldCell(idx,dayKey,dayKey,'rec',data.rec,'REC','text');
+  }
+  return `<div class="plan-day">
+    <div class="plan-day-title">${dayLabel} · ${tipoLabel}</div>
+    <div class="pf-grid">${cells}</div>
+    <div class="plan-notacion" id="pn-${idx}-${dayKey}">${compactNotation({tipo:dayKey, ...data})}</div>
+  </div>`;
+}
+function renderPlanificacion(){
+  if(planOpenIdx===null) planOpenIdx = getCurrentWeekIndex();
+  const el = document.getElementById('plan-weeks');
+  el.innerHTML = DB.plan.map((w,i)=>{
+    const open = i===planOpenIdx;
+    return `<div class="glass hist-session">
+      <div class="hist-hdr" onclick="togglePlanWeek(${i})">
+        <div>
+          <div class="hist-date">Semana del ${fmtDateShort(w.lunes)}</div>
+          <div class="hist-meta"><span class="hist-chip">3 sesiones</span></div>
+        </div>
+        <div class="hist-controls"><button class="toggle-btn" id="arr-wk-${i}">${open?'⌄':'›'}</button></div>
+      </div>
+      <div class="hist-body ${open?'open':''}" id="hb-wk-${i}">
+        ${planDayBlock(i,'series','LUNES','SERIES DE RITMO',w.series)}
+        ${planDayBlock(i,'rodaje','MIÉRCOLES','RODAJE BASE',w.rodaje)}
+        ${planDayBlock(i,'velocidad','VIERNES','VELOCIDAD',w.velocidad)}
+        <button class="plan-del-link" onclick="removePlanWeekConfirm(${i})">Eliminar</button>
+      </div>
+    </div>`;
+  }).join('') + `<button class="save-btn" style="margin-top:4px" onclick="addPlanWeek()">+ Añadir semana</button>`;
 }
 
 /* ============================================================
@@ -1205,16 +1340,16 @@ function renderChartTest(){
   const points = tests.map(t=>({y:t.tiempoTotal, label:fmtDateShort(t.fecha)}));
   const chart = points.length<=2
     ? fewPointsHTML(points, {fmt:secToTime, betterLower:true, deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s'})
-    : svgLine(points.map((p,i)=>({...p, txt:secToTime(p.y), showLabel:(i===0||i===points.length-1||p.y===Math.min(...points.map(q=>q.y)))})), {min:180,max:240,color:'#FFD60A',target:186,targetLabel:'Objetivo 3:06',betterLower:true});
+    : svgLine(points.map((p,i)=>({...p, txt:secToTime(p.y), showLabel:(i===0||i===points.length-1||p.y===Math.min(...points.map(q=>q.y)))})), {min:180,max:240,color:'#ffd60a',target:186,targetLabel:'Objetivo 3:06',betterLower:true});
   document.getElementById('chart-test').innerHTML = `
-    <div class="glass chart-card">
-      <div class="chead"><span class="ct">Evolución del test 1.000 m</span><span class="cs">objetivo 3:06</span></div>
+    <div class="glass chart-wrap">
+      <div class="chart-lbl">Evolución del test 1.000 m <span class="chart-sub">· objetivo 3:06</span></div>
       ${chart}
     </div>`;
 }
 function renderChartCaida(){
   const sesiones = DB.sesiones.filter(s=>s.tipo==='series' && s.tiempos && s.tiempos.length>1).sort((a,b)=>a.fecha<b.fecha?-1:1).slice(-6);
-  if(!sesiones.length){ document.getElementById('chart-caida').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Caída de series</span></div><div class="empty-mini">Aparece con tu primera sesión de series</div></div>`; return; }
+  if(!sesiones.length){ document.getElementById('chart-caida').innerHTML = `<div class="glass chart-wrap"><div class="chart-lbl">Caída de series</div><div class="empty-mini">Aparece con tu primera sesión de series</div></div>`; return; }
   const vals = sesiones.map(s=>s.tiempos[0]-s.tiempos[s.tiempos.length-1]);
   const max = Math.max(...vals, 1);
   const rows = sesiones.map((s,i)=>{
@@ -1222,50 +1357,50 @@ function renderChartCaida(){
     const pct = clamp(100-(v/15)*100, 0, 100);
     const w = clamp((Math.abs(v)/max)*100, 6, 100);
     return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-      <span style="font-size:11px;color:var(--fg-3);width:52px;flex:none">${fmtDateShort(s.fecha)}</span>
+      <span style="font-size:11px;color:var(--text-3);width:52px;flex:none;font-family:var(--font-mono)">${fmtDateShort(s.fecha)}</span>
       <div style="flex:1;height:10px;border-radius:5px;background:rgba(255,255,255,.06);overflow:hidden">
         <div style="height:100%;width:${w}%;border-radius:5px;background:${colorDe(pct)}"></div>
       </div>
-      <span style="font-size:12px;color:var(--fg-2);width:40px;text-align:right;flex:none">${Math.round(v)} s</span>
+      <span style="font-size:12px;color:var(--text-2);width:40px;text-align:right;flex:none;font-family:var(--font-mono)">${Math.round(v)} s</span>
     </div>`;
   }).join('');
   document.getElementById('chart-caida').innerHTML = `
-    <div class="glass chart-card">
-      <div class="chead"><span class="ct">Caída de series</span><span class="cs">primera − última, cuanto menos mejor</span></div>
+    <div class="glass chart-wrap">
+      <div class="chart-lbl">Caída de series <span class="chart-sub">· primera − última, cuanto menos mejor</span></div>
       ${rows}
     </div>`;
 }
 function renderChartRitmo130(){
   const sesiones = DB.sesiones.filter(s=>s.tipo==='rodaje' && s.ritmo130!=null).sort((a,b)=>a.fecha<b.fecha?-1:1);
   const points = sesiones.map(s=>({y:s.ritmo130, label:fmtDateShort(s.fecha)}));
-  const chart = adaptiveChart(points, {fmt:v=>secToPace(v), betterLower:true, color:'#22D37A', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s', emptyText:'Aparece con tu primer rodaje'});
+  const chart = adaptiveChart(points, {fmt:v=>secToPace(v), betterLower:true, color:'#b6ff2e', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s', emptyText:'Aparece con tu primer rodaje'});
   document.getElementById('chart-ritmo130').innerHTML = `
-    <div class="glass chart-card">
-      <div class="chead"><span class="ct">Ritmo a 130 ppm</span><span class="cs">motor aeróbico</span></div>
+    <div class="glass chart-wrap">
+      <div class="chart-lbl">Ritmo a 130 ppm <span class="chart-sub">· motor aeróbico</span></div>
       ${chart}
     </div>`;
 }
 function renderChartVelocidad(){
   const sesiones = DB.sesiones.filter(s=>s.tipo==='velocidad' && s.tiempos && s.tiempos.length).sort((a,b)=>a.fecha<b.fecha?-1:1);
   const points = sesiones.map(s=>({y:Math.min(...s.tiempos), media:s.tiempos.reduce((a,b)=>a+b,0)/s.tiempos.length, label:fmtDateShort(s.fecha)}));
-  const chart = adaptiveChart(points, {fmt:secToTime, betterLower:true, color:'#FF9F1C', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s', emptyText:'Aparece con tu primera sesión de 200'});
+  const chart = adaptiveChart(points, {fmt:secToTime, betterLower:true, color:'#ff6b00', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s', emptyText:'Aparece con tu primera sesión de 200'});
   const list = points.slice(-5).reverse().map(p=>`<div class="detail-row"><span class="k">${p.label}</span><span class="v">mejor ${secToTime(p.y)} · media ${secToTime(p.media)}</span></div>`).join('');
   document.getElementById('chart-velocidad').innerHTML = `
-    <div class="glass chart-card">
-      <div class="chead"><span class="ct">Velocidad</span><span class="cs">mejor 200 por sesión</span></div>
+    <div class="glass chart-wrap">
+      <div class="chart-lbl">Velocidad <span class="chart-sub">· mejor 200 por sesión</span></div>
       ${chart}
       ${list}
     </div>`;
 }
 function renderChartCadencia(){
-  const tipos = [['series','var(--c-series)'],['rodaje','var(--c-rodaje)'],['velocidad','var(--c-velocidad)']];
+  const tipos = [['series','var(--blue)'],['rodaje','var(--green)'],['velocidad','var(--orange)']];
   const series = tipos.map(([tipo,color])=>({
     tipo, color,
     points: DB.sesiones.filter(s=>s.tipo===tipo && s.cadencia!=null).sort((a,b)=>a.fecha<b.fecha?-1:1).map(s=>({y:s.cadencia,label:fmtDateShort(s.fecha)}))
   }));
   const totalPts = series.reduce((a,s)=>a+s.points.length,0);
   if(totalPts<2){
-    document.getElementById('chart-cadencia').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Cadencia</span></div><div class="empty-mini">Aparece cuando registres la primera sesión</div></div>`;
+    document.getElementById('chart-cadencia').innerHTML = `<div class="glass chart-wrap"><div class="chart-lbl">Cadencia</div><div class="empty-mini">Aparece cuando registres la primera sesión</div></div>`;
     return;
   }
   const w=320,h=130,pad=14,min=140,max=200;
@@ -1283,13 +1418,13 @@ function renderChartCadencia(){
   });
   const warn = series.find(s=>s.tipo==='rodaje').points.some(p=>p.y<165);
   document.getElementById('chart-cadencia').innerHTML = `
-    <div class="glass chart-card">
-      <div class="chead"><span class="ct">Cadencia</span><span class="cs">pasos / min</span></div>
+    <div class="glass chart-wrap">
+      <div class="chart-lbl">Cadencia <span class="chart-sub">· pasos / min</span></div>
       <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block">${svg}</svg>
       <div class="chart-legend">
-        <span><i style="background:var(--c-series)"></i>Series</span>
-        <span><i style="background:var(--c-rodaje)"></i>Rodaje</span>
-        <span><i style="background:var(--c-velocidad)"></i>Velocidad</span>
+        <span><i style="background:var(--blue)"></i>Series</span>
+        <span><i style="background:var(--green)"></i>Rodaje</span>
+        <span><i style="background:var(--orange)"></i>Velocidad</span>
       </div>
       ${warn?'<div class="chart-note warn">Cadencia de rodaje por debajo de 165 — suele indicar zancada demasiado larga.</div>':''}
     </div>`;
@@ -1307,28 +1442,28 @@ function renderChartCarga(){
     return {lbl:fmtDateShort(w.lunes).split(' ')[0], volumen, densidad};
   });
   if(!data.some(d=>d.volumen>0)){
-    document.getElementById('chart-carga').innerHTML = `<div class="glass chart-card"><div class="chead"><span class="ct">Carga</span></div><div class="empty-mini">Aparece con tu primera sesión de series</div></div>`;
+    document.getElementById('chart-carga').innerHTML = `<div class="glass chart-wrap"><div class="chart-lbl">Carga</div><div class="empty-mini">Aparece con tu primera sesión de series</div></div>`;
     return;
   }
   const maxVol = Math.max(...data.map(d=>d.volumen),1);
-  const barsVol = data.map((d,i)=>`<div class="bar" style="height:${Math.max((d.volumen/maxVol)*100,2)}%;background:linear-gradient(180deg,color-mix(in srgb,var(--c-series) 35%,transparent),var(--c-series));animation-delay:${i*30}ms"><b>${d.volumen||''}</b></div>`).join('');
+  const barsVol = data.map((d,i)=>`<div class="bar" style="height:${Math.max((d.volumen/maxVol)*100,2)}%;background:linear-gradient(180deg,rgba(41,121,255,.45),var(--blue));animation-delay:${i*30}ms"><b>${d.volumen||''}</b></div>`).join('');
   const maxDen = Math.max(...data.map(d=>d.densidad||0),0.01);
-  const barsDen = data.map((d,i)=>`<div class="bar" style="height:${d.densidad?Math.max((d.densidad/maxDen)*100,2):2}%;background:linear-gradient(180deg,color-mix(in srgb,var(--c-rodaje) 35%,transparent),var(--c-rodaje));animation-delay:${i*30}ms"><b>${d.densidad?d.densidad.toFixed(2):''}</b></div>`).join('');
+  const barsDen = data.map((d,i)=>`<div class="bar" style="height:${d.densidad?Math.max((d.densidad/maxDen)*100,2):2}%;background:linear-gradient(180deg,rgba(182,255,46,.45),var(--green));animation-delay:${i*30}ms"><b>${d.densidad?d.densidad.toFixed(2):''}</b></div>`).join('');
   document.getElementById('chart-carga').innerHTML = `
     <div class="glass bars">
-      <div class="chead" style="margin-bottom:12px"><span class="ct">Volumen de calidad</span><span class="cs">metros de series / semana</span></div>
+      <div class="chart-lbl" style="margin-bottom:12px">Volumen de calidad <span class="chart-sub">· metros de series / semana</span></div>
       <div class="bars-grid">${barsVol}</div>
       <div class="bars-axis">${data.map(d=>`<span>${d.lbl}</span>`).join('')}</div>
     </div>
-    <div class="glass bars" style="margin-top:12px">
-      <div class="chead" style="margin-bottom:12px"><span class="ct">Densidad</span><span class="cs">tiempo corriendo / recuperación</span></div>
+    <div class="glass bars" style="margin-top:10px">
+      <div class="chart-lbl" style="margin-bottom:12px">Densidad <span class="chart-sub">· tiempo corriendo / recuperación</span></div>
       <div class="bars-grid">${barsDen}</div>
       <div class="bars-axis">${data.map(d=>`<span>${d.lbl}</span>`).join('')}</div>
     </div>`;
 }
 function deltaBlock(curr, prev, betterLower, fmt){
-  if(curr==null) return `<div class="resumen-val" style="color:var(--fg-3)">—</div><div class="resumen-delta neutral">·</div>`;
-  let delta='<span class="resumen-delta neutral">·</span>';
+  if(curr==null) return `<div class="resumen-val" style="color:var(--text-3)">—</div><div class="resumen-delta neutral">·</div>`;
+  let delta;
   if(prev!=null){
     const d = curr-prev;
     const good = betterLower ? d<0 : d>0;
@@ -1402,11 +1537,11 @@ function zonasFromFCMax(fcmax){
 function renderFisico(){
   document.getElementById('fisico-fcmax').innerHTML = fisicoBlock('fcmax','FC máxima','ppm');
   document.getElementById('fisico-fcreposo').innerHTML = fisicoBlock('fcreposo','FC en reposo','ppm') +
-    `<p style="font-size:11.5px;color:var(--fg-3);margin-top:8px;padding:0 4px">La FC en reposo es el dato más barato de recoger: si sube varios días seguidos, no estás recuperando.</p>`;
+    `<p style="font-size:11.5px;color:var(--text-3);margin-top:8px;padding:0 4px;font-family:var(--font-mono)">La FC en reposo es el dato más barato de recoger: si sube varios días seguidos, no estás recuperando.</p>`;
   document.getElementById('fisico-peso').innerHTML = fisicoBlock('peso','Peso','kg');
 
   const fcmax = DB.fcmax.length ? DB.fcmax[DB.fcmax.length-1].valor : null;
-  let zonasHTML = `<div class="empty-mini" style="padding:14px 17px">Añade una FC máxima para calcular las zonas</div>`;
+  let zonasHTML = `<div class="empty-mini" style="padding:14px 16px">Añade una FC máxima para calcular las zonas</div>`;
   if(fcmax){
     const ranges = zonasFromFCMax(fcmax);
     const names = ['Recuperación','Rodaje fácil','Medio','Umbral','Máximo'];
@@ -1430,114 +1565,36 @@ function renderFisico(){
 /* ============================================================
    AJUSTES
    ============================================================ */
-function planUpdate(idx, field, sub, value){
-  const w = DB.plan[idx];
-  if(!w[field]) w[field] = {};
-  w[field][sub] = value;
-  persist();
-}
-function addPlanWeek(){
-  const last = DB.plan[DB.plan.length-1];
-  const nuevoLunes = addDays(last.lunes, 7);
-  DB.plan.push({lunes:nuevoLunes, series:{...last.series}, rodaje:{...last.rodaje}, velocidad:{...last.velocidad}});
-  persist();
-  renderAjustes();
-}
-function removePlanWeek(idx){
-  if(!confirm('¿Eliminar esta semana del plan?')) return;
-  DB.plan.splice(idx,1);
-  persist();
-  renderAjustes();
-}
-function planField(idx, field, sub, value, width, onchangeType){
-  const parse = onchangeType==='int' ? 'parseInt(this.value,10)' : (onchangeType==='float' ? 'parseFloat(this.value)' : 'this.value');
-  const inputType = onchangeType==='text' ? '' : 'type="number"';
-  return `<input class="campo" style="width:${width}px" ${inputType} value="${value}" onchange="planUpdate(${idx},'${field}','${sub}',${parse})">`;
-}
 function renderAjustes(){
-  document.getElementById('ajustes-plan').innerHTML = `
-    <div class="settings-group">
-      <div class="settings-group-title">Plan</div>
-      <div class="glass">
-        ${DB.plan.map((w,i)=>`
-          <div class="plan-week">
-            <div class="plan-week-top">
-              <div class="plan-week-lbl">Semana del ${fmtDateShort(w.lunes)}</div>
-              <button class="plan-del-btn" onclick="removePlanWeek(${i})">Eliminar</button>
-            </div>
-
-            <div class="plan-type-row">
-              <div class="plan-type-lbl">Series</div>
-              <div class="plan-fields">
-                <div class="plan-field"><span class="plan-field-lbl">Series</span>${planField(i,'series','n',w.series.n,46,'int')}</div>
-                <div class="plan-field"><span class="plan-field-lbl">Dist</span><div class="plan-field-row">${planField(i,'series','dist',w.series.dist,50,'float')}<i class="unit">m</i></div></div>
-                <div class="plan-field"><span class="plan-field-lbl">Ritmo</span><div class="plan-field-row">${planField(i,'series','ritmo',w.series.ritmo,50,'text')}<i class="unit">/km</i></div></div>
-                <div class="plan-field"><span class="plan-field-lbl">Rec</span>${planField(i,'series','rec',w.series.rec,50,'text')}</div>
-              </div>
-            </div>
-            <div class="plan-notacion">${compactNotation({tipo:'series', ...w.series})}</div>
-
-            <div class="plan-type-row">
-              <div class="plan-type-lbl">Rodaje</div>
-              <div class="plan-fields">
-                <div class="plan-field"><span class="plan-field-lbl">Min</span><div class="plan-field-row">${planField(i,'rodaje','dur',w.rodaje.dur,46,'float')}<i class="unit">'</i></div></div>
-                <div class="plan-field"><span class="plan-field-lbl">Rectas</span>${planField(i,'rodaje','rectas',w.rodaje.rectas,46,'int')}</div>
-              </div>
-            </div>
-            <div class="plan-notacion">${compactNotation({tipo:'rodaje', ...w.rodaje})}</div>
-
-            <div class="plan-type-row">
-              <div class="plan-type-lbl">Velocidad</div>
-              <div class="plan-fields">
-                <div class="plan-field"><span class="plan-field-lbl">Series</span>${planField(i,'velocidad','n',w.velocidad.n,46,'int')}</div>
-                <div class="plan-field"><span class="plan-field-lbl">Dist</span><div class="plan-field-row">${planField(i,'velocidad','dist',w.velocidad.dist,50,'float')}<i class="unit">m</i></div></div>
-                <div class="plan-field"><span class="plan-field-lbl">Ritmo</span><div class="plan-field-row">${planField(i,'velocidad','ritmo',w.velocidad.ritmo,50,'text')}<i class="unit">/km</i></div></div>
-                <div class="plan-field"><span class="plan-field-lbl">Rec</span>${planField(i,'velocidad','rec',w.velocidad.rec,50,'text')}</div>
-              </div>
-            </div>
-            <div class="plan-notacion">${compactNotation({tipo:'velocidad', ...w.velocidad})}</div>
-          </div>
-        `).join('')}
-        <div style="padding:13px 17px"><button class="btn-glow tap" style="--c:var(--c-ajustes);width:100%;padding:12px;border-radius:var(--r-md);font-weight:700;font-size:13px" onclick="addPlanWeek()">Añadir semana</button></div>
-      </div>
-    </div>
-  `;
   document.getElementById('ajustes-datos').innerHTML = `
-    <div class="settings-group">
-      <div class="settings-group-title">Datos</div>
-      <div class="glass">
-        <div class="settings-row tap" onclick="exportData()">
-          <div class="settings-icon" style="background:rgba(46,139,255,.08);border-color:rgba(46,139,255,.22)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-series)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-          <span>Exportar datos</span>
-        </div>
-        <div class="settings-row tap" onclick="document.getElementById('import-file').click()">
-          <div class="settings-icon" style="background:rgba(34,211,122,.08);border-color:rgba(34,211,122,.22)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-rodaje)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-          <span>Importar datos</span>
-        </div>
-        <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importData(this.files[0])">
+    <div class="sett-group glass">
+      <div class="sett-group-title">Datos</div>
+      <div class="sett-row tap" onclick="exportData()">
+        <div class="sett-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><line x1="12" y1="3" x2="12" y2="15"/><polyline points="17 8 12 3 7 8"/></svg></div>
+        <span>Exportar datos</span>
       </div>
+      <div class="sett-row tap" onclick="document.getElementById('import-file').click()">
+        <div class="sett-icon" style="background:rgba(182,255,46,0.08);border-color:rgba(182,255,46,0.22)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+        <span>Importar datos</span>
+      </div>
+      <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importData(this.files[0])">
     </div>
   `;
   document.getElementById('ajustes-prefs').innerHTML = `
-    <div class="settings-group">
-      <div class="settings-group-title">Preferencias</div>
-      <div class="glass">
-        <div class="settings-row tap" onclick="toggleRitmoView()">
-          <div class="settings-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg></div>
-          <span>Mostrar ritmo como</span>
-          <span class="state">${DB.pref.ritmo==='pace'?'Ritmo':'Tiempo'}</span>
-        </div>
+    <div class="sett-group glass">
+      <div class="sett-group-title">Preferencias</div>
+      <div class="sett-row tap" onclick="toggleRitmoView()">
+        <div class="sett-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg></div>
+        <span>Mostrar ritmo como&nbsp;&nbsp;<span style="font-size:11px;color:var(--text-3);font-family:var(--font-mono);font-weight:500;">${DB.pref.ritmo==='pace'?'Ritmo':'Tiempo'}</span></span>
       </div>
     </div>
   `;
   document.getElementById('ajustes-peligro').innerHTML = `
-    <div class="settings-group">
-      <div class="settings-group-title">Peligro</div>
-      <div class="glass">
-        <div class="settings-row danger tap" onclick="resetData()">
-          <div class="settings-icon" style="background:rgba(255,59,78,.08);border-color:rgba(255,59,78,.22)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-danger)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></div>
-          <span>Borrar todos los datos</span>
-        </div>
+    <div class="sett-group glass">
+      <div class="sett-group-title">Peligro</div>
+      <div class="sett-row danger tap" onclick="resetData()">
+        <div class="sett-icon" style="background:rgba(255,69,58,0.08);border-color:rgba(255,69,58,0.22)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></div>
+        <span>Borrar todos los datos</span>
       </div>
     </div>
   `;
@@ -1587,8 +1644,9 @@ function resetData(){
 /* ============================================================
    INIT
    ============================================================ */
-document.documentElement.style.setProperty('--halo','var(--c-series)');
+updateAppHeader();
 renderCurrent();
+updateNavIndicator(document.querySelector('.nav-btn.active'));
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
