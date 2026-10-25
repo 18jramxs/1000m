@@ -1,6 +1,6 @@
 ---
-name: 1000 m Tracker
-description: Liquid Glass × Apple Fitness × Nike — mismo sistema visual que gym-tracker, aplicado al tracker de series/rodaje/velocidad + test mensual
+name: KM Tracker
+description: Liquid Glass × Apple Fitness × Nike — mismo sistema visual que gym-tracker, componentes reales reutilizados tal cual (cabecera, today-hero, day-grid, profile-card, emom-card)
 colors:
   bg: "#050507"
   bg-card: "rgba(255,255,255,0.045)"
@@ -79,13 +79,13 @@ components:
     position: "fixed, floating, bottom"
 ---
 
-# Design System: 1000 m Tracker
+# Design System: KM Tracker
 
 ## Overview
 
 **Creative North Star: "The Family Glass" — the exact system shipped in `gym-tracker/index.html`, ported token-for-token, not reinvented.**
 
-This is the second correction of this app's visual direction. The first rewrite (noviembre 2026 training-model change) mistakenly adopted `estudio`'s own visual language (`kit-componentes.html`: Archivo/Archivo Narrow, a shifting per-tab background halo, hand-drawn micro-radii). That was wrong: `estudio` keeps its own system; `1000m` and `gym-tracker` are the pair that share one, and the shared one is gym-tracker's — Bebas Neue, SF Mono, a static tri-color mesh background, a single fixed app header, and the floating pill bottom-nav with its spring-eased sliding indicator. Three pieces of the retired estudio-style skin were kept anyway because they had genuinely earned their place: the Físico screen's card layout (title row → big current value → recent-readings list → add-row), the Historial list's flat row-with-left-dot-and-chevron (rather than gym-tracker's own expandable session cards), and red as the color of the Ajustes "Eliminar" action.
+This app, formerly "1000 m Tracker," is now **KM Tracker**. This is the third correction of its visual direction, and this time the brief was explicit: don't approximate gym-tracker's system, open its real `index.html` and copy the real CSS and markup. `estudio` keeps its own system, untouched; `1000m`/`KM Tracker` and `gym-tracker` are the pair that share one, and the shared one is gym-tracker's — literally, component by component: the same `.header` (CNP badge + centered-ish title + mono accent name), the same `.today-hero` (ghost watermark, oversized Bebas Neue title, shine sweep, date pill), the same `.day-grid`/`.day-btn` picker (now LUN/MIÉ/VIE instead of gym's five training days), the same `.vol-info-btn` access row, the same `.emom-card` quick-register pattern (now logging rep times instead of EMOM dominadas), the same `.profile-card`/`.pstat` (FC máx/FC reposo/Peso in place of peso/grasa/magra), the same `.etapa-badge` chips (now the five HR zones), and the same macros-style detail card (now FC máx/FC reposo/Peso history+add). Two pieces of the earlier estudio-style build survive, re-skinned onto gym-tracker tokens, because the user explicitly asked to keep them: the Sesiones list's flat row-with-left-dot-and-chevron (rather than gym-tracker's own expandable session card), and red as the color of the Ajustes "Eliminar" action.
 
 The material is near-black frosted glass everywhere: translucent white-on-black cards (`--bg-card`) over a slow-drifting three-color radial mesh (blue/lime/orange), with a near-invisible dot-grain texture on top. Big numbers are the loudest thing on screen — the today-hero title, PR tiles, stat pills — in oversized Bebas Neue; everything administrative (dates, ppm, distances, table-like data) drops into small SF Mono. There is exactly one fixed header per screen and it never scrolls or duplicates; section titles inside content (e.g. "Datos"/"Preferencias"/"Peligro" in Ajustes) scroll with the page and are never a second fixed bar.
 
@@ -146,38 +146,62 @@ Four radius steps, identical values and names to gym-tracker: `10px` (`--r-xs`, 
 
 ## Components
 
-### Buttons
-- **Primary (`.cta`/`.save-btn`):** solid white fill, black Bebas Neue uppercase label, `20px` radius — used for "Registrar" and "+ Añadir semana". No colored glow, no per-type tinting (that was the retired estudio-style `btn-glow`); this is gym-tracker's own plain, confident CTA.
-- **Segmented control (`.metric-row`/`.metric-btn`):** 2-equal-width buttons, active inverts to white-on-black — used for the Historial/Planificación switch at the top of the second tab.
-- **Filter pills (`.hist-tabs`/`.hist-tab`):** horizontal-scroll pill row, active inverts to white-on-black — used for Historial's type filter.
+### Header (`.header`, ported verbatim)
+`<span class="cnp-badge">CNP</span>` + `<h1>KM TRACKER&nbsp;&nbsp;<span class="accent">jramxs</span></h1>`, `position:sticky;top:0`, the exact gradient-fade-to-transparent background, `env(safe-area-inset-top)`-aware padding. This is gym-tracker's literal header markup and CSS with only the title string changed. There is exactly one of these; nothing else in the app is a second fixed/sticky header.
 
-### Cards
-- **Default (`.glass`/`.fisico-block`/`.chart-wrap`):** `--bg-card` fill, hairline border, `20px` radius, `shadow-card`. One shared recipe for every card-like surface in the app.
-- **Today-hero:** the one card that breaks the default recipe on purpose — `26px` radius, stronger blur, a ghost Bebas Neue watermark, a one-shot diagonal shine sweep on mount. Ported from gym-tracker's own `.today-hero`.
+### Today-Hero (`.today-hero`, ported verbatim)
+Ghost Bebas Neue watermark (`.today-bg-text`) behind an oversized title (`.today-title`, the session type), a `.today-sub` line carrying the compact notación (tap to flip pace/time), the pitidos affordance, and a read-only date pill (`.date-input-label`) in a `.today-date-row`. One-shot diagonal shine sweep on mount, same timing as gym-tracker. On a rest day the same card shows a smaller (32px) title and a plain date line — rest is explicitly not the hero's full-size content.
 
-### Historial Row (kept from the retired estudio build)
-Flat row — left color dot (session-type color) + title/sub stack + trailing chevron — opening a bottom sheet with the full detail, rather than gym-tracker's own inline-expanding session card. This is one of the three deliberately-kept estudio-style pieces; don't "fix" it back into a `.hist-session` expand-in-place pattern.
+### Day Picker (`.day-grid`/`.day-btn`, ported verbatim)
+Same cells, radius, border, press-scale, and `.selected`/`.today` treatment as gym-tracker's five-day picker, just three cells (LUN/MIÉ/VIE) instead of five. Tapping a day opens its `openRegistro` sheet directly — a genuine capability gained from reusing this component, not just a visual match.
+
+### Access Row (`.vol-info-btn`, ported verbatim)
+Icon (stroke SVG, blue) + label + trailing chevron, one full-width row — "Resumen de la semana" here, "Volumen por grupo muscular" in gym-tracker. Opens a sheet with the week's Lun/Mié/Vie status, reusing `renderEstaSemanaBox`.
+
+### Quick-Register Card (`.emom-card`, ported verbatim)
+Amber-tinted header + body, used for series/velocidad days only (where "one more time" is a meaningful unit, same as gym-tracker's dominadas-rep-counter use of this component). A text input + green `.sign-btn.pos` ("+") appends a parsed time to an in-memory list, rendered as removable chips; the amber-glow `.emom-action` ("Guardar") commits them as that day's `tiempos`. A `.semana-card` row below shows the week's total meters. A small "Editar detalles" link still opens the full `openRegistro` sheet for FC/cadencia/sensación/notas — no field from the old single-sheet flow was removed, this card is a faster path to the one field (tiempos) that's logged most often.
+
+### Profile Card (`.profile-card`/`.pstat`, ported verbatim)
+Avatar with its blue inset glow, name, two `.pchip` pills (objetivo + best test or next test date), then a 3-column `.profile-stats` grid — FC máx / FC reposo / Peso instead of gym-tracker's peso/grasa/magra, each `.pstat` keeping the colored 2px bar-above-the-number (`.pstat::before`) in a type color (red/blue/green) rather than gym's grasa-amber/magra-red.
+
+### Zonas Card (`.etapa-badge`, ported verbatim)
+Same `sec-hdr`/`sec-body` card shape as gym-tracker's "Etapa actual," with each of the five HR zones as its own colored pill chip (`.etapa-badge.z1`…`.z5`, same dot-prefixed pill as gym's deficit/mantenimiento/volumen badges) followed by name, use-case text, and the ppm range.
+
+### Macro-Style Detail Cards (`.macros-grid`-adjacent `sec-hdr`/`sec-body`, ported verbatim)
+FC máx, FC reposo, and Peso each get their own card: icon square + title + a summary subtitle (latest value + date, mirroring gym's "1.2g prot/kg · 0.5g grasa/kg" sec-sub) + a short history list + a date/value/`.f-btn` add-row. This is where new readings are actually entered; the profile card above is read-only at-a-glance.
+
+### Sesiones Row (kept from the retired estudio build)
+Flat row — left color dot (session-type color) + title/sub stack + trailing chevron — opening a bottom sheet with the full detail, rather than gym-tracker's own inline-expanding session card. This is one of the two deliberately-kept estudio-style pieces; don't "fix" it back into a `.hist-session` expand-in-place pattern.
+
+### Sesiones Tab: Hechas / Planificadas (`.metric-row`/`.metric-btn`, ported verbatim)
+The second tab (icon unchanged, label "Sesiones") holds two apartados behind a 2-equal-width segmented control: **Hechas** (the sessions-row list above) and **Planificadas** (the week planner). Planificación is not a settings section; it never was meant to live in Ajustes.
 
 ### Planificación Week (`.hist-session`/`.hist-hdr`/`.hist-body`, reused)
-Each plan week reuses gym-tracker's own collapsible-session component verbatim (tap header to toggle, `›`/`⌄` chevron swap, `.hist-body.open`) rather than inventing a new collapse pattern — a week behaves exactly like a historial session, just with editable fields instead of read-only data. Exactly one week is open by default: whichever week contains today, or the next upcoming week if today falls outside the whole plan. Opening a week closes any other open week (one at a time). Adding a week clones the last week's values and opens the new one for editing.
+Each plan week reuses gym-tracker's own collapsible-session component verbatim (tap header to toggle, `›`/`⌄` chevron swap, `.hist-body.open`) — a week behaves exactly like a sessions row, just with editable fields instead of read-only data. Exactly one week is open by default: whichever week contains today, or the next upcoming week if today falls outside the whole plan. Adding a week clones the last week's values and opens the new one for editing.
 
-### Físico Card (kept from the retired estudio build)
-Title row → oversized current-value readout → recent-readings list → inline add-row (date + value + "+"). This content layout survived the gym-tracker re-theme because it was already solving the "what's my current X and its trend" problem well; only its visual tokens changed (Bebas Neue value, SF Mono history rows, gym-tracker card recipe).
+### Settings Row (`.sett-group`/`.sett-row`/`.sett-icon`, ported verbatim)
+Grouped by a small uppercase eyebrow title, one card per group, rows separated by hairlines (never one card per row) — colored icon square + label + optional right-aligned mono state value. Fixed section order: **Datos** → **Preferencias** → **Peligro**, always last and visually separated.
 
-### Settings Row (`.sett-group`/`.sett-row`/`.sett-icon`, ported)
-Grouped by a small uppercase eyebrow title, one `.glass` card per group, rows separated by hairlines (never one card per row) — colored icon square + label + optional right-aligned mono state value. Fixed section order: **Datos** → **Preferencias** → **Peligro**, always last and visually separated. Planificación is no longer a settings section — it moved to its own apartado under the Historial tab.
+### Buttons
+- **Primary (`.cta`/`.save-btn`):** solid white fill, black Bebas Neue uppercase label, `20px` radius, used where no more specific gym-tracker button applies (e.g. "+ Añadir semana", the plain Registrar CTA on rodaje/test days).
+- **Segmented control (`.metric-row`/`.metric-btn`):** 2-equal-width buttons, active inverts to white-on-black.
+- **Filter pills (`.hist-tabs`/`.hist-tab`):** horizontal-scroll pill row, active inverts to white-on-black — used for the Hechas type filter.
+
+### Cards
+Every card in the app shares gym-tracker's real two-layer recipe: a flat base (fill/border/radius/`shadow-card`) plus a later override that swaps the fill for a subtle layered gradient (`160deg, .055→.018→.03`) with `blur(36px) saturate(220%) brightness(1.05)`, and adds a glossy 1px top-edge seam (`::after`, inset 8%). This applies to `.glass`, `.fisico-block`, `.profile-card`, `.sett-group`, `.hist-session`, and `.emom-card` identically — the "almost-invisible depth" the user called out as missing is this exact two-layer background, not a new effect.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep exactly one fixed `.app-header` per screen; any other title scrolls with its content, per the One-Header Rule.
+- **Do** keep exactly one `.header` in the whole app — sticky, gym-tracker's real markup/CSS, title "KM TRACKER" never changing per screen; any other title scrolls with its content, per the One-Header Rule.
 - **Do** keep each session type's color fixed everywhere it appears — never reassign it to chrome, and never reintroduce per-tab background recoloring.
 - **Do** render every logged/derived value in SF Mono, per the Data-Is-Mono Rule.
 - **Do** give every Planificación day block the same 4-column grid regardless of how many fields it uses, per the Equal-Grid Rule.
-- **Do** treat the nav-indicator's colored glow and the today-hero's shine sweep as intentional gym-tracker brand commitments, not defects to flatten.
+- **Do** treat the nav-indicator's colored glow, the today-hero's shine sweep, and the profile-card's colored `pstat` bars as intentional gym-tracker brand commitments, not defects to flatten.
+- **Do** reach for an existing gym-tracker component (and its real class names) before writing anything new — the standing instruction behind every component listed above.
 
 ### Don't:
-- **Don't** reintroduce Archivo/Archivo Narrow, a shifting background halo, or any other piece of the retired estudio-style (`kit-componentes.html`) skin — that direction was a mistake for this app and is fully retired.
-- **Don't** move Planificación back into Ajustes; it is its own apartado alongside Historial under the second tab.
+- **Don't** reintroduce Archivo/Archivo Narrow, a shifting background halo, or any other piece of the twice-retired estudio-style (`kit-componentes.html`) skin.
+- **Don't** move Planificación back into Ajustes; it is its own apartado (alongside Hechas) inside the Sesiones tab.
 - **Don't** give a day block with fewer fields (rodaje) a narrower or re-centered grid — empty placeholder cells keep every block's columns aligned.
-- **Don't** convert the Historial row or the Físico card layout back to gym-tracker's own native patterns (expandable session, etc.) — those two pieces are deliberate, named exceptions kept from the retired build.
+- **Don't** convert the Sesiones row back to gym-tracker's own expandable-session pattern, or re-theme the Ajustes "Eliminar" row's red away — those are the two deliberate, named exceptions kept from the retired estudio build. Everything else in the app, including Físico, is gym-tracker's own native pattern now, not an exception.

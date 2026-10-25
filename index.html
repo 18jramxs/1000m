@@ -6,9 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="1000 m Tracker">
+<meta name="apple-mobile-web-app-title" content="KM Tracker">
 <meta name="theme-color" content="#050507">
-<title>1000 m Tracker</title>
+<title>KM Tracker</title>
 
 <!-- Bebas Neue — mismo sistema visual que gym-tracker -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,12 +17,13 @@
 
 <style>
 /* ============================================================
-   1000 M TRACKER — v5
-   Tema portado tal cual del gym-tracker (Liquid Glass × Apple
-   Fitness × Nike): mismos tokens, mismos componentes. De la etapa
-   "estudio" solo se conservan tres cosas, re-tematizadas: las
-   tarjetas de Físico, las filas de Historial (punto + chevron) y
-   el rojo de ELIMINAR en Ajustes.
+   KM TRACKER — v6 (antes "1000 m Tracker")
+   Mismo sistema visual que gym-tracker, componentes reales
+   copiados tal cual: cabecera, today-hero, day-grid, vol-info-btn,
+   emom-card, profile-card con pstat, etapa-badge, macros-grid.
+   De la etapa "estudio" solo quedan tres piezas, re-tematizadas:
+   el reparto de contenido de Físico, las filas de Sesiones
+   (punto + chevron) y el rojo de ELIMINAR en Ajustes.
    ============================================================ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
 
@@ -84,31 +85,41 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
 .screen,.app-header,.bottom-nav,.toast{position:relative;z-index:1;}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}}
 
-/* —— CABECERA — una sola, fija, nada se ve por encima —— */
-.app-header{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  padding-top:calc(env(safe-area-inset-top,0px) + 10px);
-  padding-bottom:10px;padding-left:20px;padding-right:20px;
-  background:var(--bg);
+/* —— CABECERA (ported tal cual del gym-tracker: .header) —— */
+.header{
+  background:linear-gradient(to bottom, rgba(5,5,7,0.92) 0%, rgba(5,5,7,0.6) 80%, transparent 100%);
+  backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);
   border-bottom:1px solid var(--border);
-  display:flex;align-items:center;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
 }
-.app-header h1{font-size:12.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text);}
+.header h1{font-size:12.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text);
+  display:flex;align-items:center;gap:10px;}
+.header .cnp-badge{color:var(--blue);font-family:var(--font-sans);font-weight:800;letter-spacing:1.6px;
+  border:1px solid var(--border-2);border-radius:var(--r-xs);padding:2px 6px;font-size:10.5px;line-height:1.4;flex-shrink:0;}
+.header h1 .accent{font-family:var(--font-mono);font-weight:500;letter-spacing:0px;text-transform:none;color:var(--blue);}
 
-.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;
-  padding:calc(env(safe-area-inset-top,0px) + 56px) 16px 8px;}
-.screen{display:none;}
+.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;}
+.screen{display:none;padding:14px 16px 8px;}
 .screen.active{display:flex;flex-direction:column;gap:14px;animation:pageIn 0.36s var(--ease-out-soft) both;}
 @keyframes pageIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
 
 h2.sec{font-size:16px;font-weight:700;color:var(--text);}
 .label{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.6px;font-weight:600;}
 
-/* —— tarjeta compartida (recipe del gym-tracker) —— */
-.glass,.fisico-block,.chart-wrap,.bars{
-  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);
-  backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);
+/* —— tarjeta compartida (recipe del gym-tracker: glass + sheen en capas) —— */
+.glass,.fisico-block,.chart-wrap,.bars,.profile-card,.sett-group,.hist-session,.emom-card{
+  position:relative;border:1px solid var(--border);border-radius:var(--r);
   box-shadow:var(--shadow-card);
+  background:linear-gradient(160deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.018) 60%, rgba(255,255,255,0.03) 100%);
+  backdrop-filter:blur(36px) saturate(220%) brightness(1.05);
+  -webkit-backdrop-filter:blur(36px) saturate(220%) brightness(1.05);
+}
+.glass::after,.fisico-block::after,.profile-card::after,.sett-group::after,.hist-session::after{
+  content:"";position:absolute;top:0;left:8%;right:8%;height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  border-radius:1px;pointer-events:none;
 }
 
 .tap{cursor:pointer;transition:transform 0.16s var(--ease-pop);}
@@ -143,17 +154,134 @@ button{font-family:inherit;}
 .today-bg-text{position:absolute;font-family:var(--font-disp);font-size:54px;font-weight:400;
   color:rgba(255,255,255,0.05);text-transform:uppercase;letter-spacing:-0.5px;line-height:0.85;
   white-space:nowrap;top:14px;right:-8px;pointer-events:none;user-select:none;}
+.today-top-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;position:relative;}
 .today-title{font-family:var(--font-disp);font-size:40px;font-weight:400;letter-spacing:0;line-height:1;
-  color:var(--text);margin-bottom:6px;text-transform:uppercase;position:relative;}
-.notacion{margin-top:8px;font-family:var(--font-mono);font-weight:500;font-size:14px;color:var(--text-2);
-  cursor:pointer;display:inline-flex;align-items:center;gap:8px;position:relative;}
+  color:var(--text);text-transform:uppercase;position:relative;}
+.today-sub{font-size:12px;color:var(--text-2);display:flex;gap:14px;margin-top:6px;position:relative;}
+.notacion{font-family:var(--font-mono);font-weight:500;font-size:14px;color:var(--text-2);
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
 .notacion svg{width:14px;height:14px;color:var(--text-3);flex:none;}
+.today-date-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;position:relative;}
+.date-btn-wrap{position:relative;display:inline-flex;flex-shrink:0;}
 .pitidos-row{margin-top:14px;position:relative;}
 .pitidos-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);
   border:1px solid var(--border);border-radius:var(--r-pill);padding:6px 12px;
   font-size:12px;font-weight:600;color:var(--text-2);}
 .pitidos-btn svg{width:14px;height:14px;}
 .pitidos-line{margin-top:8px;font-size:12px;color:var(--text-3);font-family:var(--font-mono);}
+
+/* —— SESSION INFO (pastilla de fecha, ported) —— */
+.session-info{position:relative;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.date-input-label{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  padding:6px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:var(--r-xs);
+  font-size:11px;font-weight:700;letter-spacing:0.3px;color:var(--text);white-space:nowrap;text-transform:uppercase;}
+
+/* —— DAY GRID (ported: LUN/MIÉ/VIE) —— */
+.day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+.day-btn{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);
+  padding:14px 2px;border-radius:var(--r-sm);font-family:var(--font-disp);font-size:19px;font-weight:400;
+  letter-spacing:0.5px;cursor:pointer;text-align:center;position:relative;overflow:hidden;
+  transition:background 0.22s ease,border-color 0.22s ease,color 0.22s ease,transform 0.18s var(--ease-pop);}
+.day-btn:active{transform:scale(0.95);}
+.day-btn.selected{background:#fff;border-color:#fff;color:#000;font-weight:400;
+  box-shadow:0 6px 18px rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.4);}
+.day-btn.today::after{content:"";position:absolute;left:50%;bottom:5px;width:4px;height:4px;
+  border-radius:50%;background:var(--blue);transform:translateX(-50%);}
+.day-btn.today.selected::after{background:#000;}
+
+/* —— ACCESO (vol-info-btn, ported) —— */
+.vol-info-btn{display:flex;align-items:center;gap:9px;width:100%;margin-bottom:0;
+  background:linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.018));
+  border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 14px;
+  color:var(--text-2);font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;text-align:left;}
+.vol-info-btn svg:first-child{color:var(--blue);flex-shrink:0;}
+.vol-info-btn span{flex:1;}
+.vol-info-btn .chev{color:var(--text-3);flex-shrink:0;}
+
+/* —— TARJETA DE REGISTRO RÁPIDO (emom-card, ported) —— */
+.emom-hdr{display:flex;align-items:center;padding:11px 14px;background:rgba(255,214,10,0.06);
+  border-bottom:1px solid rgba(255,214,10,0.15);gap:10px;}
+.emom-badge{background:rgba(255,214,10,0.18);color:var(--amber);border:1px solid rgba(255,214,10,0.4);
+  border-radius:6px;font-size:10px;font-weight:800;padding:3px 9px;letter-spacing:1px;}
+.emom-body{padding:14px;}
+.emom-action{width:100%;background:linear-gradient(135deg, var(--amber), var(--orange));color:#111;border:none;
+  border-radius:var(--r-sm);padding:12px;font-family:var(--font-disp);font-size:15px;font-weight:400;
+  letter-spacing:1px;cursor:pointer;margin-top:12px;text-transform:uppercase;
+  box-shadow:0 8px 20px rgba(255,107,0,0.3);transition:transform 0.18s;}
+.emom-action:active{transform:scale(0.985);}
+.sign-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:var(--r-sm);
+  font-family:var(--font-disp);font-size:26px;font-weight:400;width:48px;height:48px;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;line-height:1;color:var(--text);}
+.sign-btn.pos{color:var(--green);border-color:rgba(182,255,46,0.3);background:rgba(182,255,46,0.08);}
+.sign-btn.neg{color:var(--red);border-color:rgba(255,69,58,0.3);background:rgba(255,69,58,0.08);}
+.f-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.quick-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.quick-chips span{font-size:12.5px;font-family:var(--font-mono);color:var(--text-2);
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:100px;padding:4px 10px;}
+.quick-chips button{background:none;border:none;color:var(--text-3);font-size:13px;cursor:pointer;padding:0 0 0 4px;}
+.quick-editar{display:block;margin-top:10px;text-align:center;font-size:11.5px;color:var(--text-3);
+  background:none;border:none;cursor:pointer;font-family:inherit;text-decoration:underline;}
+
+/* —— SEMANA-CARD (resumen, ported) —— */
+.semana-card{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:var(--r-sm);
+  overflow:hidden;margin-top:10px;}
+.semana-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:13px;}
+.semana-lbl{color:var(--text-3);}
+.semana-val{font-family:var(--font-mono);font-weight:600;color:var(--text);}
+
+/* —— PERFIL FÍSICO (profile-card, ported) —— */
+.profile-card{overflow:hidden;}
+.profile-ghost{position:absolute;top:-10px;right:-8px;font-family:var(--font-disp);font-size:70px;font-weight:400;
+  color:rgba(255,255,255,0.05);letter-spacing:-1px;line-height:0.8;text-transform:uppercase;white-space:nowrap;
+  pointer-events:none;user-select:none;animation:ghostDrift 9s ease-in-out infinite;}
+@keyframes ghostDrift{0%,100%{opacity:0.045;transform:translateX(0)}50%{opacity:0.08;transform:translateX(-7px)}}
+.profile-top{display:flex;align-items:center;gap:12px;position:relative;padding:15px 16px 0;}
+.profile-av{position:relative;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+  background:linear-gradient(140deg, #fff, #cfe0ff 70%, #a9c6ff);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -2px 4px rgba(41,121,255,0.25), 0 4px 16px rgba(41,121,255,0.22);}
+.profile-av span{font-family:var(--font-disp);font-size:21px;color:#0a1224;position:relative;z-index:2;}
+.profile-id{flex:1;min-width:0;}
+.profile-name{font-family:var(--font-disp);font-size:18px;font-weight:400;letter-spacing:0.2px;color:var(--text);line-height:1.05;}
+.profile-chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.pchip{font-family:var(--font-mono);font-size:10.5px;font-weight:500;color:var(--text-2);padding:3px 9px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:100px;letter-spacing:0.2px;}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin:12px 16px 15px;position:relative;
+  background:var(--border);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;}
+.pstat{background:var(--bg-card);padding:10px 8px 9px;text-align:center;position:relative;}
+.pstat::before{content:"";position:absolute;top:0;left:22%;right:22%;height:2px;border-radius:2px;
+  background:var(--text-3);opacity:0.3;}
+.pstat.fcmax::before{background:var(--red);opacity:0.6;box-shadow:0 0 10px var(--red);}
+.pstat.fcreposo::before{background:var(--blue);opacity:0.6;box-shadow:0 0 10px var(--blue);}
+.pstat.peso::before{background:var(--green);opacity:0.6;box-shadow:0 0 10px var(--green);}
+.pstat-v{font-family:var(--font-disp);font-size:25px;font-weight:400;letter-spacing:-0.5px;line-height:1;color:var(--text);}
+.pstat.fcmax .pstat-v{color:#ff6b6b;}
+.pstat.fcreposo .pstat-v{color:var(--blue2);}
+.pstat.peso .pstat-v{color:#c8ff5e;}
+.pstat-v small{font-size:12px;font-family:var(--font-mono);color:var(--text-3);margin-left:2px;letter-spacing:0;}
+.pstat-l{font-size:9.5px;color:var(--text-3);margin-top:6px;text-transform:uppercase;letter-spacing:0.6px;font-weight:700;}
+
+/* —— ZONAS (etapa-badge, ported) —— */
+.etapa-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:var(--r-pill);
+  font-size:11px;font-weight:800;letter-spacing:0.9px;font-family:inherit;}
+.etapa-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+.etapa-badge.z1{background:rgba(255,255,255,0.06);color:var(--text-2);border:1px solid var(--border-2);}
+.etapa-badge.z2{background:var(--green-bg);color:var(--green);border:1px solid rgba(182,255,46,0.3);}
+.etapa-badge.z3{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(255,214,10,0.3);}
+.etapa-badge.z4{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(255,107,0,0.3);}
+.etapa-badge.z5{background:var(--red-bg);color:var(--red);border:1px solid rgba(255,69,58,0.3);}
+.zona-row2{padding:12px 16px;display:flex;align-items:baseline;gap:12px;}
+.zona-row2+.zona-row2{border-top:1px solid var(--border);}
+.zona-row2 .zr-name{font-size:13px;font-weight:600;color:var(--text);}
+.zona-row2 .zr-use{font-size:11.5px;color:var(--text-3);margin-top:2px;}
+.zona-row2 .zr-rango{margin-left:auto;font-size:12px;color:var(--text-3);font-family:var(--font-mono);flex-shrink:0;}
+
+/* —— MACROS-STYLE detail card (ported) —— */
+.macros-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.macro-item{background:rgba(255,255,255,0.035);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:14px 8px;text-align:center;}
+.macro-val{font-family:var(--font-disp);font-size:28px;color:var(--text);line-height:1;}
+.macro-unit{font-size:10px;color:var(--text-3);font-family:var(--font-mono);margin-top:2px;}
+.macro-lbl{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-top:6px;font-weight:700;}
 
 .hoy-tipo-sm{font-family:var(--font-disp);font-size:28px;letter-spacing:0.4px;text-transform:uppercase;color:var(--text);margin-top:4px;}
 
@@ -288,13 +416,15 @@ button{font-family:inherit;}
 .fisico-add{display:flex;gap:7px;margin-top:10px;}
 .fisico-add input{flex:1;min-width:0;}
 
-.zona-row{padding:13px 16px;}
-.zona-row+.zona-row{border-top:1px solid var(--border);}
-.zona-top{display:flex;align-items:baseline;gap:9px;}
-.zona-nombre{font-weight:700;font-size:13.5px;color:var(--text);}
-.zona-rango{font-size:12px;color:var(--text-3);font-family:var(--font-mono);margin-left:auto;}
-.zona-uso{font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.45;}
-.zona-warn{font-size:11.5px;color:var(--orange);margin-top:6px;line-height:1.45;}
+.zona-warn{font-size:11.5px;color:var(--orange);margin:0 16px 14px;line-height:1.45;}
+
+/* —— sec-hdr (ported: cabecera de tarjeta con icono cuadrado) —— */
+.sec-hdr{display:flex;align-items:center;gap:12px;padding:16px 16px 12px;}
+.sec-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid var(--border);}
+.sec-title{font-size:16px;font-weight:700;color:var(--text);}
+.sec-sub{font-size:12px;color:var(--text-3);margin-top:2px;font-family:var(--font-mono);}
+.sec-body{padding:0 16px 16px;}
 
 /* —— SETTINGS (ported) —— */
 .sett-group{margin-bottom:12px;overflow:hidden;}
@@ -316,6 +446,10 @@ button{font-family:inherit;}
 .campo::placeholder,.f-input::placeholder{color:var(--text-3);font-family:var(--font-sans);}
 textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(--font-sans);}
 .field-lbl{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:5px;display:block;}
+.f-btn{background:#fff;color:#000;border:none;border-radius:var(--r-sm);padding:11px 16px;
+  font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;font-family:inherit;
+  box-shadow:0 6px 14px rgba(255,255,255,0.10);transition:transform 0.15s;}
+.f-btn:active{transform:scale(0.97);}
 .field{margin-bottom:11px;}
 .field-row{display:flex;gap:9px;}
 .field-row .field{flex:1;}
@@ -383,9 +517,10 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(-
 </head>
 <body>
 
-<!-- ───── CABECERA ÚNICA Y FIJA ───── -->
-<div class="app-header">
-  <h1 id="app-header-title">Hoy</h1>
+<!-- ───── CABECERA (idéntica a la del gym-tracker) ───── -->
+<div class="header">
+  <span class="cnp-badge">CNP</span>
+  <h1>KM TRACKER&nbsp;&nbsp;<span class="accent">jramxs</span></h1>
 </div>
 
 <div class="wrap">
@@ -396,8 +531,8 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(-
   <!-- HISTORIAL + PLANIFICACIÓN -->
   <section id="screen-historial" class="screen">
     <div class="metric-row" id="hist-switch">
-      <button class="metric-btn" data-sub="historial" onclick="setHistorialSub('historial')">Historial</button>
-      <button class="metric-btn" data-sub="planificacion" onclick="setHistorialSub('planificacion')">Planificación</button>
+      <button class="metric-btn" data-sub="historial" onclick="setHistorialSub('historial')">Hechas</button>
+      <button class="metric-btn" data-sub="planificacion" onclick="setHistorialSub('planificacion')">Planificadas</button>
     </div>
     <div id="historial-sub-historial">
       <div class="hist-tabs" id="hist-filter"></div>
@@ -422,10 +557,11 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(-
 
   <!-- FISICO -->
   <section id="screen-fisico" class="screen">
+    <div id="fisico-perfil"></div>
+    <div id="fisico-zonas"></div>
+    <div id="fisico-peso"></div>
     <div id="fisico-fcmax"></div>
     <div id="fisico-fcreposo"></div>
-    <div id="fisico-peso"></div>
-    <div id="fisico-zonas"></div>
   </section>
 
   <!-- AJUSTES -->
@@ -434,7 +570,7 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(-
     <div id="ajustes-prefs"></div>
     <div id="ajustes-peligro"></div>
     <div style="text-align:center;padding:22px 0 6px;font-size:11px;color:var(--text-4);font-family:var(--font-mono);letter-spacing:0.4px;">
-      1000 M TRACKER · POR JO$E
+      KM TRACKER · POR JO$E
       <div id="app-version" style="margin-top:5px;font-size:9.5px;opacity:0.6;"></div>
     </div>
   </section>
@@ -447,7 +583,7 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(-
     <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.2V12l3.2 2"/></svg></span>Hoy
   </button>
   <button class="nav-btn" data-tab="historial">
-    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="14" y2="17"/></svg></span>Historial
+    <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="14" y2="17"/></svg></span>Sesiones
   </button>
   <button class="nav-btn" data-tab="progreso">
     <span class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><polyline points="4 18 9 13 13 16 20 7"/></svg></span>Progreso
@@ -502,10 +638,12 @@ function toISO(d){ return `${d.getFullYear()}-${pad2s(d.getMonth()+1)}-${pad2s(d
 function todayISO(){ return toISO(new Date()); }
 function addDays(dateStr, n){ const d=parseISO(dateStr); d.setDate(d.getDate()+n); return toISO(d); }
 const DIAS=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
+const DIAS_FULL=['DOMINGO','LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO'];
 const MESES=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 const MESES_MIN=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 function fmtDateLong(s){ const d=parseISO(s); return `${DIAS[d.getDay()]} ${d.getDate()} ${MESES[d.getMonth()]}`; }
 function fmtDateShort(s){ const d=parseISO(s); return `${d.getDate()} ${MESES_MIN[d.getMonth()]}`; }
+function fmtDatePill(s){ const d=parseISO(s); return `${DIAS_FULL[d.getDay()]} · ${d.getDate()} ${MESES[d.getMonth()]} ${d.getFullYear()}`; }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
@@ -613,18 +751,12 @@ function pitidoSeg(def){
    ============================================================ */
 let currentTab = 'hoy';
 let historialSub = 'historial';
-const HEADER_TITLES = {hoy:'Hoy', progreso:'Progreso', fisico:'Físico', ajustes:'Ajustes'};
-function updateAppHeader(){
-  const t = currentTab==='historial' ? (historialSub==='planificacion' ? 'Planificación' : 'Historial') : HEADER_TITLES[currentTab];
-  document.getElementById('app-header-title').textContent = t;
-}
 function showTab(tab){
   currentTab = tab;
   document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.id==='screen-'+tab));
   const btn = document.querySelector(`.nav-btn[data-tab="${tab}"]`);
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(btn){ btn.classList.add('active'); updateNavIndicator(btn); }
-  updateAppHeader();
   renderCurrent();
 }
 document.querySelectorAll('.nav-btn').forEach(b=>{
@@ -706,6 +838,92 @@ function renderUltimaVez(tipo, fecha){
   }
   return `<div class="glass ultima-vez"><div class="label">Última vez · ${fmtDateShort(prev.fecha)}</div>${body}</div>`;
 }
+function weekTotalMeters(weekMonday){
+  const fin = addDays(weekMonday,6);
+  let m = 0;
+  DB.sesiones.forEach(s=>{
+    if((s.tipo==='series'||s.tipo==='velocidad') && s.fecha>=weekMonday && s.fecha<=fin){
+      m += (s.series||0)*(s.distancia||0);
+    }
+  });
+  return m;
+}
+function fmtMetros(m){ return m.toLocaleString('es-ES')+' m'; }
+function renderDayGrid(fecha){
+  const week = getWeekForDate(fecha);
+  const dias = [['Lun','LUN'],['Mié','MIÉ'],['Vie','VIE']];
+  const offsets = {Lun:0, Mié:2, Vie:4};
+  const btns = dias.map(([key,lbl])=>{
+    const d = week ? addDays(week.lunes, offsets[key]) : null;
+    const isToday = d===fecha;
+    const cls = ['day-btn']; if(isToday) cls.push('selected','today');
+    return `<button class="${cls.join(' ')} tap" ${d?`onclick="openRegistro('${d}')"`:'disabled'}>${lbl}</button>`;
+  }).join('');
+  return `<div class="day-grid">${btns}</div>`;
+}
+let quickTiempos = [];
+function quickAddTiempo(){
+  const input = document.getElementById('quick-tiempo-input');
+  const v = parseFlexTime(input.value);
+  if(v==null) return;
+  quickTiempos.push(v);
+  input.value = '';
+  renderQuickChips();
+}
+function quickRemoveTiempo(i){
+  quickTiempos.splice(i,1);
+  renderQuickChips();
+}
+function renderQuickChips(){
+  const el = document.getElementById('quick-chips');
+  if(!el) return;
+  el.innerHTML = quickTiempos.map((t,i)=>`<span>${secToTime(t)} <button onclick="quickRemoveTiempo(${i})" aria-label="Quitar">✕</button></span>`).join('');
+}
+function quickGuardar(fecha, tipo){
+  if(!quickTiempos.length) return;
+  checkPRUpdate(tipo==='series'?400:200, Math.min(...quickTiempos));
+  const existing = DB.sesiones.find(s=>s.fecha===fecha && s.tipo===tipo);
+  const def = getSessionDef(fecha);
+  const obj = existing ? {...existing} : {fecha, tipo, series:def.n, distancia:def.dist, ritmo:parseFlexTime(def.ritmo), recuperacion:parseFlexTime(def.rec)};
+  obj.tiempos = quickTiempos.slice();
+  obj.series = quickTiempos.length;
+  upsertSesion(obj);
+  persist();
+  quickTiempos = [];
+  toast('Tiempos guardados');
+  renderCurrent();
+}
+function renderQuickCard(def, fecha){
+  const meta = TIPOS[def.tipo];
+  quickTiempos = [];
+  return `
+    <div class="emom-card">
+      <div class="emom-hdr">
+        <div class="sec-icon" style="background:rgba(41,121,255,0.08);border-color:rgba(41,121,255,0.22)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></div>
+        <div><div class="sec-title" style="font-size:15px">Tiempos</div><div class="sec-sub">${fmtDateLong(fecha)}</div></div>
+      </div>
+      <div class="emom-body">
+        <div class="f-row">
+          <input type="text" class="f-input" id="quick-tiempo-input" placeholder="${def.tipo==='series'?'1:25':'40'}" inputmode="decimal">
+          <button class="sign-btn pos tap" onclick="quickAddTiempo()">+</button>
+        </div>
+        <div class="quick-chips" id="quick-chips"></div>
+        <button class="emom-action tap" onclick="quickGuardar('${fecha}','${def.tipo}')">Guardar</button>
+        <button class="quick-editar tap" onclick="openRegistro('${fecha}')">Editar detalles (FC, cadencia, notas)</button>
+      </div>
+    </div>
+    <div class="semana-card">
+      <div class="semana-row"><span class="semana-lbl">Total semana</span><span class="semana-val">${fmtMetros(weekTotalMeters(getWeekForDate(fecha).lunes))}</span></div>
+    </div>
+  `;
+}
+function openResumenSemana(fecha){
+  openSheet(`
+    <div class="sheet-title">Resumen de la semana</div>
+    ${renderEstaSemanaBox(fecha).replace('class="glass"','class="glass" style="padding:0"')}
+    <div class="sheet-actions"><button class="primary" onclick="closeSheet()">Cerrar</button></div>
+  `);
+}
 function renderHoy(){
   const el = document.getElementById('screen-hoy');
   const fecha = todayISO();
@@ -716,15 +934,17 @@ function renderHoy(){
     const next = nextTrainingDate(fecha);
     const nextMeta = TIPOS[next.def.tipo];
     el.innerHTML = `
-      <div class="glass descanso-card">
-        <div class="label">${fmtDateLong(fecha)}</div>
-        <h1 class="hoy-tipo-sm">Descanso</h1>
+      <div class="today-hero">
+        <div class="today-bg-text">DESCANSO</div>
+        <div class="today-top-row"><div class="today-title" style="font-size:32px">Descanso</div></div>
+        <div class="today-sub"><span>${fmtDateLong(fecha)}</span></div>
       </div>
       <div class="glass proximo-box">
         <div class="label">Próximo entreno</div>
         <div class="proximo-dia">${fmtDateLong(next.fecha)} · ${nextMeta.label}</div>
         <div class="proximo-notacion">${compactNotation(next.def)}</div>
       </div>
+      ${renderDayGrid(fecha)}
       ${renderEstaSemanaBox(fecha)}
       ${renderAgendaSection()}
     `;
@@ -733,14 +953,15 @@ function renderHoy(){
   }
 
   const pitidos = (def.tipo==='series'||def.tipo==='velocidad') ? pitidoSeg(def) : null;
+  const quickHTML = (def.tipo==='series'||def.tipo==='velocidad') ? renderQuickCard(def, fecha) : `<button class="cta tap" onclick="openRegistro('${fecha}')">Registrar</button>`;
   el.innerHTML = `
-    <div class="today-hero">
+    <div class="today-hero" id="today-hero">
       <div class="today-bg-text">${tipoMeta.label.split(' ')[0]}</div>
-      <div class="label" style="position:relative">${fmtDateLong(fecha)}</div>
-      <div class="today-title">${tipoMeta.label}</div>
-      <div class="notacion" onclick="toggleRitmoView()">
-        <span>${compactNotation(def)}</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg>
+      <div class="today-top-row"><div class="today-title">${tipoMeta.label}</div></div>
+      <div class="today-sub">
+        <span class="notacion" onclick="toggleRitmoView()">${compactNotation(def)}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;vertical-align:-1px;margin-left:4px"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg>
+        </span>
       </div>
       ${pitidos!=null ? `
       <div class="pitidos-row">
@@ -750,8 +971,17 @@ function renderHoy(){
         </button>
         <div class="pitidos-line" id="pitidos-line" style="display:none">Pitido cada ${pitidos} s · un pitido por cada 100 m</div>
       </div>` : ''}
+      <div class="today-date-row">
+        <div class="date-btn-wrap"><span class="date-input-label">${fmtDatePill(fecha)}</span></div>
+      </div>
     </div>
-    <button class="cta tap" onclick="openRegistro('${fecha}')">Registrar</button>
+    ${renderDayGrid(fecha)}
+    <button class="vol-info-btn tap" onclick="openResumenSemana('${fecha}')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="4" y2="13"/><line x1="10" y1="20" x2="10" y2="8"/><line x1="16" y1="20" x2="16" y2="4"/><line x1="22" y1="20" x2="22" y2="11"/></svg>
+      <span>Resumen de la semana</span>
+      <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    ${quickHTML}
     ${renderUltimaVez(def.tipo, fecha)}
     ${renderAgendaSection()}
   `;
@@ -1037,7 +1267,6 @@ function setHistorialSub(sub){
   document.querySelectorAll('#hist-switch .metric-btn').forEach(b=>b.classList.toggle('active', b.dataset.sub===sub));
   document.getElementById('historial-sub-historial').style.display = sub==='historial' ? 'block' : 'none';
   document.getElementById('historial-sub-planificacion').style.display = sub==='planificacion' ? 'block' : 'none';
-  updateAppHeader();
   if(sub==='planificacion') renderPlanificacion();
   else renderHistorialList();
 }
@@ -1512,37 +1741,43 @@ function addFisico(tipo){
   persist();
   renderFisico();
 }
-function fisicoBlock(tipo, titulo, unidad){
-  const arr = tipo==='fcmax'?DB.fcmax:tipo==='fcreposo'?DB.fcreposo:DB.peso;
-  const last = arr[arr.length-1];
-  const hist = arr.slice(-6).reverse().map(r=>`<div class="fisico-hist-row"><span>${fmtDateShort(r.fecha)}</span><b>${r.valor} ${unidad}</b></div>`).join('');
-  return `
-    <div class="glass fisico-block">
-      <div class="fh"><span class="ft">${titulo}</span></div>
-      <div class="fisico-current">${last?last.valor:'—'}<small>${unidad}</small></div>
-      <div class="fisico-hist">${hist || '<div class="fisico-hist-row"><span>Sin registros</span></div>'}</div>
-      <div class="fisico-add">
-        <input class="campo" type="date" id="fis-${tipo}-fecha" value="${todayISO()}">
-        <input class="campo" type="number" id="fis-${tipo}-valor" placeholder="${unidad}" style="max-width:90px">
-        <button class="icon-btn tap" style="background:rgba(255,255,255,.06);border-radius:var(--r-sm);width:40px" onclick="addFisico('${tipo}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </button>
-      </div>
-    </div>`;
-}
 function zonasFromFCMax(fcmax){
   const pcts = [[50,60],[60,70],[70,80],[80,90],[90,100]];
   return pcts.map(([a,b])=>[Math.round(fcmax*a/100), Math.round(fcmax*b/100)]);
 }
-function renderFisico(){
-  document.getElementById('fisico-fcmax').innerHTML = fisicoBlock('fcmax','FC máxima','ppm');
-  document.getElementById('fisico-fcreposo').innerHTML = fisicoBlock('fcreposo','FC en reposo','ppm') +
-    `<p style="font-size:11.5px;color:var(--text-3);margin-top:8px;padding:0 4px;font-family:var(--font-mono)">La FC en reposo es el dato más barato de recoger: si sube varios días seguidos, no estás recuperando.</p>`;
-  document.getElementById('fisico-peso').innerHTML = fisicoBlock('peso','Peso','kg');
-
+function renderPerfilFisico(){
+  const fcmax = DB.fcmax.length ? DB.fcmax[DB.fcmax.length-1] : null;
+  const fcreposo = DB.fcreposo.length ? DB.fcreposo[DB.fcreposo.length-1] : null;
+  const peso = DB.peso.length ? DB.peso[DB.peso.length-1] : null;
+  const pr1000 = getPR(1000);
+  const next = nextTrainingDate(addDays(todayISO(),-1));
+  const nextTestTxt = next.def.tipo==='test' ? fmtDateShort(next.fecha) : 'por fijar';
+  document.getElementById('fisico-perfil').innerHTML = `
+    <div class="profile-card">
+      <div class="profile-ghost">KM</div>
+      <div class="profile-top">
+        <div class="profile-av"><span>J</span></div>
+        <div class="profile-id">
+          <div class="profile-name">jramxs</div>
+          <div class="profile-chips">
+            <span class="pchip">Objetivo 3:06</span>
+            <span class="pchip">${pr1000?('Mejor '+secToTime(pr1000.valor)):('Próx. test '+nextTestTxt)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="pstat fcmax"><div class="pstat-v">${fcmax?fcmax.valor:'—'}</div><div class="pstat-l">FC máx</div></div>
+        <div class="pstat fcreposo"><div class="pstat-v">${fcreposo?fcreposo.valor:'—'}</div><div class="pstat-l">FC reposo</div></div>
+        <div class="pstat peso"><div class="pstat-v">${peso?peso.valor+'<small>kg</small>':'—'}</div><div class="pstat-l">Peso</div></div>
+      </div>
+    </div>`;
+}
+function renderZonasCard(){
   const fcmax = DB.fcmax.length ? DB.fcmax[DB.fcmax.length-1].valor : null;
-  let zonasHTML = `<div class="empty-mini" style="padding:14px 16px">Añade una FC máxima para calcular las zonas</div>`;
-  if(fcmax){
+  let body;
+  if(!fcmax){
+    body = `<div class="empty-mini" style="padding:0 16px 16px">Añade una FC máxima para calcular las zonas</div>`;
+  } else {
     const ranges = zonasFromFCMax(fcmax);
     const names = ['Recuperación','Rodaje fácil','Medio','Umbral','Máximo'];
     const usos = [
@@ -1552,14 +1787,56 @@ function renderFisico(){
       'Lo más rápido que se aguanta sin que se acumule la acidez: 30–40 min a 165-170, 15–20 min a 170-175.',
       'Donde caen las series y el test.'
     ];
-    zonasHTML = ranges.map(([a,b],i)=>`
-      <div class="zona-row">
-        <div class="zona-top"><span class="zona-nombre">Z${i+1} · ${names[i]}</span><span class="zona-rango">${a}–${b} ppm</span></div>
-        <div class="zona-uso">${usos[i]}</div>
-        ${i===2?'<div class="zona-warn">Es donde se acaba corriendo por defecto, porque va cómodo pero no fácil. Ni construye base como la Z2 ni da estímulo como la Z5. Si el rodaje del miércoles se te va ahí, has perdido el entrenamiento.</div>':''}
-      </div>`).join('');
+    body = `<div class="sec-body" style="padding:0">` + ranges.map(([a,b],i)=>`
+      <div class="zona-row2">
+        <span class="etapa-badge z${i+1}">Z${i+1}</span>
+        <div><div class="zr-name">${names[i]}</div><div class="zr-use">${usos[i]}</div></div>
+        <span class="zr-rango">${a}–${b}</span>
+      </div>`).join('') + `</div>
+      ${fcmax ? `<div class="zona-warn">La Z3 es donde se acaba corriendo por defecto, porque va cómodo pero no fácil: ni construye base como la Z2 ni da estímulo como la Z5.</div>` : ''}`;
   }
-  document.getElementById('fisico-zonas').innerHTML = `<div class="glass">${zonasHTML}</div>`;
+  document.getElementById('fisico-zonas').innerHTML = `
+    <div class="fisico-block" style="padding:0">
+      <div class="sec-hdr">
+        <div class="sec-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <div><div class="sec-title">Zonas de FC</div><div class="sec-sub">${DB.fcmax.length?'Según tu FC máxima':'Sin configurar'}</div></div>
+      </div>
+      ${body}
+    </div>`;
+}
+function macroStyleBlock(tipo, titulo, unidad, iconSvg, iconColorStyle){
+  const arr = tipo==='fcmax'?DB.fcmax:tipo==='fcreposo'?DB.fcreposo:DB.peso;
+  const last = arr[arr.length-1];
+  const hist = arr.slice(-5).reverse().map(r=>`<div class="fisico-hist-row"><span>${fmtDateShort(r.fecha)}</span><b>${r.valor} ${unidad}</b></div>`).join('');
+  return `
+    <div class="fisico-block" style="padding:0">
+      <div class="sec-hdr">
+        <div class="sec-icon" style="${iconColorStyle}">${iconSvg}</div>
+        <div><div class="sec-title">${titulo}</div><div class="sec-sub">${last?last.valor+' '+unidad+' · '+fmtDateShort(last.fecha):'Sin registros'}</div></div>
+      </div>
+      <div class="sec-body">
+        <div class="fisico-hist">${hist || '<div class="fisico-hist-row"><span>Sin registros</span></div>'}</div>
+        <div class="f-row" style="margin-top:10px">
+          <input class="f-input" type="date" id="fis-${tipo}-fecha" value="${todayISO()}" style="flex:1">
+          <input class="f-input" type="number" id="fis-${tipo}-valor" placeholder="${unidad}" style="max-width:80px">
+          <button class="f-btn tap" onclick="addFisico('${tipo}')">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+}
+function renderFisico(){
+  renderPerfilFisico();
+  renderZonasCard();
+  document.getElementById('fisico-peso').innerHTML = macroStyleBlock('peso','Peso','kg',
+    '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="3"/><path d="M5 21v-2a7 7 0 0114 0v2"/></svg>',
+    'background:rgba(182,255,46,0.08);border-color:rgba(182,255,46,0.22)');
+  document.getElementById('fisico-fcmax').innerHTML = macroStyleBlock('fcmax','FC máxima','ppm',
+    '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    'background:rgba(255,69,58,0.08);border-color:rgba(255,69,58,0.22)');
+  document.getElementById('fisico-fcreposo').innerHTML = macroStyleBlock('fcreposo','FC en reposo','ppm',
+    '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+    'background:rgba(41,121,255,0.08);border-color:rgba(41,121,255,0.22)')
+    + `<p style="font-size:11.5px;color:var(--text-3);margin-top:8px;padding:0 4px;font-family:var(--font-mono)">La FC en reposo es el dato más barato de recoger: si sube varios días seguidos, no estás recuperando.</p>`;
 }
 
 /* ============================================================
@@ -1605,7 +1882,7 @@ function exportData(){
   const blob = new Blob([JSON.stringify({sesiones:DB.sesiones, plan:DB.plan, fcmax:DB.fcmax, fcreposo:DB.fcreposo, peso:DB.peso, pref:DB.pref}, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `1000m-backup-${todayISO()}.json`;
+  a.download = `km-tracker-backup-${todayISO()}.json`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -1644,7 +1921,6 @@ function resetData(){
 /* ============================================================
    INIT
    ============================================================ */
-updateAppHeader();
 renderCurrent();
 updateNavIndicator(document.querySelector('.nav-btn.active'));
 
