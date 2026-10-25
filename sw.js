@@ -1,4 +1,4 @@
-const APP_VERSION = 1;
+const APP_VERSION = 2;
 const CACHE_NAME = `m1000-v${APP_VERSION}`;
 const CORE_ASSETS = [
   './',
