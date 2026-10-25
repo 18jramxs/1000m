@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-10-25T00:00:00Z",
-  "title": "Design System: 1000 m Tracker",
+  "title": "Design System: KM Tracker",
   "extensions": {
     "colorMeta": {
       "bg": { "role": "neutral", "displayName": "Void Black", "canonical": "#050507", "tonalRamp": ["#050507","#0a0a0c","#141419","#1e1e24","#38383f","#5c5c66","#8f8f99","#d8d8de"] },
@@ -14,7 +14,11 @@
       "red": { "role": "negative", "displayName": "Danger Red", "canonical": "#ff453a", "tonalRamp": ["#4d1512","#661c17","#80231d","#992a23","#cc3830","#ff453a","#ff7169","#ffaba6"] },
       "ink-black": { "role": "neutral", "displayName": "Ink Black", "canonical": "#000000", "tonalRamp": ["#000000","#000000","#000000","#000000","#1a1a1a","#333333","#4d4d4d","#666666"] },
       "overlay-black": { "role": "neutral", "displayName": "Overlay Black", "canonical": "rgba(0,0,0,0.6)" },
-      "shadow-black": { "role": "neutral", "displayName": "Shadow Black", "canonical": "rgba(0,0,0,0.3)" }
+      "shadow-black": { "role": "neutral", "displayName": "Shadow Black", "canonical": "rgba(0,0,0,0.3)" },
+      "emom-ink": { "role": "neutral", "displayName": "Emom Ink", "canonical": "#111111" },
+      "avatar-sky": { "role": "neutral", "displayName": "Avatar Sky", "canonical": "#cfe0ff" },
+      "avatar-sky-deep": { "role": "neutral", "displayName": "Avatar Sky Deep", "canonical": "#a9c6ff" },
+      "avatar-ink": { "role": "neutral", "displayName": "Avatar Ink", "canonical": "#0a1224" }
     },
     "typographyMeta": {
       "display": { "displayName": "Display (Bebas Neue)", "purpose": "Today-hero title, PR/stat values, plan-day titles, few-points big numbers — oversized Bebas Neue, never dense data." },

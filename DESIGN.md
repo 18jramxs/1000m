@@ -19,6 +19,10 @@ colors:
   ink-black: "#000000"
   overlay-black: "rgba(0,0,0,0.6)"
   shadow-black: "rgba(0,0,0,0.3)"
+  emom-ink: "#111111"
+  avatar-sky: "#cfe0ff"
+  avatar-sky-deep: "#a9c6ff"
+  avatar-ink: "#0a1224"
 typography:
   display:
     fontFamily: "Bebas Neue, Anton, SF Pro Display, system-ui, sans-serif"
@@ -48,6 +52,8 @@ rounded:
   pill: "100px"
   chip: "6px"
   icon-tile: "11px"
+  sec-icon-tile: "12px"
+  seam: "1px"
   tip: "2px-5px"
 spacing:
   screen-pad: "0 16px 8px"
@@ -106,6 +112,8 @@ The material is near-black frosted glass everywhere: translucent white-on-black 
 - **Void** (`#050507`) / **Card glass** (`rgba(255,255,255,0.045)`) / **Text ladder** (`#fff` / `.62` / `.54`): identical to gym-tracker's own tokens, unmodified.
 - **Ink black** (`#000000`): the text color on every inverted "selected/active/primary" surface — `.save-btn`, `.metric-btn.active`, `.hist-tab.active`, `.toggle-row button[aria-pressed="true"]`, `.sheet-actions .primary`. Always paired with a white fill, never used standalone; this is gym-tracker's own invert-to-white convention, reproduced verbatim at every one of its call sites.
 - **Overlay black** (`rgba(0,0,0,0.6)`) / **Shadow black** (`rgba(0,0,0,0.3)`): the bottom-sheet backdrop and the nav-indicator's ambient shadow component respectively — both literal gym-tracker values, not new additions.
+- **Emom ink** (`#111111`): the text color on `.emom-action` (the amber/orange "Guardar" gradient button) — gym-tracker's own near-black, not pure `#000`, chosen there so dark text doesn't look flat against a warm gradient.
+- **Avatar sky / Avatar sky deep / Avatar ink** (`#cfe0ff` / `#a9c6ff` / `#0a1224`): the three stops of `.profile-av`'s diagonal gradient and its initial's text color — literal gym-tracker values for the profile avatar, unrelated to the session-type palette.
 
 ### Named Rules
 **The Invert-to-White Rule.** Every selected/active/primary surface (segmented control, filter pills, toggle rows, the save CTA, the primary sheet action) inverts to solid white fill + ink-black text rather than tinting toward an accent color — ported verbatim from gym-tracker, where this is the one universal "this is chosen/primary" signal.
@@ -142,7 +150,7 @@ Tonal glass layering plus a small shadow vocabulary, identical to gym-tracker: `
 
 ## Shapes
 
-Four radius steps, identical values and names to gym-tracker: `10px` (`--r-xs`, inputs), `14px` (`--r-sm`, small buttons/toggles), `20px` (`--r`, default cards and the primary CTA), `26px` (`--r-lg`, today-hero and the bottom-sheet's top corners), plus a `100px` pill for the nav and segmented controls. Borders are always 1px hairlines at `.08–.14` opacity. Three more values are literal gym-tracker tokens kept outside that main scale because gym-tracker itself keeps them outside it: `6px` (`.hist-chip`, the small meta-chip inside a collapsible session/week header), `11px` (the settings-row icon-tile square), and a `2px–5px` "tip" range for the few decorative micro-details sized to their own element's height rather than the card/button scale — the bar-chart taper (`6px 6px 2px 2px`), the caída-de-series progress-pill (`5px`, half its own `10px` height), and the bottom-sheet's drag handle (`3px` on a `36×5px` bar).
+Four radius steps, identical values and names to gym-tracker: `10px` (`--r-xs`, inputs), `14px` (`--r-sm`, small buttons/toggles), `20px` (`--r`, default cards and the primary CTA), `26px` (`--r-lg`, today-hero and the bottom-sheet's top corners), plus a `100px` pill for the nav and segmented controls. Borders are always 1px hairlines at `.08–.14` opacity. Several more values are literal gym-tracker tokens kept outside that main scale because gym-tracker itself keeps them outside it: `6px` (`.hist-chip`), `11px` (the settings-row icon-tile square, `.sett-icon`), `12px` (the larger `sec-hdr` icon-tile, `.sec-icon` — used on Físico's profile/zonas/macro cards, a size step up from `.sett-icon` in the real gym-tracker file), `1px` (the glossy top-edge seam's own corner rounding, `.card::after{border-radius:1px}`), and a `2px–5px` "tip" range for decorative micro-details sized to their own element's height — the bar-chart taper, the caída-de-series progress-pill (`5px`), and the bottom-sheet's drag handle (`3px` on a `36×5px` bar).
 
 ## Components
 
