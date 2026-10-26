@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-25T00:00:00Z",
+  "generatedAt": "2026-10-26T00:00:00Z",
   "title": "Design System: KM Tracker",
   "extensions": {
     "colorMeta": {
@@ -57,12 +57,20 @@
       "css": ".ds-card{background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.08);border-radius:20px;backdrop-filter:blur(28px) saturate(180%);box-shadow:0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);padding:16px;color:#fff;}.ds-card-lbl{font-size:10px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:rgba(255,255,255,0.54);}.ds-card-body{margin-top:6px;font-family:'SF Mono',monospace;font-size:12.5px;color:rgba(255,255,255,0.62);}"
     },
     {
-      "name": "App Header (fixed, singular)",
+      "name": "Header (fixed, singular, content never changes)",
       "kind": "custom",
       "refersTo": "card-glass",
-      "description": "Exactly one fixed header per screen — solid fill, env(safe-area-inset-top) aware. The correctness mechanism of the One-Header Rule.",
-      "html": "<div class=\"ds-app-header\"><h1>Historial</h1></div>",
-      "css": ".ds-app-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:10px 20px;background:#050507;border-bottom:1px solid rgba(255,255,255,0.08);}.ds-app-header h1{font-size:12.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#fff;}"
+      "description": "Exactly one .header for the whole app — CNP badge + KM TRACKER + jramxs accent, position:fixed with a solid fill (not gym-tracker's own position:sticky + backdrop-filter, which drags on scroll). The correctness mechanism of the One-Header Rule.",
+      "html": "<div class=\"ds-header\"><span class=\"ds-cnp\">CNP</span><h1>KM TRACKER&nbsp;&nbsp;<span class=\"ds-accent\">jramxs</span></h1></div>",
+      "css": ".ds-header{position:fixed;top:0;left:0;right:0;z-index:50;padding:10px 20px 14px;background:#050507;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;}.ds-header h1{font-size:12.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:10px;}.ds-cnp{color:#2979ff;font-weight:800;letter-spacing:1.6px;border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:2px 6px;font-size:10.5px;}.ds-accent{font-family:'SF Mono',monospace;font-weight:500;color:#2979ff;text-transform:none;}"
+    },
+    {
+      "name": "Day Picker + Date Pill",
+      "kind": "custom",
+      "refersTo": "card-glass",
+      "description": "LUN/MIÉ/VIE selector (gym-tracker's own selectDay logic, three cells instead of five) plus an invisible native date input overlaying a styled pill label — both drive the same selectedFecha state behind the Hoy hero.",
+      "html": "<div class=\"ds-day-grid\"><button class=\"ds-day-btn ds-sel\">LUN</button><button class=\"ds-day-btn\">MIÉ</button><button class=\"ds-day-btn\">VIE</button></div><div class=\"ds-date-wrap\"><input type=\"date\" class=\"ds-date-hidden\"><span class=\"ds-date-label\">LUNES · 2 NOV 2026</span></div>",
+      "css": ".ds-day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}.ds-day-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.62);padding:14px 2px;border-radius:14px;font-family:'Bebas Neue',sans-serif;font-size:19px;cursor:pointer;}.ds-sel{background:#fff;border-color:#fff;color:#000;box-shadow:0 6px 18px rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.4);}.ds-date-wrap{position:relative;display:inline-flex;margin-top:10px;}.ds-date-label{padding:6px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:11px;font-weight:700;color:#fff;text-transform:uppercase;pointer-events:none;}.ds-date-hidden{position:absolute;inset:0;opacity:0;}"
     },
     {
       "name": "Bottom Nav (sliding indicator)",
@@ -84,39 +92,43 @@
       "name": "Planificación Week (collapsible)",
       "kind": "custom",
       "refersTo": "card-glass",
-      "description": "Reuses gym-tracker's own hist-session/hist-hdr/hist-body collapse pattern for plan weeks, now holding editable 4-column field grids instead of read-only data.",
-      "html": "<div class=\"ds-wk\"><div class=\"ds-wk-hdr\"><div><div class=\"ds-wk-date\">Semana del 2 nov</div><div class=\"ds-wk-chip\">3 sesiones</div></div><button class=\"ds-wk-arr\">⌄</button></div><div class=\"ds-wk-body\"><div class=\"ds-wk-grid\"><div class=\"ds-wk-cell\"><span>SERIES</span><input value=\"5\"></div><div class=\"ds-wk-cell\"><span>DIST M</span><input value=\"400\"></div><div class=\"ds-wk-cell\"><span>RITMO /KM</span><input value=\"3:32\"></div><div class=\"ds-wk-cell\"><span>REC</span><input value=\"2:00\"></div></div></div></div>",
-      "css": ".ds-wk{background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;}.ds-wk-hdr{padding:13px 15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}.ds-wk-date{font-size:15px;font-weight:700;color:#fff;}.ds-wk-chip{font-size:11px;color:rgba(255,255,255,0.62);background:rgba(255,255,255,0.05);border-radius:6px;padding:2px 8px;font-family:'SF Mono',monospace;margin-top:4px;display:inline-block;}.ds-wk-arr{background:none;border:none;color:rgba(255,255,255,0.54);font-size:22px;cursor:pointer;}.ds-wk-body{padding:10px 15px 12px;border-top:1px solid rgba(255,255,255,0.08);}.ds-wk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.ds-wk-cell{display:flex;flex-direction:column;gap:4px;}.ds-wk-cell span{font-size:9px;color:rgba(255,255,255,0.54);text-transform:uppercase;letter-spacing:0.3px;font-weight:700;text-align:center;}.ds-wk-cell input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-family:'SF Mono',monospace;font-size:13px;padding:8px 2px;text-align:center;width:100%;}"
+      "description": "Reuses gym-tracker's own hist-session/hist-hdr/hist-body collapse pattern for plan weeks, now holding editable 4-column field grids. Edits land in a draft (planDraft), not DB.plan directly; a Cancelar/Guardar footer appears only when the draft differs from the saved week, and folding or switching weeks with a dirty draft asks for confirmation first.",
+      "html": "<div class=\"ds-wk\"><div class=\"ds-wk-hdr\"><div><div class=\"ds-wk-date\">Semana del 2 nov</div><div class=\"ds-wk-chip\">3 sesiones</div></div><button class=\"ds-wk-arr\">⌄</button></div><div class=\"ds-wk-body\"><div class=\"ds-wk-grid\"><div class=\"ds-wk-cell\"><span>SERIES</span><input value=\"5\"></div><div class=\"ds-wk-cell\"><span>DIST M</span><input value=\"400\"></div><div class=\"ds-wk-cell\"><span>RITMO /KM</span><input value=\"3:32\"></div><div class=\"ds-wk-cell\"><span>REC</span><input value=\"2:00\"></div></div><div class=\"ds-wk-footer\"><button class=\"ds-wk-cancel\">Cancelar</button><button class=\"ds-wk-save\">Guardar</button></div></div></div>",
+      "css": ".ds-wk{background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;}.ds-wk-hdr{padding:13px 15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}.ds-wk-date{font-size:15px;font-weight:700;color:#fff;}.ds-wk-chip{font-size:11px;color:rgba(255,255,255,0.62);background:rgba(255,255,255,0.05);border-radius:6px;padding:2px 8px;font-family:'SF Mono',monospace;margin-top:4px;display:inline-block;}.ds-wk-arr{background:none;border:none;color:rgba(255,255,255,0.54);font-size:22px;cursor:pointer;}.ds-wk-body{padding:10px 15px 12px;border-top:1px solid rgba(255,255,255,0.08);}.ds-wk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.ds-wk-cell{display:flex;flex-direction:column;gap:4px;}.ds-wk-cell span{font-size:9px;color:rgba(255,255,255,0.54);text-transform:uppercase;letter-spacing:0.3px;font-weight:700;text-align:center;}.ds-wk-cell input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-family:'SF Mono',monospace;font-size:13px;padding:8px 2px;text-align:center;width:100%;}.ds-wk-footer{display:flex;gap:8px;margin-top:10px;}.ds-wk-cancel{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.62);padding:10px 16px;border-radius:14px;font-size:12.5px;}.ds-wk-save{background:linear-gradient(135deg,#ffd60a,#ff6b00);color:#111;border:none;padding:10px 18px;border-radius:14px;font-family:'Bebas Neue',sans-serif;box-shadow:0 8px 20px rgba(255,107,0,0.3);}"
     }
   ],
   "narrative": {
     "northStar": "The Family Glass",
-    "overview": "This is the second correction of this app's visual direction. The first rewrite mistakenly adopted estudio's own visual language. That was wrong: estudio keeps its own system; 1000m and gym-tracker are the pair that share one, and the shared one is gym-tracker's — Bebas Neue, SF Mono, a static tri-color mesh background, a single fixed app header, and the floating pill bottom-nav with its spring-eased sliding indicator. Three pieces of the retired estudio-style skin were kept anyway because they had genuinely earned their place: the Físico screen's card layout, the Historial list's flat row-with-left-dot-and-chevron, and red as the color of the Ajustes 'Eliminar' action.\n\nThe material is near-black frosted glass everywhere: translucent white-on-black cards over a slow-drifting three-color radial mesh (blue/lime/orange), with a near-invisible dot-grain texture on top. Big numbers are the loudest thing on screen in oversized Bebas Neue; everything administrative drops into small SF Mono. There is exactly one fixed header per screen and it never scrolls or duplicates.",
+    "overview": "This app (formerly '1000 m Tracker') is now KM Tracker, and this is the third correction of its visual direction: estudio keeps its own system, untouched; KM Tracker and gym-tracker are the pair that share one, copied component-by-component from gym-tracker's real index.html rather than approximated — the header, the today-hero, the day-grid (now LUN/MIÉ/VIE), the date pill, the vol-info-btn access row, the emom-card quick-register pattern, the profile-card/pstat trio, the etapa-badge zone chips, and the macros-style detail cards. Only two pieces of the earlier estudio-style build survive, re-skinned onto gym-tracker tokens by explicit request: the Sesiones row's flat dot-and-chevron list, and red for the Ajustes 'Eliminar' action.\n\nThe material is near-black frosted glass everywhere: translucent white-on-black cards over a slow-drifting three-color radial mesh (blue/lime/orange), with a near-invisible dot-grain texture on top. Big numbers are the loudest thing on screen in oversized Bebas Neue; everything administrative drops into small SF Mono. There is exactly one header in the whole app (not per-screen — it never changes), and it is position:fixed with a solid fill rather than gym-tracker's own position:sticky + backdrop-filter, because that literal combination visibly dragged on scroll — a known WebKit compositing bug, not a style choice. Cards never explain their own data in prose; a title and a number are the whole card.",
     "keyCharacteristics": [
-      "Near-black glass cards sharing one recipe: bg-card fill, hairline border, shadow-card",
-      "Bebas Neue oversized numerals for hero/stat/PR values; SF Mono for every logged or computed data point",
-      "A single fixed app-header per screen (never sticky, never duplicated) plus the floating pill bottom-nav with a spring-eased sliding indicator",
+      "Near-black glass cards sharing one recipe: layered gradient fill, hairline border, glossy top-edge seam, shadow-card",
+      "Bebas Neue oversized numerals for hero/stat/PR/pstat values; SF Mono for every logged or computed data point",
+      "Exactly one fixed .header for the whole app (content never changes per screen) plus the floating pill bottom-nav with a spring-eased sliding indicator",
       "Selected/active states invert to solid white-on-black, never a tinted accent",
-      "Static tri-color mesh background — no per-tab recoloring, no halo mechanic"
+      "Static tri-color mesh background — no per-tab recoloring, no halo mechanic",
+      "No explanatory prose under a title/value — the data is the whole card"
     ],
     "rules": [
-      { "name": "The One-Header Rule", "body": "Exactly one .app-header exists per screen render, position:fixed, solid var(--bg) fill. Any title living inside scrolling content is never fixed or sticky — it scrolls normally.", "section": "layout" },
+      { "name": "The One-Header Rule", "body": "Exactly one .header exists in the whole document, position:fixed (not gym-tracker's own position:sticky, which drags on scroll when combined with backdrop-filter), solid var(--bg) fill, a direct unwrapped child of body so no ancestor transform/filter/overflow can break the fixed positioning. Any title living inside scrolling content is never fixed or sticky — it scrolls normally.", "section": "layout" },
       { "name": "The Type-Owns-Its-Color Rule", "body": "Each session type (series/rodaje/velocidad/test) keeps one fixed accent everywhere it appears — colors never migrate to generic chrome, and there is no per-tab background recoloring.", "section": "colors" },
       { "name": "The Data-Is-Mono Rule", "body": "Any value the user logged or the app computed from logged data renders in SF Mono; Bebas Neue is reserved for headline-scale numbers and short uppercase labels.", "section": "typography" },
-      { "name": "The Equal-Grid Rule", "body": "Every Planificación day block's field row is grid-template-columns:repeat(4,1fr) regardless of how many fields that day type needs — rodaje leaves 2 cells empty rather than using a narrower grid, so columns stay aligned across Lunes/Miércoles/Viernes.", "section": "layout" }
+      { "name": "The Equal-Grid Rule", "body": "Every Planificación day block's field row is grid-template-columns:repeat(4,1fr) regardless of how many fields that day type needs — rodaje leaves 2 cells empty rather than using a narrower grid, so columns stay aligned across Lunes/Miércoles/Viernes.", "section": "layout" },
+      { "name": "The No-Explainer Rule", "body": "A card states its title and its data; it never adds a sentence teaching what the data means or why it matters. Short, conditional, data-driven warnings that fire only when a real threshold is crossed (e.g. cadencia below 165) are not explainers and stay.", "section": "components" }
     ],
     "dos": [
-      "Do keep exactly one fixed app-header per screen; any other title scrolls with its content.",
+      "Do keep exactly one fixed .header for the whole app; any other title scrolls with its content.",
       "Do keep each session type's color fixed everywhere it appears — never per-tab background recoloring.",
       "Do render every logged/derived value in SF Mono.",
       "Do give every Planificación day block the same 4-column grid regardless of how many fields it uses.",
-      "Do treat the nav-indicator's colored glow and the today-hero's shine sweep as intentional gym-tracker brand commitments, not defects to flatten."
+      "Do treat the nav-indicator's colored glow, the today-hero's shine sweep, and the emom-action amber glow as intentional gym-tracker brand commitments, not defects to flatten.",
+      "Do let a title/value stand alone without an explanatory sentence under it, per the No-Explainer Rule."
     ],
     "donts": [
-      "Don't reintroduce Archivo/Archivo Narrow, a shifting background halo, or any other piece of the retired estudio-style skin.",
-      "Don't move Planificación back into Ajustes; it is its own apartado alongside Historial under the second tab.",
+      "Don't reintroduce Archivo/Archivo Narrow, a shifting background halo, or any other piece of the twice-retired estudio-style skin.",
+      "Don't move Planificación back into Ajustes; it is its own apartado (alongside Hechas) inside the Sesiones tab.",
       "Don't give a day block with fewer fields a narrower or re-centered grid — empty placeholder cells keep columns aligned.",
-      "Don't convert the Historial row or the Físico card layout back to gym-tracker's own native patterns — those two pieces are deliberate, named exceptions kept from the retired build."
+      "Don't convert the Sesiones row back to gym-tracker's own expandable-session pattern, or re-theme the Ajustes 'Eliminar' row's red away — those are the two deliberate exceptions; everything else, including Físico, is gym-tracker's own native pattern now.",
+      "Don't revert the header to position:sticky to match gym-tracker more literally — that combination is the bug this app's header was fixed to avoid."
     ]
   }
 }
