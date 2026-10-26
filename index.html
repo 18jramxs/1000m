@@ -63,7 +63,7 @@
   color-scheme:dark;
 }
 
-html,body{background:var(--bg);}
+html,body{background:var(--bg);overscroll-behavior-y:none;}
 body{
   color:var(--text);font-family:var(--font-sans);font-size:15px;min-height:100vh;
   padding-bottom:100px;-webkit-font-smoothing:antialiased;position:relative;
@@ -85,14 +85,13 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
 .screen,.app-header,.bottom-nav,.toast{position:relative;z-index:1;}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}}
 
-/* —— CABECERA (ported tal cual del gym-tracker: .header) —— */
+/* —— CABECERA — fija de verdad, nunca se arrastra con el scroll —— */
 .header{
-  background:linear-gradient(to bottom, rgba(5,5,7,0.92) 0%, rgba(5,5,7,0.6) 80%, transparent 100%);
-  backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:var(--bg);
   border-bottom:1px solid var(--border);
-  padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 14px;
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 20px 14px;
   display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
 }
 .header h1{font-size:12.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text);
   display:flex;align-items:center;gap:10px;}
@@ -100,7 +99,8 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
   border:1px solid var(--border-2);border-radius:var(--r-xs);padding:2px 6px;font-size:10.5px;line-height:1.4;flex-shrink:0;}
 .header h1 .accent{font-family:var(--font-mono);font-weight:500;letter-spacing:0px;text-transform:none;color:var(--blue);}
 
-.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;}
+.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;
+  padding-top:calc(env(safe-area-inset-top,0px) + 58px);}
 .screen{display:none;padding:14px 16px 8px;}
 .screen.active{display:flex;flex-direction:column;gap:14px;animation:pageIn 0.36s var(--ease-out-soft) both;}
 @keyframes pageIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
@@ -174,7 +174,10 @@ button{font-family:inherit;}
 .session-info{position:relative;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .date-input-label{position:relative;display:inline-flex;align-items:center;justify-content:center;
   padding:6px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:var(--r-xs);
-  font-size:11px;font-weight:700;letter-spacing:0.3px;color:var(--text);white-space:nowrap;text-transform:uppercase;}
+  font-size:11px;font-weight:700;letter-spacing:0.3px;color:var(--text);white-space:nowrap;text-transform:uppercase;
+  pointer-events:none;}
+.date-input.date-input-hidden{position:absolute;inset:0;width:100%;height:100%;opacity:0;padding:0;border:none;
+  font-size:inherit;cursor:pointer;color-scheme:dark;}
 
 /* —— DAY GRID (ported: LUN/MIÉ/VIE) —— */
 .day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
@@ -357,7 +360,9 @@ button{font-family:inherit;}
 .pf-cell .f-input{font-size:13px;padding:8px 2px;text-align:center;min-width:0;width:100%;}
 .plan-notacion{margin-top:7px;font-size:12px;color:var(--text-3);font-family:var(--font-mono);}
 .plan-del-link{background:none;border:0;color:var(--red);font-size:11px;font-weight:700;letter-spacing:0.3px;
-  text-transform:uppercase;cursor:pointer;padding:4px;display:block;margin:10px 0 0 auto;}
+  text-transform:uppercase;cursor:pointer;padding:4px;}
+.plan-save-row{display:flex;gap:8px;align-items:center;}
+.plan-save-row .btn-ghost{padding:10px 16px;font-size:12.5px;}
 
 /* —— PR / stats (reuso de stats-row/stat-pill) —— */
 .stats-row,.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
@@ -416,7 +421,6 @@ button{font-family:inherit;}
 .fisico-add{display:flex;gap:7px;margin-top:10px;}
 .fisico-add input{flex:1;min-width:0;}
 
-.zona-warn{font-size:11.5px;color:var(--orange);margin:0 16px 14px;line-height:1.45;}
 
 /* —— sec-hdr (ported: cabecera de tarjeta con icono cuadrado) —— */
 .sec-hdr{display:flex;align-items:center;gap:12px;padding:16px 16px 12px;}
@@ -849,17 +853,32 @@ function weekTotalMeters(weekMonday){
   return m;
 }
 function fmtMetros(m){ return m.toLocaleString('es-ES')+' m'; }
-function renderDayGrid(fecha){
-  const week = getWeekForDate(fecha);
+function renderDayGrid(selFecha){
+  const week = getWeekForDate(selFecha);
+  const today = todayISO();
   const dias = [['Lun','LUN'],['Mié','MIÉ'],['Vie','VIE']];
   const offsets = {Lun:0, Mié:2, Vie:4};
   const btns = dias.map(([key,lbl])=>{
     const d = week ? addDays(week.lunes, offsets[key]) : null;
-    const isToday = d===fecha;
-    const cls = ['day-btn']; if(isToday) cls.push('selected','today');
-    return `<button class="${cls.join(' ')} tap" ${d?`onclick="openRegistro('${d}')"`:'disabled'}>${lbl}</button>`;
+    const cls = ['day-btn']; if(d===selFecha) cls.push('selected'); if(d===today) cls.push('today');
+    return `<button class="${cls.join(' ')} tap" ${d?`onclick="selectDay('${d}')"`:'disabled'}>${lbl}</button>`;
   }).join('');
   return `<div class="day-grid">${btns}</div>`;
+}
+let selectedFecha = null;
+function defaultSelectedFecha(){
+  const t = todayISO();
+  return getSessionDef(t).tipo!=='descanso' ? t : nextTrainingDate(t).fecha;
+}
+function selectDay(fecha){
+  selectedFecha = fecha;
+  renderHoy();
+  if(navigator.vibrate) navigator.vibrate(10);
+}
+function onHoyDateChange(v){
+  if(!v) return;
+  selectedFecha = v;
+  renderHoy();
 }
 let quickTiempos = [];
 function quickAddTiempo(){
@@ -926,7 +945,8 @@ function openResumenSemana(fecha){
 }
 function renderHoy(){
   const el = document.getElementById('screen-hoy');
-  const fecha = todayISO();
+  if(selectedFecha==null) selectedFecha = defaultSelectedFecha();
+  const fecha = selectedFecha;
   const def = getSessionDef(fecha);
   const tipoMeta = TIPOS[def.tipo];
 
@@ -972,7 +992,10 @@ function renderHoy(){
         <div class="pitidos-line" id="pitidos-line" style="display:none">Pitido cada ${pitidos} s · un pitido por cada 100 m</div>
       </div>` : ''}
       <div class="today-date-row">
-        <div class="date-btn-wrap"><span class="date-input-label">${fmtDatePill(fecha)}</span></div>
+        <div class="date-btn-wrap">
+          <input type="date" id="hoy-date-input" class="date-input date-input-hidden" value="${fecha}" onchange="onHoyDateChange(this.value)">
+          <span class="date-input-label">${fmtDatePill(fecha)}</span>
+        </div>
       </div>
     </div>
     ${renderDayGrid(fecha)}
@@ -1370,7 +1393,8 @@ function deleteSesion(key){
 /* ============================================================
    PLANIFICACIÓN — semanas colapsables
    ============================================================ */
-let planOpenIdx = null;
+let planOpenIdx = undefined; // undefined = sin calcular todavía; -1 = todas plegadas; N = semana N abierta
+let planDraft = null; // {idx, data} — copia editable de la semana abierta, aparte de DB.plan hasta Guardar
 function getCurrentWeekIndex(){
   const today = todayISO();
   let idx = DB.plan.findIndex(w => today>=w.lunes && today<=addDays(w.lunes,6));
@@ -1378,36 +1402,63 @@ function getCurrentWeekIndex(){
   idx = DB.plan.findIndex(w => w.lunes>=today);
   return idx>=0 ? idx : 0;
 }
+function planHasChanges(){
+  if(!planDraft) return false;
+  return JSON.stringify(planDraft.data) !== JSON.stringify(DB.plan[planDraft.idx]);
+}
+function confirmDiscardPlanChanges(){
+  if(!planHasChanges()) return true;
+  return confirm('Hay cambios sin guardar en esta semana. ¿Descartarlos?');
+}
+function startPlanDraft(idx){
+  planDraft = {idx, data: JSON.parse(JSON.stringify(DB.plan[idx]))};
+}
 function togglePlanWeek(i){
-  planOpenIdx = (planOpenIdx===i) ? null : i;
+  if(!confirmDiscardPlanChanges()) return;
+  planDraft = null;
+  planOpenIdx = (planOpenIdx===i) ? -1 : i;
+  if(planOpenIdx>=0) startPlanDraft(planOpenIdx);
   renderPlanificacion();
 }
 function planUpdate(idx, field, sub, value){
-  const w = DB.plan[idx];
-  if(!w[field]) w[field] = {};
-  w[field][sub] = value;
-  persist();
+  if(!planDraft || planDraft.idx!==idx) startPlanDraft(idx);
+  if(!planDraft.data[field]) planDraft.data[field] = {};
+  planDraft.data[field][sub] = value;
 }
 function updatePlanNotacion(idx, dayKey){
-  const w = DB.plan[idx];
+  const data = planDraft && planDraft.idx===idx ? planDraft.data : DB.plan[idx];
   const el = document.getElementById(`pn-${idx}-${dayKey}`);
-  if(el) el.textContent = compactNotation({tipo:dayKey, ...w[dayKey]});
-  const chip = document.getElementById(`wk-chip-${idx}`);
-  if(chip) {/* el nº de sesiones es siempre 3, no depende de los campos */}
+  if(el) el.textContent = compactNotation({tipo:dayKey, ...data[dayKey]});
+  const footer = document.getElementById(`wk-footer-${idx}`);
+  if(footer) footer.style.display = planHasChanges() ? 'flex' : 'none';
+}
+function savePlanWeek(idx){
+  if(!planDraft || planDraft.idx!==idx) return;
+  DB.plan[idx] = planDraft.data;
+  persist();
+  toast('Semana guardada');
+  renderPlanificacion();
+}
+function cancelPlanWeek(idx){
+  startPlanDraft(idx);
+  renderPlanificacion();
 }
 function addPlanWeek(){
+  if(!confirmDiscardPlanChanges()) return;
   const last = DB.plan[DB.plan.length-1];
   const nuevoLunes = addDays(last.lunes, 7);
   DB.plan.push({lunes:nuevoLunes, series:{...last.series}, rodaje:{...last.rodaje}, velocidad:{...last.velocidad}});
   persist();
   planOpenIdx = DB.plan.length-1;
+  startPlanDraft(planOpenIdx);
   renderPlanificacion();
 }
 function removePlanWeekConfirm(i){
   if(!confirm('¿Eliminar esta semana del plan?')) return;
   DB.plan.splice(i,1);
   persist();
-  planOpenIdx = null;
+  planOpenIdx = -1;
+  planDraft = null;
   renderPlanificacion();
 }
 function planFieldCell(idx, dayKey, field, sub, value, lbl, type){
@@ -1434,12 +1485,14 @@ function planDayBlock(idx, dayKey, dayLabel, tipoLabel, data){
   </div>`;
 }
 function renderPlanificacion(){
-  if(planOpenIdx===null) planOpenIdx = getCurrentWeekIndex();
+  if(planOpenIdx===undefined){ planOpenIdx = getCurrentWeekIndex(); startPlanDraft(planOpenIdx); }
   const el = document.getElementById('plan-weeks');
   el.innerHTML = DB.plan.map((w,i)=>{
     const open = i===planOpenIdx;
+    const data = (open && planDraft && planDraft.idx===i) ? planDraft.data : w;
+    const dirty = open && planHasChanges();
     return `<div class="glass hist-session">
-      <div class="hist-hdr" onclick="togglePlanWeek(${i})">
+      <div class="hist-hdr tap" onclick="togglePlanWeek(${i})">
         <div>
           <div class="hist-date">Semana del ${fmtDateShort(w.lunes)}</div>
           <div class="hist-meta"><span class="hist-chip">3 sesiones</span></div>
@@ -1447,10 +1500,16 @@ function renderPlanificacion(){
         <div class="hist-controls"><button class="toggle-btn" id="arr-wk-${i}">${open?'⌄':'›'}</button></div>
       </div>
       <div class="hist-body ${open?'open':''}" id="hb-wk-${i}">
-        ${planDayBlock(i,'series','LUNES','SERIES DE RITMO',w.series)}
-        ${planDayBlock(i,'rodaje','MIÉRCOLES','RODAJE BASE',w.rodaje)}
-        ${planDayBlock(i,'velocidad','VIERNES','VELOCIDAD',w.velocidad)}
-        <button class="plan-del-link" onclick="removePlanWeekConfirm(${i})">Eliminar</button>
+        ${planDayBlock(i,'series','LUNES','SERIES DE RITMO',data.series)}
+        ${planDayBlock(i,'rodaje','MIÉRCOLES','RODAJE BASE',data.rodaje)}
+        ${planDayBlock(i,'velocidad','VIERNES','VELOCIDAD',data.velocidad)}
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+          <button class="plan-del-link" style="margin:0" onclick="removePlanWeekConfirm(${i})">Eliminar</button>
+          <div class="plan-save-row" id="wk-footer-${i}" style="display:${dirty?'flex':'none'}">
+            <button class="btn-ghost tap" onclick="cancelPlanWeek(${i})">Cancelar</button>
+            <button class="emom-action tap" style="margin:0;width:auto;padding:10px 18px" onclick="savePlanWeek(${i})">Guardar</button>
+          </div>
+        </div>
       </div>
     </div>`;
   }).join('') + `<button class="save-btn" style="margin-top:4px" onclick="addPlanWeek()">+ Añadir semana</button>`;
@@ -1772,36 +1831,38 @@ function renderPerfilFisico(){
       </div>
     </div>`;
 }
+let zonasOpen = false;
+function toggleZonas(){
+  zonasOpen = !zonasOpen;
+  renderZonasCard();
+}
 function renderZonasCard(){
   const fcmax = DB.fcmax.length ? DB.fcmax[DB.fcmax.length-1].valor : null;
-  let body;
+  const names = ['Recuperación','Rodaje fácil','Medio','Umbral','Máximo'];
+  let resumen, body;
   if(!fcmax){
-    body = `<div class="empty-mini" style="padding:0 16px 16px">Añade una FC máxima para calcular las zonas</div>`;
+    resumen = 'Añade tu FC máxima en Datos corporales';
+    body = `<div class="empty-mini" style="padding:0 16px 16px">Sin FC máxima configurada</div>`;
   } else {
     const ranges = zonasFromFCMax(fcmax);
-    const names = ['Recuperación','Rodaje fácil','Medio','Umbral','Máximo'];
-    const usos = [
-      'Caminar y trotar muy suave.',
-      'Donde va el rodaje del miércoles.',
-      'Zona de nadie: cansa sin dar estímulo claro.',
-      'Lo más rápido que se aguanta sin que se acumule la acidez: 30–40 min a 165-170, 15–20 min a 170-175.',
-      'Donde caen las series y el test.'
-    ];
-    body = `<div class="sec-body" style="padding:0">` + ranges.map(([a,b],i)=>`
+    resumen = `Z2 rodaje ${ranges[1][0]}-${ranges[1][1]} · Z5 series ${ranges[4][0]}-${ranges[4][1]}`;
+    body = ranges.map(([a,b],i)=>`
       <div class="zona-row2">
         <span class="etapa-badge z${i+1}">Z${i+1}</span>
-        <div><div class="zr-name">${names[i]}</div><div class="zr-use">${usos[i]}</div></div>
+        <div><div class="zr-name">${names[i]}</div></div>
         <span class="zr-rango">${a}–${b}</span>
-      </div>`).join('') + `</div>
-      ${fcmax ? `<div class="zona-warn">La Z3 es donde se acaba corriendo por defecto, porque va cómodo pero no fácil: ni construye base como la Z2 ni da estímulo como la Z5.</div>` : ''}`;
+      </div>`).join('');
   }
   document.getElementById('fisico-zonas').innerHTML = `
-    <div class="fisico-block" style="padding:0">
-      <div class="sec-hdr">
-        <div class="sec-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <div><div class="sec-title">Zonas de FC</div><div class="sec-sub">${DB.fcmax.length?'Según tu FC máxima':'Sin configurar'}</div></div>
+    <div class="glass hist-session">
+      <div class="hist-hdr tap" onclick="toggleZonas()">
+        <div>
+          <div class="hist-date">Zonas de frecuencia</div>
+          <div class="hist-meta"><span class="hist-chip">${resumen}</span></div>
+        </div>
+        <div class="hist-controls"><button class="toggle-btn">${zonasOpen?'⌄':'›'}</button></div>
       </div>
-      ${body}
+      <div class="hist-body ${zonasOpen?'open':''}">${body}</div>
     </div>`;
 }
 function macroStyleBlock(tipo, titulo, unidad, iconSvg, iconColorStyle){
@@ -1835,8 +1896,7 @@ function renderFisico(){
     'background:rgba(255,69,58,0.08);border-color:rgba(255,69,58,0.22)');
   document.getElementById('fisico-fcreposo').innerHTML = macroStyleBlock('fcreposo','FC en reposo','ppm',
     '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
-    'background:rgba(41,121,255,0.08);border-color:rgba(41,121,255,0.22)')
-    + `<p style="font-size:11.5px;color:var(--text-3);margin-top:8px;padding:0 4px;font-family:var(--font-mono)">La FC en reposo es el dato más barato de recoger: si sube varios días seguidos, no estás recuperando.</p>`;
+    'background:rgba(41,121,255,0.08);border-color:rgba(41,121,255,0.22)');
 }
 
 /* ============================================================

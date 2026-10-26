@@ -119,7 +119,7 @@ The material is near-black frosted glass everywhere: translucent white-on-black 
 **The Invert-to-White Rule.** Every selected/active/primary surface (segmented control, filter pills, toggle rows, the save CTA, the primary sheet action) inverts to solid white fill + ink-black text rather than tinting toward an accent color — ported verbatim from gym-tracker, where this is the one universal "this is chosen/primary" signal.
 
 ### Named Rules
-**The One-Header Rule.** Exactly one `.app-header` exists per screen render, `position:fixed`, solid `var(--bg)` fill, sized by `env(safe-area-inset-top)`. Any title that lives inside scrolling content (settings-group eyebrows, chart labels) is never fixed or sticky — it scrolls normally. Two headers fighting for the same strip of screen is the defect this rule exists to prevent.
+**The One-Header Rule.** Exactly one `.header` exists in the whole document (not per-screen — its content never changes), `position:fixed`, solid `var(--bg)` fill, sized by `env(safe-area-inset-top)`. It must stay a direct, unwrapped child of `<body>`: `position:fixed` breaks the moment any ancestor gets `transform`, `filter`, `backdrop-filter`, `will-change`, or a clipping `overflow` — check for that first if the header ever drags again. Any title that lives inside scrolling content (settings-group eyebrows, chart labels) is never fixed or sticky — it scrolls normally.
 **The Type-Owns-Its-Color Rule.** Each session type (series/rodaje/velocidad/test) keeps one fixed accent everywhere it appears (hero, dot, chart line) — colors never migrate to generic chrome, and there is no per-tab background recoloring.
 
 ## Typography
@@ -155,13 +155,16 @@ Four radius steps, identical values and names to gym-tracker: `10px` (`--r-xs`, 
 ## Components
 
 ### Header (`.header`, ported verbatim)
-`<span class="cnp-badge">CNP</span>` + `<h1>KM TRACKER&nbsp;&nbsp;<span class="accent">jramxs</span></h1>`, `position:sticky;top:0`, the exact gradient-fade-to-transparent background, `env(safe-area-inset-top)`-aware padding. This is gym-tracker's literal header markup and CSS with only the title string changed. There is exactly one of these; nothing else in the app is a second fixed/sticky header.
+`<span class="cnp-badge">CNP</span>` + `<h1>KM TRACKER&nbsp;&nbsp;<span class="accent">jramxs</span></h1>`, `env(safe-area-inset-top)`-aware padding. **`position:fixed`, solid `var(--bg)` fill — not gym-tracker's own `position:sticky` + gradient-fade + backdrop-filter.** That literal combination was tried first (matching gym-tracker byte-for-byte) and visibly dragged with scroll on-device; `position:sticky` plus `backdrop-filter` on the same element is a known WebKit compositing bug. Fixed positioning + a solid fill sidesteps it entirely, at the cost of this one deliberate divergence from "copy tal cual." `.wrap` carries a matching `padding-top:calc(env(safe-area-inset-top,0px) + 58px)` to clear it, and `html,body{overscroll-behavior-y:none}` stops the vertical bounce that would otherwise flash the body background above the fixed header. There is exactly one `.header`; nothing else in the app is a second fixed/sticky header.
 
 ### Today-Hero (`.today-hero`, ported verbatim)
 Ghost Bebas Neue watermark (`.today-bg-text`) behind an oversized title (`.today-title`, the session type), a `.today-sub` line carrying the compact notación (tap to flip pace/time), the pitidos affordance, and a read-only date pill (`.date-input-label`) in a `.today-date-row`. One-shot diagonal shine sweep on mount, same timing as gym-tracker. On a rest day the same card shows a smaller (32px) title and a plain date line — rest is explicitly not the hero's full-size content.
 
-### Day Picker (`.day-grid`/`.day-btn`, ported verbatim)
-Same cells, radius, border, press-scale, and `.selected`/`.today` treatment as gym-tracker's five-day picker, just three cells (LUN/MIÉ/VIE) instead of five. Tapping a day opens its `openRegistro` sheet directly — a genuine capability gained from reusing this component, not just a visual match.
+### Day Picker (`.day-grid`/`.day-btn`, ported verbatim, logic reused)
+Same cells, radius, border, press-scale, and `.selected`/`.today` treatment as gym-tracker's five-day picker, just three cells (LUN/MIÉ/VIE) instead of five. Tapping a day loads that date's session into the hero — the exact `selectDay()`/`.selected`-class-swap logic gym-tracker uses for its own day picker, not a new handler. A module-level `selectedFecha` (gym-tracker's `currentDay`/`currentDate` pair, collapsed into one value since this app has no distinct "day type") drives the whole Hoy screen; it defaults to today if today is a training day, otherwise to the next one (`nextTrainingDate`), and persists across tab switches within the session, same as gym-tracker's own `currentDate`. The real `openRegistro` sheet (and the quick-register card) still act on whichever date is currently selected.
+
+### Date Pill (`.date-input-label` + hidden `<input type="date">`, ported verbatim)
+The visible pill is `pointer-events:none`; a transparent native date input (`.date-input-hidden`, `position:absolute;inset:0`) sits on top of it inside `.date-btn-wrap` and captures the tap, opening iOS's real date picker. Choosing a date calls `onHoyDateChange()`, which sets `selectedFecha` and re-renders — the same invisible-input-over-styled-label trick gym-tracker uses, so the button never has to fake its own calendar UI.
 
 ### Access Row (`.vol-info-btn`, ported verbatim)
 Icon (stroke SVG, blue) + label + trailing chevron, one full-width row — "Resumen de la semana" here, "Volumen por grupo muscular" in gym-tracker. Opens a sheet with the week's Lun/Mié/Vie status, reusing `renderEstaSemanaBox`.
@@ -172,8 +175,8 @@ Amber-tinted header + body, used for series/velocidad days only (where "one more
 ### Profile Card (`.profile-card`/`.pstat`, ported verbatim)
 Avatar with its blue inset glow, name, two `.pchip` pills (objetivo + best test or next test date), then a 3-column `.profile-stats` grid — FC máx / FC reposo / Peso instead of gym-tracker's peso/grasa/magra, each `.pstat` keeping the colored 2px bar-above-the-number (`.pstat::before`) in a type color (red/blue/green) rather than gym's grasa-amber/magra-red.
 
-### Zonas Card (`.etapa-badge`, ported verbatim)
-Same `sec-hdr`/`sec-body` card shape as gym-tracker's "Etapa actual," with each of the five HR zones as its own colored pill chip (`.etapa-badge.z1`…`.z5`, same dot-prefixed pill as gym's deficit/mantenimiento/volumen badges) followed by name, use-case text, and the ppm range.
+### Zonas Card (`.etapa-badge`, ported verbatim; collapse reused from `.hist-session`)
+Collapsed by default, reusing the same `.hist-hdr`/`.hist-body`/chevron-swap pattern as a sessions row or a plan week — the header shows a one-line summary chip ("Z2 rodaje 118–138 · Z5 series 177–197," the two zones actually used day to day) instead of a title + subtitle. Expanded, each of the five HR zones is its own colored pill chip (`.etapa-badge.z1`…`.z5`, same dot-prefixed pill as gym's deficit/mantenimiento/volumen badges) followed by its name and ppm range — no use-case prose underneath; the chip, name, and numbers are the whole row.
 
 ### Macro-Style Detail Cards (`.macros-grid`-adjacent `sec-hdr`/`sec-body`, ported verbatim)
 FC máx, FC reposo, and Peso each get their own card: icon square + title + a summary subtitle (latest value + date, mirroring gym's "1.2g prot/kg · 0.5g grasa/kg" sec-sub) + a short history list + a date/value/`.f-btn` add-row. This is where new readings are actually entered; the profile card above is read-only at-a-glance.
@@ -185,7 +188,9 @@ Flat row — left color dot (session-type color) + title/sub stack + trailing ch
 The second tab (icon unchanged, label "Sesiones") holds two apartados behind a 2-equal-width segmented control: **Hechas** (the sessions-row list above) and **Planificadas** (the week planner). Planificación is not a settings section; it never was meant to live in Ajustes.
 
 ### Planificación Week (`.hist-session`/`.hist-hdr`/`.hist-body`, reused)
-Each plan week reuses gym-tracker's own collapsible-session component verbatim (tap header to toggle, `›`/`⌄` chevron swap, `.hist-body.open`) — a week behaves exactly like a sessions row, just with editable fields instead of read-only data. Exactly one week is open by default: whichever week contains today, or the next upcoming week if today falls outside the whole plan. Adding a week clones the last week's values and opens the new one for editing.
+Each plan week reuses gym-tracker's own collapsible-session component verbatim (tap header to toggle, `›`/`⌄` chevron swap, `.hist-body.open`) — a week behaves exactly like a sessions row, just with editable fields instead of read-only data. Exactly one week is open by default: whichever week contains today, or the next upcoming week if today falls outside the whole plan; opening a different week always closes whichever one was open (never two at once). Adding a week clones the last week's values and opens the new one for editing.
+
+**Edits are a draft, not a live write.** Opening a week snapshots it into `planDraft` (a deep clone); every field's `onchange` writes into that draft, not into `DB.plan`, and updates that day's `plan-notacion` line live. A `.plan-save-row` (`Cancelar` as `.btn-ghost`, `Guardar` as the amber-glow `.emom-action`) appears only when the draft differs from the saved week (`planHasChanges()`, a `JSON.stringify` diff) and is invisible otherwise. `Guardar` commits the draft into `DB.plan` and persists; `Cancelar` re-snapshots from the saved week, discarding edits. Folding the week, opening a different one, or deleting it while the draft is dirty asks for confirmation first (`confirmDiscardPlanChanges()`) — this is the one place in the app a destructive-ish action gets a native `confirm()` guard beyond actual deletions.
 
 ### Settings Row (`.sett-group`/`.sett-row`/`.sett-icon`, ported verbatim)
 Grouped by a small uppercase eyebrow title, one card per group, rows separated by hairlines (never one card per row) — colored icon square + label + optional right-aligned mono state value. Fixed section order: **Datos** → **Preferencias** → **Peligro**, always last and visually separated.
@@ -201,12 +206,16 @@ Every card in the app shares gym-tracker's real two-layer recipe: a flat base (f
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep exactly one `.header` in the whole app — sticky, gym-tracker's real markup/CSS, title "KM TRACKER" never changing per screen; any other title scrolls with its content, per the One-Header Rule.
+- **Do** keep exactly one `.header` in the whole app — `position:fixed`, title "KM TRACKER" never changing per screen; any other title scrolls with its content, per the One-Header Rule.
 - **Do** keep each session type's color fixed everywhere it appears — never reassign it to chrome, and never reintroduce per-tab background recoloring.
 - **Do** render every logged/derived value in SF Mono, per the Data-Is-Mono Rule.
 - **Do** give every Planificación day block the same 4-column grid regardless of how many fields it uses, per the Equal-Grid Rule.
 - **Do** treat the nav-indicator's colored glow, the today-hero's shine sweep, and the profile-card's colored `pstat` bars as intentional gym-tracker brand commitments, not defects to flatten.
 - **Do** reach for an existing gym-tracker component (and its real class names) before writing anything new — the standing instruction behind every component listed above.
+- **Do** let a title/value stand on its own without an explanatory sentence under it (Físico's FC máx/FC reposo/zonas were explicitly cleaned of this); a number with a label is self-explanatory, per the No-Explainer Rule.
+
+### Named Rules
+**The No-Explainer Rule.** A card states its title and its data; it does not add a sentence teaching the user what the data means or why it matters (e.g. the removed "la FC en reposo es el dato más barato de recoger…" and "la Z3 es donde se acaba corriendo por defecto…" paragraphs). Short, conditional, data-driven warnings that fire only when a real threshold is crossed (the cadencia-below-165 note) are a different thing and stay — the line is "always-on generic teaching text" vs. "a specific fact about specific logged data."
 
 ### Don't:
 - **Don't** reintroduce Archivo/Archivo Narrow, a shifting background halo, or any other piece of the twice-retired estudio-style (`kit-componentes.html`) skin.
