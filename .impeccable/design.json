@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T00:00:00Z",
+  "generatedAt": "2026-10-26T01:00:00Z",
   "title": "Design System: KM Tracker",
   "extensions": {
     "colorMeta": {
@@ -92,7 +92,7 @@
       "name": "Planificación Week (collapsible)",
       "kind": "custom",
       "refersTo": "card-glass",
-      "description": "Reuses gym-tracker's own hist-session/hist-hdr/hist-body collapse pattern for plan weeks, now holding editable 4-column field grids. Edits land in a draft (planDraft), not DB.plan directly; a Cancelar/Guardar footer appears only when the draft differs from the saved week, and folding or switching weeks with a dirty draft asks for confirmation first.",
+      "description": "Reuses gym-tracker's own hist-session/hist-hdr/hist-body collapse pattern for plan weeks. Lunes and Viernes (when not set to Test) hold any number of named blocks, each its own 4-column field row (SERIES/DIST M/RITMO/REC) plus a name field and a remove (✕) control, with a dashed '+ Bloque' row to append another; Miércoles and a Viernes set to Test stay single-field. Viernes also carries a 2-up toggle-row (Velocidad/Test) stored per week. Edits land in a draft (planDraft), not DB.plan directly; a Cancelar/Guardar footer appears only when the draft differs from the saved week, and folding or switching weeks with a dirty draft asks for confirmation first.",
       "html": "<div class=\"ds-wk\"><div class=\"ds-wk-hdr\"><div><div class=\"ds-wk-date\">Semana del 2 nov</div><div class=\"ds-wk-chip\">3 sesiones</div></div><button class=\"ds-wk-arr\">⌄</button></div><div class=\"ds-wk-body\"><div class=\"ds-wk-grid\"><div class=\"ds-wk-cell\"><span>SERIES</span><input value=\"5\"></div><div class=\"ds-wk-cell\"><span>DIST M</span><input value=\"400\"></div><div class=\"ds-wk-cell\"><span>RITMO /KM</span><input value=\"3:32\"></div><div class=\"ds-wk-cell\"><span>REC</span><input value=\"2:00\"></div></div><div class=\"ds-wk-footer\"><button class=\"ds-wk-cancel\">Cancelar</button><button class=\"ds-wk-save\">Guardar</button></div></div></div>",
       "css": ".ds-wk{background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;}.ds-wk-hdr{padding:13px 15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}.ds-wk-date{font-size:15px;font-weight:700;color:#fff;}.ds-wk-chip{font-size:11px;color:rgba(255,255,255,0.62);background:rgba(255,255,255,0.05);border-radius:6px;padding:2px 8px;font-family:'SF Mono',monospace;margin-top:4px;display:inline-block;}.ds-wk-arr{background:none;border:none;color:rgba(255,255,255,0.54);font-size:22px;cursor:pointer;}.ds-wk-body{padding:10px 15px 12px;border-top:1px solid rgba(255,255,255,0.08);}.ds-wk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.ds-wk-cell{display:flex;flex-direction:column;gap:4px;}.ds-wk-cell span{font-size:9px;color:rgba(255,255,255,0.54);text-transform:uppercase;letter-spacing:0.3px;font-weight:700;text-align:center;}.ds-wk-cell input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-family:'SF Mono',monospace;font-size:13px;padding:8px 2px;text-align:center;width:100%;}.ds-wk-footer{display:flex;gap:8px;margin-top:10px;}.ds-wk-cancel{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.62);padding:10px 16px;border-radius:14px;font-size:12.5px;}.ds-wk-save{background:linear-gradient(135deg,#ffd60a,#ff6b00);color:#111;border:none;padding:10px 18px;border-radius:14px;font-family:'Bebas Neue',sans-serif;box-shadow:0 8px 20px rgba(255,107,0,0.3);}"
     }
@@ -113,7 +113,8 @@
       { "name": "The Type-Owns-Its-Color Rule", "body": "Each session type (series/rodaje/velocidad/test) keeps one fixed accent everywhere it appears — colors never migrate to generic chrome, and there is no per-tab background recoloring.", "section": "colors" },
       { "name": "The Data-Is-Mono Rule", "body": "Any value the user logged or the app computed from logged data renders in SF Mono; Bebas Neue is reserved for headline-scale numbers and short uppercase labels.", "section": "typography" },
       { "name": "The Equal-Grid Rule", "body": "Every Planificación day block's field row is grid-template-columns:repeat(4,1fr) regardless of how many fields that day type needs — rodaje leaves 2 cells empty rather than using a narrower grid, so columns stay aligned across Lunes/Miércoles/Viernes.", "section": "layout" },
-      { "name": "The No-Explainer Rule", "body": "A card states its title and its data; it never adds a sentence teaching what the data means or why it matters. Short, conditional, data-driven warnings that fire only when a real threshold is crossed (e.g. cadencia below 165) are not explainers and stay.", "section": "components" }
+      { "name": "The No-Explainer Rule", "body": "A card states its title and its data; it never adds a sentence teaching what the data means or why it matters. Short, conditional, data-driven warnings that fire only when a real threshold is crossed (e.g. cadencia below 165) are not explainers and stay.", "section": "components" },
+      { "name": "The Typed-Time Rule", "body": "Every time-valued field shares one onTimeInput/onTimeBlur pair: typing digits-only live-formats right-to-left (last 2 digits = seconds, rest = minutes, under 3 digits displays bare), and a seconds component over 59 flags .time-error on blur and blocks that field's save action until fixed.", "section": "components" }
     ],
     "dos": [
       "Do keep exactly one fixed .header for the whole app; any other title scrolls with its content.",
@@ -121,7 +122,8 @@
       "Do render every logged/derived value in SF Mono.",
       "Do give every Planificación day block the same 4-column grid regardless of how many fields it uses.",
       "Do treat the nav-indicator's colored glow, the today-hero's shine sweep, and the emom-action amber glow as intentional gym-tracker brand commitments, not defects to flatten.",
-      "Do let a title/value stand alone without an explanatory sentence under it, per the No-Explainer Rule."
+      "Do let a title/value stand alone without an explanatory sentence under it, per the No-Explainer Rule.",
+      "Do route every time-valued input through the shared onTimeInput/onTimeBlur pair and block save on .time-error, per the Typed-Time Rule."
     ],
     "donts": [
       "Don't reintroduce Archivo/Archivo Narrow, a shifting background halo, or any other piece of the twice-retired estudio-style skin.",
