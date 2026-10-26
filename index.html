@@ -108,9 +108,13 @@ body::after{content:"";position:fixed;inset:0;background-image:radial-gradient(r
 h2.sec{font-size:16px;font-weight:700;color:var(--text);}
 .label{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.6px;font-weight:600;}
 
-/* —— tarjeta compartida (recipe del gym-tracker: glass + sheen en capas) —— */
+/* —— tarjeta compartida (recipe del gym-tracker: glass + sheen en capas) ——
+   overflow:hidden + background-clip:padding-box + isolation:isolate: sin esto,
+   cualquier hijo con fondo propio a sangre (ej. .emom-hdr) o un borde translúcido
+   sobre el fondo asoma en dientes por fuera de la esquina redondeada del padre. */
 .glass,.fisico-block,.chart-wrap,.bars,.profile-card,.sett-group,.hist-session,.emom-card{
-  position:relative;border:1px solid var(--border);border-radius:var(--r);
+  position:relative;overflow:hidden;isolation:isolate;
+  border:1px solid var(--border);border-radius:var(--r);background-clip:padding-box;
   box-shadow:var(--shadow-card);
   background:linear-gradient(160deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.018) 60%, rgba(255,255,255,0.03) 100%);
   backdrop-filter:blur(36px) saturate(220%) brightness(1.05);
@@ -119,7 +123,7 @@ h2.sec{font-size:16px;font-weight:700;color:var(--text);}
 .glass::after,.fisico-block::after,.profile-card::after,.sett-group::after,.hist-session::after{
   content:"";position:absolute;top:0;left:8%;right:8%;height:1px;
   background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-  border-radius:1px;pointer-events:none;
+  border-radius:inherit;pointer-events:none;
 }
 
 .tap{cursor:pointer;transition:transform 0.16s var(--ease-pop);}
@@ -142,7 +146,7 @@ button{font-family:inherit;}
 
 /* —— HOY: today-hero (ported) —— */
 .today-hero{
-  position:relative;border-radius:var(--r-lg);
+  position:relative;border-radius:var(--r-lg);isolation:isolate;background-clip:padding-box;
   background:linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025));
   border:1px solid var(--border-2);backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);
   padding:22px;overflow:hidden;box-shadow:var(--shadow-card-lg);
@@ -224,6 +228,14 @@ button{font-family:inherit;}
 .quick-chips button{background:none;border:none;color:var(--text-3);font-size:13px;cursor:pointer;padding:0 0 0 4px;}
 .quick-editar{display:block;margin-top:10px;text-align:center;font-size:11.5px;color:var(--text-3);
   background:none;border:none;cursor:pointer;font-family:inherit;text-decoration:underline;}
+.bloque-group{margin-bottom:14px;}
+.bloque-group:last-of-type{margin-bottom:0;}
+.bloque-hdr{font-size:11px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:8px;font-family:var(--font-mono);}
+.bloque-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.slot-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.slot-n{font-size:9px;color:var(--text-3);font-family:var(--font-mono);font-weight:700;}
+.slot-wrap .campo{text-align:center;padding:10px 4px;}
+.bloque-avg{margin-top:8px;font-size:12px;color:var(--text-2);font-family:var(--font-mono);}
 
 /* —— SEMANA-CARD (resumen, ported) —— */
 .semana-card{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:var(--r-sm);
@@ -315,6 +327,17 @@ button{font-family:inherit;}
 .agenda-day .st{font-size:11px;color:var(--text-3);font-weight:600;flex:none;font-family:var(--font-mono);}
 .agenda-day.today .t{color:var(--text);font-weight:700;}
 
+/* —— resumen de la semana (ficha dedicada: margen uniforme, HOY como pastilla interior) —— */
+.resumen-row{display:flex;align-items:center;gap:10px;padding:11px 0;min-height:24px;}
+.resumen-row+.resumen-row{border-top:1px solid var(--border);}
+.resumen-row .dot{width:8px;height:8px;border-radius:50%;flex:none;}
+.resumen-row .day{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.4px;width:26px;flex:none;line-height:1;}
+.resumen-row .name{flex:1;min-width:0;font-size:13px;color:var(--text-2);line-height:1;}
+.resumen-row .name b{color:var(--text);font-weight:700;font-family:var(--font-mono);}
+.resumen-row .status{flex:none;font-size:10px;font-weight:800;letter-spacing:0.4px;text-transform:uppercase;
+  color:var(--text-3);font-family:var(--font-mono);line-height:1;}
+.resumen-row .status.hoy{color:#000;background:#fff;border-radius:100px;padding:3px 9px;}
+
 .descanso-card{padding:16px;}
 
 /* —— SEGMENTED CONTROL / PILLS (ported) —— */
@@ -359,6 +382,12 @@ button{font-family:inherit;}
 .pf-lbl{font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.3px;font-weight:700;text-align:center;}
 .pf-cell .f-input{font-size:13px;padding:8px 2px;text-align:center;min-width:0;width:100%;}
 .plan-notacion{margin-top:7px;font-size:12px;color:var(--text-3);font-family:var(--font-mono);}
+.plan-bloque-row{margin-bottom:10px;}
+.plan-bloque-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.plan-bloque-hdr .pb-nombre{flex:1;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;padding:7px 9px;}
+.pb-del{flex:none;background:none;border:0;color:var(--text-3);font-size:14px;cursor:pointer;padding:4px 6px;}
+.plan-add-bloque{display:block;width:100%;margin-top:4px;padding:9px;border-radius:var(--r-xs);background:rgba(255,255,255,0.04);
+  border:1px dashed var(--border-2);color:var(--text-3);font-size:11.5px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;cursor:pointer;font-family:inherit;}
 .plan-del-link{background:none;border:0;color:var(--red);font-size:11px;font-weight:700;letter-spacing:0.3px;
   text-transform:uppercase;cursor:pointer;padding:4px;}
 .plan-save-row{display:flex;gap:8px;align-items:center;}
@@ -447,6 +476,7 @@ button{font-family:inherit;}
   -webkit-appearance:none;font-family:var(--font-mono);transition:border-color 0.18s,background 0.18s;
 }
 .campo:focus,.f-input:focus,select.campo:focus,textarea.campo:focus{border-color:var(--border-3);background:rgba(255,255,255,0.09);}
+.time-error{border-color:var(--red) !important;background:var(--red-bg) !important;}
 .campo::placeholder,.f-input::placeholder{color:var(--text-3);font-family:var(--font-sans);}
 textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(--font-sans);}
 .field-lbl{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:5px;display:block;}
@@ -477,7 +507,7 @@ textarea.campo{resize:vertical;min-height:60px;line-height:1.4;font-family:var(-
 .modal-sheet{width:100%;background:linear-gradient(165deg, rgba(30,30,37,0.82), rgba(14,14,18,0.92));
   backdrop-filter:var(--glass-strong);-webkit-backdrop-filter:var(--glass-strong);
   border:1px solid var(--border-2);border-bottom:none;border-radius:var(--r-lg) var(--r-lg) 0 0;
-  padding:22px 20px 40px;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-card-lg);
+  padding:22px 20px calc(40px + env(safe-area-inset-bottom,0px));max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-card-lg);
   transform:translateY(100%);transition:transform 0.4s var(--ease-drawer);}
 .modal-shroud.open .modal-sheet{transform:translateY(0);}
 .modal-grab{width:38px;height:5px;background:rgba(255,255,255,0.18);border-radius:3px;margin:0 auto 18px;}
@@ -651,18 +681,54 @@ function fmtDatePill(s){ const d=parseISO(s); return `${DIAS_FULL[d.getDay()]} �
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
+/* —— formateo en vivo de campos de tiempo (teclado numérico de iPhone no tiene ":") ——
+   escribir solo dígitos: "1"→"1", "12"→"12", "125"→"1:25", "1253"→"12:53"
+   (de derecha a izquierda: últimos 2 dígitos = segundos, resto = minutos; <3 dígitos = segundos sueltos) */
+function formatTimeTyping(digits){
+  if(digits==='') return '';
+  if(digits.length<=2) return digits;
+  const sec = digits.slice(-2);
+  const min = String(parseInt(digits.slice(0,-2),10));
+  return `${min}:${sec}`;
+}
+function timeFieldValue(sec){
+  if(sec==null||isNaN(sec)) return '';
+  sec = Math.round(sec);
+  if(sec<60) return String(sec);
+  const m = Math.floor(sec/60), s = sec%60;
+  return `${m}:${pad2(s)}`;
+}
+function onTimeInput(e){
+  const el = e.target;
+  const digits = el.value.replace(/\D/g,'').slice(0,4);
+  el.value = formatTimeTyping(digits);
+  el.classList.remove('time-error');
+}
+function onTimeBlur(e){
+  const el = e.target;
+  const v = el.value;
+  el.classList.remove('time-error');
+  if(v.includes(':')){
+    const sec = Number(v.split(':')[1]);
+    if(sec>59) el.classList.add('time-error');
+  }
+}
+
 /* ============================================================
    DATOS
    ============================================================ */
 const OLD_KEYS = ['m1000_sessions','m1000_meta','m1000_agenda','m1000_last_export_ts','m1000_export_reminder_seen','m1000_cleared_at'];
 OLD_KEYS.forEach(k=>localStorage.removeItem(k));
 
+function bloqueRectas(n){ return {nombre:'Rectas', n, dist:100, ritmo:'', rec:'1:00'}; }
+function bloqueSeries(n,dist,ritmo,rec){ return {nombre:'Series', n, dist, ritmo, rec}; }
+
 const PLAN_DEFAULT = [
-  {lunes:'2026-11-02', series:{n:5,dist:400,ritmo:'3:32',rec:'2:00'}, rodaje:{dur:35,rectas:4}, velocidad:{n:8,dist:200,ritmo:'3:20',rec:'1:30'}},
-  {lunes:'2026-11-09', series:{n:6,dist:400,ritmo:'3:30',rec:'2:00'}, rodaje:{dur:38,rectas:4}, velocidad:{n:8,dist:200,ritmo:'3:20',rec:'1:30'}},
-  {lunes:'2026-11-16', series:{n:5,dist:400,ritmo:'3:23',rec:'2:00'}, rodaje:{dur:40,rectas:6}, velocidad:{n:10,dist:200,ritmo:'3:20',rec:'1:30'}},
-  {lunes:'2026-11-23', series:{n:6,dist:400,ritmo:'3:25',rec:'1:45'}, rodaje:{dur:40,rectas:6}, velocidad:{n:8,dist:200,ritmo:'3:10',rec:'1:30'}},
-  {lunes:'2026-11-30', series:{n:5,dist:400,ritmo:'3:25',rec:'2:00'}, rodaje:{dur:25,rectas:4}, velocidad:{n:8,dist:200,ritmo:'3:20',rec:'1:30'}},
+  {lunes:'2026-11-02', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:32','2:00')], rodaje:{dur:35,rectas:4}, viernesTipo:'test', viernesBloques:[bloqueSeries(8,200,'3:20','1:30')], test:{dist:1000}},
+  {lunes:'2026-11-09', lunesBloques:[bloqueRectas(3), bloqueSeries(6,400,'3:30','2:00')], rodaje:{dur:38,rectas:4}, viernesTipo:'velocidad', viernesBloques:[bloqueSeries(8,200,'3:20','1:30')], test:{dist:1000}},
+  {lunes:'2026-11-16', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:23','2:00')], rodaje:{dur:40,rectas:6}, viernesTipo:'velocidad', viernesBloques:[bloqueSeries(10,200,'3:20','1:30')], test:{dist:1000}},
+  {lunes:'2026-11-23', lunesBloques:[bloqueRectas(3), bloqueSeries(6,400,'3:25','1:45')], rodaje:{dur:40,rectas:6}, viernesTipo:'velocidad', viernesBloques:[bloqueSeries(8,200,'3:10','1:30')], test:{dist:1000}},
+  {lunes:'2026-11-30', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:25','2:00')], rodaje:{dur:25,rectas:4}, viernesTipo:'test', viernesBloques:[bloqueSeries(8,200,'3:20','1:30')], test:{dist:1000}},
 ];
 
 const TESTS_DEFAULT = [
@@ -674,8 +740,8 @@ const FCMAX_DEFAULT = [{fecha:'2026-09-27', valor:197}];
 const FCREPOSO_DEFAULT = [{fecha:'2026-09-27', valor:49}];
 
 function loadJSON(key, fallback){
-  try{ const v = localStorage.getItem(key); return v==null ? fallback : JSON.parse(v); }
-  catch(e){ return fallback; }
+  try{ const v = localStorage.getItem(key); return v==null ? JSON.parse(JSON.stringify(fallback)) : JSON.parse(v); }
+  catch(e){ return JSON.parse(JSON.stringify(fallback)); }
 }
 function saveJSON(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
 
@@ -697,8 +763,8 @@ function persist(){
   saveJSON('m1000_pref', DB.pref);
 }
 
-const APP_VERSION = 1;
-const APP_BUILD_DATE = '25 oct 2026';
+const APP_VERSION = 2;
+const APP_BUILD_DATE = '26 oct 2026';
 
 const TIPOS = {
   series:{label:'Series de ritmo', color:'var(--c-series)', dot:'var(--blue)'},
@@ -723,31 +789,102 @@ function getWeekForDate(dateStr){
 function getSessionDef(dateStr){
   const d = parseISO(dateStr);
   const dow = d.getDay();
-  if(dow===5 && isFirstFriday(d)) return {tipo:'test'};
   const week = getWeekForDate(dateStr);
   if(!week) return {tipo:'descanso'};
-  if(dow===1) return {tipo:'series', ...week.series};
-  if(dow===3) return {tipo:'rodaje', ...week.rodaje};
-  if(dow===5) return {tipo:'velocidad', ...week.velocidad};
+  if(dow===1) return {tipo:'series', bloques:week.lunesBloques};
+  if(dow===3) return {tipo:'rodaje', dur:week.rodaje.dur, rectas:week.rodaje.rectas};
+  if(dow===5){
+    if(week.viernesTipo==='test') return {tipo:'test', dist:(week.test&&week.test.dist)||1000};
+    return {tipo:'velocidad', bloques:week.viernesBloques};
+  }
   return {tipo:'descanso'};
+}
+function bloqueNotation(b, mode, tipo){
+  if(!b.ritmo) return `${b.n} × ${b.dist}`;
+  const paceSec = parseFlexTime(b.ritmo);
+  const recSec = parseFlexTime(b.rec);
+  let val;
+  if(mode==='pace') val = `@ ${b.ritmo}${tipo==='series'?'/km':''}`;
+  else val = `· ${secToTime(repFromRitmo(paceSec, b.dist))}`;
+  return `${b.n} × ${b.dist} ${val} r${fmtRec(tipo, recSec)}`;
 }
 function compactNotation(def, mode){
   mode = mode || DB.pref.ritmo;
   if(def.tipo==='series' || def.tipo==='velocidad'){
-    const paceSec = parseFlexTime(def.ritmo);
-    const recSec = parseFlexTime(def.rec);
-    let val;
-    if(mode==='pace') val = `@ ${def.ritmo}${def.tipo==='series'?'/km':''}`;
-    else val = `· ${secToTime(repFromRitmo(paceSec, def.dist))}`;
-    return `${def.n} × ${def.dist} ${val} r${fmtRec(def.tipo, recSec)}`;
+    return (def.bloques||[]).map(b=>bloqueNotation(b, mode, def.tipo)).join(' · ');
   }
   if(def.tipo==='rodaje') return `${def.dur}' Z2 + ${def.rectas} × 100`;
-  if(def.tipo==='test') return 'TEST 1.000';
+  if(def.tipo==='test') return `TEST ${def.dist||1000}`;
   return 'Descanso';
 }
-function pitidoSeg(def){
-  const paceSec = parseFlexTime(def.ritmo);
+function pitidoSeg(bloque){
+  const paceSec = parseFlexTime(bloque.ritmo);
+  if(paceSec==null) return null;
   return Math.round(paceSec/10);
+}
+
+/* ============================================================
+   BLOQUES — formulario compartido de registro de tiempos
+   (lo usan tanto la tarjeta rápida de Hoy como la ficha de Registro)
+   ============================================================ */
+function bloqueGroupHTML(b, bi, idPrefix, savedBloque){
+  const vals = new Array(b.n).fill(null);
+  if(savedBloque && savedBloque.tiempos){
+    savedBloque.tiempos.forEach((t,i)=>{ if(i<vals.length) vals[i]=t; });
+  }
+  const slots = vals.map((v,i)=>`
+    <div class="slot-wrap">
+      <span class="slot-n">${i+1}</span>
+      <input class="campo time-field slot-input" inputmode="numeric" id="${idPrefix}-t-${bi}-${i}"
+        data-prefix="${idPrefix}" data-bi="${bi}" data-i="${i}"
+        value="${v!=null?timeFieldValue(v):''}" oninput="onSlotInput(event)" onblur="onTimeBlur(event)">
+    </div>`).join('');
+  return `<div class="bloque-group" data-dist="${b.dist}">
+    <div class="bloque-hdr">${(b.nombre||'').toUpperCase()} · ${b.dist} m</div>
+    <div class="bloque-grid">${slots}</div>
+    <div class="bloque-avg" id="${idPrefix}-avg-${bi}" style="display:none"></div>
+  </div>`;
+}
+function bloquesFormHTML(def, fecha, idPrefix){
+  const existing = DB.sesiones.find(s=>s.fecha===fecha && s.tipo===def.tipo);
+  return (def.bloques||[]).map((b,bi)=>bloqueGroupHTML(b, bi, idPrefix, existing && existing.bloques ? existing.bloques[bi] : null)).join('');
+}
+function collectBloques(def, idPrefix){
+  return (def.bloques||[]).map((b,bi)=>{
+    const tiempos=[];
+    for(let i=0;i<b.n;i++){
+      const el = document.getElementById(`${idPrefix}-t-${bi}-${i}`);
+      const v = el ? parseFlexTime(el.value) : null;
+      if(v!=null) tiempos.push(v);
+    }
+    return {nombre:b.nombre, dist:b.dist, ritmo:b.ritmo, rec:b.rec, tiempos};
+  });
+}
+function updateBloqueAvg(prefix, bi){
+  const avgEl = document.getElementById(`${prefix}-avg-${bi}`);
+  if(!avgEl) return;
+  const group = avgEl.closest('.bloque-group');
+  const inputs = group.querySelectorAll('.slot-input');
+  const vals = [];
+  inputs.forEach(inp=>{ const v = parseFlexTime(inp.value); if(v!=null) vals.push(v); });
+  if(vals.length<2){ avgEl.style.display='none'; return; }
+  const media = vals.reduce((a,b)=>a+b,0)/vals.length;
+  const dist = parseFloat(group.dataset.dist)||100;
+  const s100 = media/dist*100;
+  avgEl.style.display='block';
+  avgEl.textContent = `media ${secToTime(media)} · ${s100.toFixed(1)} s/100`;
+}
+function onSlotInput(e){
+  onTimeInput(e);
+  const el = e.target;
+  updateBloqueAvg(el.dataset.prefix, el.dataset.bi);
+  clearTimeout(el._advT);
+  if(el.value!==''){
+    el._advT = setTimeout(()=>{
+      const next = document.getElementById(`${el.dataset.prefix}-t-${el.dataset.bi}-${parseInt(el.dataset.i,10)+1}`);
+      if(next) next.focus();
+    }, 550);
+  }
 }
 
 /* ============================================================
@@ -831,10 +968,12 @@ function renderUltimaVez(tipo, fecha){
   const prev = lastSessionOfType(tipo, fecha);
   if(!prev) return `<div class="glass ultima-vez"><div class="label">Última vez</div><div style="margin-top:6px;color:var(--text-3);font-size:13px;font-family:var(--font-mono)">Sin registros previos</div></div>`;
   let body = '';
-  if(prev.tiempos && prev.tiempos.length){
-    const caida = prev.tiempos[0]-prev.tiempos[prev.tiempos.length-1];
-    body = `<div class="tiempos">${prev.tiempos.map(t=>`<span>${secToTime(t)}</span>`).join('')}</div>
-      <div class="caida">Caída <b>${caida>=0?'+':''}${Math.round(caida)} s</b></div>`;
+  if(tipo==='series' || tipo==='velocidad'){
+    body = (prev.bloques||[]).filter(b=>b.tiempos && b.tiempos.length).map(b=>{
+      const caida = b.tiempos.length>1 ? b.tiempos[0]-b.tiempos[b.tiempos.length-1] : null;
+      return `<div class="tiempos">${b.tiempos.map(t=>`<span>${secToTime(t)}</span>`).join('')}</div>` +
+        (caida!=null ? `<div class="caida">Caída <b>${caida>=0?'+':''}${Math.round(caida)} s</b></div>` : '');
+    }).join('');
   } else if(prev.tipo==='rodaje'){
     body = `<div class="caida">${prev.duracion?prev.duracion+' min · ':''}${prev.ritmo130!=null?'Ritmo 130: '+secToPace(prev.ritmo130)+'/km':''}</div>`;
   } else if(prev.tipo==='test'){
@@ -846,8 +985,8 @@ function weekTotalMeters(weekMonday){
   const fin = addDays(weekMonday,6);
   let m = 0;
   DB.sesiones.forEach(s=>{
-    if((s.tipo==='series'||s.tipo==='velocidad') && s.fecha>=weekMonday && s.fecha<=fin){
-      m += (s.series||0)*(s.distancia||0);
+    if((s.tipo==='series'||s.tipo==='velocidad') && s.fecha>=weekMonday && s.fecha<=fin && s.bloques){
+      s.bloques.forEach(b=>{ m += (b.tiempos?b.tiempos.length:0)*(b.dist||0); });
     }
   });
   return m;
@@ -898,36 +1037,58 @@ function renderQuickChips(){
   if(!el) return;
   el.innerHTML = quickTiempos.map((t,i)=>`<span>${secToTime(t)} <button onclick="quickRemoveTiempo(${i})" aria-label="Quitar">✕</button></span>`).join('');
 }
-function quickGuardar(fecha, tipo){
-  if(!quickTiempos.length) return;
-  checkPRUpdate(tipo==='series'?400:200, Math.min(...quickTiempos));
-  const existing = DB.sesiones.find(s=>s.fecha===fecha && s.tipo===tipo);
+function quickGuardar(fecha){
   const def = getSessionDef(fecha);
-  const obj = existing ? {...existing} : {fecha, tipo, series:def.n, distancia:def.dist, ritmo:parseFlexTime(def.ritmo), recuperacion:parseFlexTime(def.rec)};
-  obj.tiempos = quickTiempos.slice();
-  obj.series = quickTiempos.length;
-  upsertSesion(obj);
+  const scope = document.getElementById('quick-card');
+  if(scope && scope.querySelector('.time-error')){ toast('Revisa los tiempos marcados en rojo'); return; }
+  if(def.bloques && def.bloques.length){
+    const bloques = collectBloques(def, 'q');
+    if(!bloques.some(b=>b.tiempos.length)){ toast('Introduce al menos un tiempo'); return; }
+    bloques.forEach(b=>{ if(b.tiempos.length) checkPRUpdate(b.dist, Math.min(...b.tiempos)); });
+    upsertSesion({fecha, tipo:def.tipo, bloques});
+  } else {
+    if(!quickTiempos.length) return;
+    checkPRUpdate(def.tipo==='series'?400:200, Math.min(...quickTiempos));
+    upsertSesion({fecha, tipo:def.tipo, bloques:[{nombre:'Libre', dist:def.dist||0, ritmo:def.ritmo||'', rec:def.rec||'', tiempos:quickTiempos.slice()}]});
+  }
   persist();
   quickTiempos = [];
   toast('Tiempos guardados');
   renderCurrent();
 }
 function renderQuickCard(def, fecha){
-  const meta = TIPOS[def.tipo];
   quickTiempos = [];
+  if(!def.bloques || !def.bloques.length){
+    return `
+      <div class="emom-card" id="quick-card">
+        <div class="emom-hdr">
+          <div class="sec-icon" style="background:rgba(41,121,255,0.08);border-color:rgba(41,121,255,0.22)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></div>
+          <div><div class="sec-title" style="font-size:15px">Tiempos</div><div class="sec-sub">${fmtDateLong(fecha)}</div></div>
+        </div>
+        <div class="emom-body">
+          <div class="f-row">
+            <input type="text" class="f-input time-field" id="quick-tiempo-input" placeholder="1:25" inputmode="numeric" oninput="onTimeInput(event)" onblur="onTimeBlur(event)">
+            <button class="sign-btn pos tap" onclick="quickAddTiempo()">+</button>
+          </div>
+          <div class="quick-chips" id="quick-chips"></div>
+          <button class="emom-action tap" onclick="quickGuardar('${fecha}')">Guardar</button>
+          <button class="quick-editar tap" onclick="openRegistro('${fecha}')">Editar detalles (FC, cadencia, notas)</button>
+        </div>
+      </div>
+      <div class="semana-card">
+        <div class="semana-row"><span class="semana-lbl">Total semana</span><span class="semana-val">${fmtMetros(weekTotalMeters(getWeekForDate(fecha).lunes))}</span></div>
+      </div>
+    `;
+  }
   return `
-    <div class="emom-card">
+    <div class="emom-card" id="quick-card">
       <div class="emom-hdr">
         <div class="sec-icon" style="background:rgba(41,121,255,0.08);border-color:rgba(41,121,255,0.22)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--blue2)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></div>
         <div><div class="sec-title" style="font-size:15px">Tiempos</div><div class="sec-sub">${fmtDateLong(fecha)}</div></div>
       </div>
       <div class="emom-body">
-        <div class="f-row">
-          <input type="text" class="f-input" id="quick-tiempo-input" placeholder="${def.tipo==='series'?'1:25':'40'}" inputmode="decimal">
-          <button class="sign-btn pos tap" onclick="quickAddTiempo()">+</button>
-        </div>
-        <div class="quick-chips" id="quick-chips"></div>
-        <button class="emom-action tap" onclick="quickGuardar('${fecha}','${def.tipo}')">Guardar</button>
+        ${bloquesFormHTML(def, fecha, 'q')}
+        <button class="emom-action tap" onclick="quickGuardar('${fecha}')">Guardar</button>
         <button class="quick-editar tap" onclick="openRegistro('${fecha}')">Editar detalles (FC, cadencia, notas)</button>
       </div>
     </div>
@@ -939,7 +1100,7 @@ function renderQuickCard(def, fecha){
 function openResumenSemana(fecha){
   openSheet(`
     <div class="sheet-title">Resumen de la semana</div>
-    ${renderEstaSemanaBox(fecha).replace('class="glass"','class="glass" style="padding:0"')}
+    ${renderEstaSemanaBox(fecha)}
     <div class="sheet-actions"><button class="primary" onclick="closeSheet()">Cerrar</button></div>
   `);
 }
@@ -972,7 +1133,7 @@ function renderHoy(){
     return;
   }
 
-  const pitidos = (def.tipo==='series'||def.tipo==='velocidad') ? pitidoSeg(def) : null;
+  const pitidoBloques = (def.tipo==='series'||def.tipo==='velocidad') ? (def.bloques||[]).filter(b=>pitidoSeg(b)!=null) : [];
   const quickHTML = (def.tipo==='series'||def.tipo==='velocidad') ? renderQuickCard(def, fecha) : `<button class="cta tap" onclick="openRegistro('${fecha}')">Registrar</button>`;
   el.innerHTML = `
     <div class="today-hero" id="today-hero">
@@ -983,13 +1144,13 @@ function renderHoy(){
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;vertical-align:-1px;margin-left:4px"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg>
         </span>
       </div>
-      ${pitidos!=null ? `
+      ${pitidoBloques.length ? `
       <div class="pitidos-row">
         <button class="pitidos-btn" id="pitidos-btn" onclick="togglePitidos()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="8" r="0.6" fill="currentColor" stroke="none"/></svg>
           Pitidos
         </button>
-        <div class="pitidos-line" id="pitidos-line" style="display:none">Pitido cada ${pitidos} s · un pitido por cada 100 m</div>
+        <div class="pitidos-line" id="pitidos-line" style="display:none">${pitidoBloques.map(b=>`${b.nombre}: pitido cada ${pitidoSeg(b)} s · un pitido por cada 100 m`).join('<br>')}</div>
       </div>` : ''}
       <div class="today-date-row">
         <div class="date-btn-wrap">
@@ -1057,6 +1218,19 @@ function nextTrainingDate(fromDate){
   }
   return {fecha:d, def:{tipo:'descanso'}};
 }
+function sesionResumenTexto(def, fecha){
+  const s = DB.sesiones.find(x=>x.fecha===fecha && x.tipo===def.tipo);
+  if(!s) return null;
+  if(def.tipo==='series' || def.tipo==='velocidad'){
+    const todos = (s.bloques||[]).flatMap(b=>b.tiempos||[]);
+    if(!todos.length) return TIPOS[def.tipo].label;
+    const media = todos.reduce((a,b)=>a+b,0)/todos.length;
+    return `${todos.length} × ${secToTime(media)}`;
+  }
+  if(def.tipo==='rodaje') return `${s.duracion||'—'} min`;
+  if(def.tipo==='test') return secToTime(s.tiempoTotal);
+  return TIPOS[def.tipo].label;
+}
 function renderEstaSemanaBox(fecha){
   const week = getWeekForDate(fecha);
   if(!week) return '';
@@ -1066,99 +1240,77 @@ function renderEstaSemanaBox(fecha){
     const def = getSessionDef(d);
     const meta = TIPOS[def.tipo] || {dot:'var(--text-3)', label:'—'};
     const done = DB.sesiones.some(s=>s.fecha===d && s.tipo===def.tipo);
+    const nombre = done ? sesionResumenTexto(def, d) : (def.tipo==='descanso' ? '—' : meta.label);
     let status;
     if(d===today) status='HOY';
     else if(d>today) status='';
     else status = done ? 'Hecho' : 'Sin registrar';
-    return `<div class="agenda-day ${d===today?'today':''}">
+    return `<div class="resumen-row">
       <span class="dot" style="background:${meta.dot}"></span>
-      <span class="t">${lbl} · ${meta.label}</span>
-      <span class="st">${status}</span>
+      <span class="day">${lbl}</span>
+      <span class="name">${done?`<b>${nombre}</b>`:nombre}</span>
+      <span class="status ${d===today?'hoy':''}">${status}</span>
     </div>`;
   }).join('');
-  return `<div class="glass" style="padding:14px 16px"><div class="label">Esta semana</div><div style="margin-top:8px">${rows}</div></div>`;
+  return `<div class="glass" style="padding:14px 16px"><div class="label">Esta semana</div><div style="margin-top:4px">${rows}</div></div>`;
 }
 
 /* ============================================================
    REGISTRO (sheet)
    ============================================================ */
-let reg = null; // {fecha, tipo, def, ritmoSec, ritmoMode, n}
+let reg = null; // {fecha, tipo, def}
 
 function openRegistro(fecha){
   const def = getSessionDef(fecha);
-  reg = {fecha, tipo:def.tipo, def, ritmoMode:'pace', n: def.n||0};
-  if(def.ritmo) reg.ritmoSec = parseFlexTime(def.ritmo);
+  reg = {fecha, tipo:def.tipo, def};
+  quickTiempos = [];
   renderRegistroSheet();
 }
 function regOnDateChange(v){
   reg.fecha = v;
   const def = getSessionDef(v);
-  reg.tipo = def.tipo; reg.def = def; reg.n = def.n||0;
-  if(def.ritmo) reg.ritmoSec = parseFlexTime(def.ritmo);
+  reg.tipo = def.tipo; reg.def = def;
+  quickTiempos = [];
   renderRegistroSheet();
-}
-function ritmoFieldDisplay(){
-  if(reg.ritmoMode==='pace') return secToPace(reg.ritmoSec);
-  return secToTime(repFromRitmo(reg.ritmoSec, reg.def.dist));
-}
-function regOnRitmoInput(v){
-  const parsed = parseFlexTime(v);
-  if(parsed==null) return;
-  if(reg.ritmoMode==='pace') reg.ritmoSec = parsed;
-  else reg.ritmoSec = ritmoFromRep(parsed, reg.def.dist);
-}
-function regToggleRitmoMode(){
-  reg.ritmoMode = reg.ritmoMode==='pace' ? 'time' : 'pace';
-  document.getElementById('reg-ritmo').value = ritmoFieldDisplay();
-  document.getElementById('reg-ritmo-unit').textContent = reg.ritmoMode==='pace' ? '/km' : '';
-}
-function regOnNChange(v){
-  reg.n = parseInt(v,10)||0;
-  document.getElementById('reg-tiempos').innerHTML = tiemposInputsHTML();
-}
-function tiemposInputsHTML(){
-  let html='';
-  for(let i=0;i<reg.n;i++) html += `<input class="campo" id="reg-t-${i}" placeholder="${reg.tipo==='series'?'1:25':'40'}" inputmode="decimal">`;
-  return html;
 }
 function renderRegistroSheet(){
   const tipo = reg.tipo;
   const meta = TIPOS[tipo] || {label:'Descanso', color:'var(--text-3)'};
   let body = '';
   if(tipo==='series' || tipo==='velocidad'){
-    body = `
-      <div class="field-row">
-        <div class="field"><label class="field-lbl">${tipo==='series'?'Series':'Nº de series'}</label>
-          <input class="campo" id="reg-n" type="number" value="${reg.n}" oninput="regOnNChange(this.value)"></div>
-        <div class="field"><label class="field-lbl">Distancia (m)</label>
-          <input class="campo" id="reg-dist" type="number" value="${reg.def.dist||200}" oninput="reg.def.dist=parseFloat(this.value)||reg.def.dist"></div>
-      </div>
-      <div class="field"><label class="field-lbl">Ritmo</label>
-        <div class="ritmo-field">
-          <input class="campo" id="reg-ritmo" value="${ritmoFieldDisplay()}" oninput="regOnRitmoInput(this.value)">
-          <span id="reg-ritmo-unit" style="color:var(--text-3);font-size:12px">/km</span>
-          <button class="swap-btn" type="button" onclick="regToggleRitmoMode()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7h11M18 7l-3-3M18 7l-3 3M17 17H6M6 17l3 3M6 17l3-3"/></svg>
-          </button>
+    if(reg.def.bloques && reg.def.bloques.length){
+      body = `
+        <div class="field">${bloquesFormHTML(reg.def, reg.fecha, 'r')}</div>
+        <div class="field-row">
+          <div class="field"><label class="field-lbl">FC máxima</label><input class="campo" id="reg-fcmax" type="number" inputmode="numeric"></div>
+          <div class="field"><label class="field-lbl">Cadencia</label><input class="campo" id="reg-cadencia" type="number" inputmode="numeric"></div>
         </div>
-      </div>
-      <div class="field"><label class="field-lbl">Recuperación</label>
-        <input class="campo" id="reg-rec" value="${reg.def.rec||''}" placeholder="2:00"></div>
-      <div class="field"><label class="field-lbl">Tiempos</label>
-        <div class="tiempos-grid" id="reg-tiempos">${tiemposInputsHTML()}</div></div>
-      <div class="field-row">
-        <div class="field"><label class="field-lbl">FC máxima</label><input class="campo" id="reg-fcmax" type="number" inputmode="numeric"></div>
-        <div class="field"><label class="field-lbl">Cadencia</label><input class="campo" id="reg-cadencia" type="number" inputmode="numeric"></div>
-      </div>
-      <div class="field"><label class="field-lbl">Sensación</label><input class="campo" id="reg-sensacion" placeholder="Ej: cómodo, duro, muy duro"></div>
-      <div class="field"><label class="field-lbl">Notas</label><textarea class="campo" id="reg-notas"></textarea></div>
-    `;
+        <div class="field"><label class="field-lbl">Sensación</label><input class="campo" id="reg-sensacion" placeholder="Ej: cómodo, duro, muy duro"></div>
+        <div class="field"><label class="field-lbl">Notas</label><textarea class="campo" id="reg-notas"></textarea></div>
+      `;
+    } else {
+      body = `
+        <div class="field"><label class="field-lbl">Tiempos</label>
+          <div class="f-row">
+            <input type="text" class="f-input time-field" id="quick-tiempo-input" placeholder="1:25" inputmode="numeric" oninput="onTimeInput(event)" onblur="onTimeBlur(event)">
+            <button class="sign-btn pos tap" onclick="quickAddTiempo()">+</button>
+          </div>
+          <div class="quick-chips" id="quick-chips"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label class="field-lbl">FC máxima</label><input class="campo" id="reg-fcmax" type="number" inputmode="numeric"></div>
+          <div class="field"><label class="field-lbl">Cadencia</label><input class="campo" id="reg-cadencia" type="number" inputmode="numeric"></div>
+        </div>
+        <div class="field"><label class="field-lbl">Sensación</label><input class="campo" id="reg-sensacion" placeholder="Ej: cómodo, duro, muy duro"></div>
+        <div class="field"><label class="field-lbl">Notas</label><textarea class="campo" id="reg-notas"></textarea></div>
+      `;
+    }
   } else if(tipo==='rodaje'){
     body = `
       <div class="field"><label class="field-lbl">Duración (min)</label><input class="campo" id="reg-duracion" type="number" value="${reg.def.dur||''}"></div>
       <div class="field-row">
-        <div class="field"><label class="field-lbl">Ritmo medio (/km)</label><input class="campo" id="reg-ritmomedio" placeholder="5:52"></div>
-        <div class="field"><label class="field-lbl">Ritmo a 130 ppm (/km)</label><input class="campo" id="reg-ritmo130" placeholder="5:52"></div>
+        <div class="field"><label class="field-lbl">Ritmo medio (/km)</label><input class="campo time-field" id="reg-ritmomedio" placeholder="5:52" inputmode="numeric" oninput="onTimeInput(event)" onblur="onTimeBlur(event)"></div>
+        <div class="field"><label class="field-lbl">Ritmo a 130 ppm (/km)</label><input class="campo time-field" id="reg-ritmo130" placeholder="5:52" inputmode="numeric" oninput="onTimeInput(event)" onblur="onTimeBlur(event)"></div>
       </div>
       <div class="field-row">
         <div class="field"><label class="field-lbl">FC media</label><input class="campo" id="reg-fcmedia" type="number" inputmode="numeric"></div>
@@ -1167,15 +1319,15 @@ function renderRegistroSheet(){
       <div class="field"><label class="field-lbl">Cadencia media</label><input class="campo" id="reg-cadencia" type="number" inputmode="numeric"></div>
       <div class="field-row">
         <div class="field"><label class="field-lbl">Rectas (nº)</label><input class="campo" id="reg-rectasn" type="number" value="${reg.def.rectas||''}"></div>
-        <div class="field"><label class="field-lbl">Tiempo medio recta</label><input class="campo" id="reg-rectast" placeholder="15"></div>
+        <div class="field"><label class="field-lbl">Tiempo medio recta</label><input class="campo time-field" id="reg-rectast" placeholder="15" inputmode="numeric" oninput="onTimeInput(event)" onblur="onTimeBlur(event)"></div>
       </div>
       <div class="field"><label class="field-lbl">Notas</label><textarea class="campo" id="reg-notas"></textarea></div>
     `;
   } else if(tipo==='test'){
     body = `
       <div class="field-row">
-        <div class="field"><label class="field-lbl">Tiempo total</label><input class="campo" id="reg-tiempototal" placeholder="3:20"></div>
-        <div class="field"><label class="field-lbl">Split 500</label><input class="campo" id="reg-split500" placeholder="1:38"></div>
+        <div class="field"><label class="field-lbl">Tiempo total</label><input class="campo time-field" id="reg-tiempototal" placeholder="3:20" inputmode="numeric" oninput="onTimeInput(event)" onblur="onTimeBlur(event)"></div>
+        <div class="field"><label class="field-lbl">Split 500</label><input class="campo time-field" id="reg-split500" placeholder="1:38" inputmode="numeric" oninput="onTimeInput(event)" onblur="onTimeBlur(event)"></div>
       </div>
       <div class="field"><label class="field-lbl">FC máxima</label><input class="campo" id="reg-fcmax" type="number" inputmode="numeric"></div>
       <div class="field"><label class="field-lbl">Calentamiento</label>
@@ -1217,33 +1369,27 @@ function regSetBool(field, val, btn){
     document.getElementById('reg-calmin-wrap').style.display = val ? 'block':'none';
   }
 }
-function collectTiempos(n){
-  const arr=[];
-  for(let i=0;i<n;i++){
-    const v = document.getElementById('reg-t-'+i);
-    const parsed = v ? parseFlexTime(v.value) : null;
-    if(parsed!=null) arr.push(parsed);
-  }
-  return arr;
-}
 function upsertSesion(obj){
   const i = DB.sesiones.findIndex(s=>s.fecha===obj.fecha && s.tipo===obj.tipo);
   if(i>=0) DB.sesiones[i] = {...DB.sesiones[i], ...obj};
   else { obj.id = uid(); DB.sesiones.push(obj); }
 }
 function saveRegistro(){
+  if(document.querySelector('#sheet .time-error')){ toast('Revisa los tiempos marcados en rojo'); return; }
   const fecha = reg.fecha, tipo = reg.tipo;
   if(tipo==='series' || tipo==='velocidad'){
-    const n = parseInt(document.getElementById('reg-n').value,10)||0;
-    const dist = parseFloat(document.getElementById('reg-dist').value)||reg.def.dist;
-    const recSec = parseFlexTime(document.getElementById('reg-rec').value);
-    const tiempos = collectTiempos(n);
     const fcmax = parseFloat(document.getElementById('reg-fcmax').value)||null;
     const cadencia = parseFloat(document.getElementById('reg-cadencia').value)||null;
     const sensacion = document.getElementById('reg-sensacion').value.trim();
     const notas = document.getElementById('reg-notas').value.trim();
-    checkPRUpdate(tipo==='series'?400:200, tiempos.length?Math.min(...tiempos):null);
-    upsertSesion({fecha, tipo, series:n, distancia:dist, ritmo:reg.ritmoSec, recuperacion:recSec, tiempos, fcMax:fcmax, cadencia, sensacion, notas});
+    let bloques;
+    if(reg.def.bloques && reg.def.bloques.length){
+      bloques = collectBloques(reg.def, 'r');
+    } else {
+      bloques = [{nombre:'Libre', dist:reg.def.dist||0, ritmo:reg.def.ritmo||'', rec:reg.def.rec||'', tiempos:quickTiempos.slice()}];
+    }
+    bloques.forEach(b=>{ if(b.tiempos.length) checkPRUpdate(b.dist, Math.min(...b.tiempos)); });
+    upsertSesion({fecha, tipo, bloques, fcMax:fcmax, cadencia, sensacion, notas});
   } else if(tipo==='rodaje'){
     const duracion = parseFloat(document.getElementById('reg-duracion').value)||null;
     const ritmoMedio = parseFlexTime(document.getElementById('reg-ritmomedio').value);
@@ -1317,10 +1463,11 @@ function renderHistorialList(){
     const meta = TIPOS[s.tipo];
     let sub = '';
     if(s.tipo==='series' || s.tipo==='velocidad'){
-      if(s.tiempos && s.tiempos.length){
-        const media = s.tiempos.reduce((a,b)=>a+b,0)/s.tiempos.length;
-        sub = `${s.series} × ${s.distancia}   media ${secToTime(media)}`;
-      } else sub = `${s.series} × ${s.distancia}`;
+      const todos = (s.bloques||[]).flatMap(b=>b.tiempos||[]);
+      if(todos.length){
+        const media = todos.reduce((a,b)=>a+b,0)/todos.length;
+        sub = `${todos.length} tiempos   media ${secToTime(media)}`;
+      } else sub = (s.bloques||[]).map(b=>`${b.dist} m`).join(' · ') || '—';
     } else if(s.tipo==='rodaje'){
       sub = `${s.duracion||'—'} min${s.ritmoMedio!=null?'   '+secToPace(s.ritmoMedio)+'/km':''}${s.fcMedia!=null?'   '+s.fcMedia+' ppm':''}`;
     } else if(s.tipo==='test'){
@@ -1342,17 +1489,20 @@ function openDetail(key){
   const meta = TIPOS[s.tipo];
   let rows = [];
   if(s.tipo==='series' || s.tipo==='velocidad'){
-    rows.push(['Series', s.series]);
-    rows.push(['Distancia', s.distancia+' m']);
-    if(s.ritmo!=null) rows.push(['Ritmo plan', secToPace(s.ritmo)+'/km']);
-    rows.push(['Recuperación', fmtRec(s.tipo, s.recuperacion)]);
-    if(s.tiempos && s.tiempos.length){
-      rows.push(['Tiempos', s.tiempos.map(secToTime).join(' · ')]);
-      const caida = s.tiempos[0]-s.tiempos[s.tiempos.length-1];
-      rows.push(['Caída', (caida>=0?'+':'')+Math.round(caida)+' s']);
-      const media = s.tiempos.reduce((a,b)=>a+b,0)/s.tiempos.length;
-      rows.push(['Media', secToTime(media)]);
-    }
+    (s.bloques||[]).forEach(b=>{
+      rows.push([b.nombre||'Bloque', `${b.n?b.n+' × ':''}${b.dist} m`]);
+      if(b.ritmo) rows.push(['Ritmo plan', b.ritmo+'/km']);
+      if(b.rec) rows.push(['Recuperación', b.rec]);
+      if(b.tiempos && b.tiempos.length){
+        rows.push(['Tiempos', b.tiempos.map(secToTime).join(' · ')]);
+        if(b.tiempos.length>1){
+          const caida = b.tiempos[0]-b.tiempos[b.tiempos.length-1];
+          rows.push(['Caída', (caida>=0?'+':'')+Math.round(caida)+' s']);
+        }
+        const media = b.tiempos.reduce((a,c)=>a+c,0)/b.tiempos.length;
+        rows.push(['Media', secToTime(media)]);
+      }
+    });
     if(s.fcMax) rows.push(['FC máxima', s.fcMax+' ppm']);
     if(s.cadencia) rows.push(['Cadencia', s.cadencia+' spm']);
     if(s.sensacion) rows.push(['Sensación', s.sensacion]);
@@ -1425,15 +1575,44 @@ function planUpdate(idx, field, sub, value){
   if(!planDraft.data[field]) planDraft.data[field] = {};
   planDraft.data[field][sub] = value;
 }
+function planBloqueUpdate(idx, dayKey, bi, prop, value){
+  if(!planDraft || planDraft.idx!==idx) startPlanDraft(idx);
+  planDraft.data[dayKey][bi][prop] = value;
+}
+function planBloqueAdd(idx, dayKey){
+  if(!planDraft || planDraft.idx!==idx) startPlanDraft(idx);
+  planDraft.data[dayKey].push({nombre:'Bloque', n:1, dist:100, ritmo:'', rec:''});
+  renderPlanificacion();
+}
+function planBloqueRemove(idx, dayKey, bi){
+  if(!planDraft || planDraft.idx!==idx) startPlanDraft(idx);
+  planDraft.data[dayKey].splice(bi,1);
+  renderPlanificacion();
+}
+function planSetViernesTipo(idx, val){
+  if(!planDraft || planDraft.idx!==idx) startPlanDraft(idx);
+  planDraft.data.viernesTipo = val;
+  renderPlanificacion();
+}
+function planDefForDayKey(dayKey, data){
+  if(dayKey==='lunesBloques') return {tipo:'series', bloques:data.lunesBloques};
+  if(dayKey==='viernesBloques') return {tipo:'velocidad', bloques:data.viernesBloques};
+  if(dayKey==='rodaje') return {tipo:'rodaje', dur:data.rodaje.dur, rectas:data.rodaje.rectas};
+  if(dayKey==='test') return {tipo:'test', dist:(data.test&&data.test.dist)||1000};
+  return null;
+}
 function updatePlanNotacion(idx, dayKey){
   const data = planDraft && planDraft.idx===idx ? planDraft.data : DB.plan[idx];
   const el = document.getElementById(`pn-${idx}-${dayKey}`);
-  if(el) el.textContent = compactNotation({tipo:dayKey, ...data[dayKey]});
+  const def = planDefForDayKey(dayKey, data);
+  if(el && def) el.textContent = compactNotation(def);
   const footer = document.getElementById(`wk-footer-${idx}`);
   if(footer) footer.style.display = planHasChanges() ? 'flex' : 'none';
 }
 function savePlanWeek(idx){
   if(!planDraft || planDraft.idx!==idx) return;
+  const body = document.getElementById(`hb-wk-${idx}`);
+  if(body && body.querySelector('.time-error')){ toast('Revisa los tiempos marcados en rojo'); return; }
   DB.plan[idx] = planDraft.data;
   persist();
   toast('Semana guardada');
@@ -1447,7 +1626,15 @@ function addPlanWeek(){
   if(!confirmDiscardPlanChanges()) return;
   const last = DB.plan[DB.plan.length-1];
   const nuevoLunes = addDays(last.lunes, 7);
-  DB.plan.push({lunes:nuevoLunes, series:{...last.series}, rodaje:{...last.rodaje}, velocidad:{...last.velocidad}});
+  const viernesDate = addDays(nuevoLunes, 4);
+  DB.plan.push({
+    lunes: nuevoLunes,
+    lunesBloques: JSON.parse(JSON.stringify(last.lunesBloques)),
+    rodaje: {...last.rodaje},
+    viernesTipo: isFirstFriday(parseISO(viernesDate)) ? 'test' : 'velocidad',
+    viernesBloques: JSON.parse(JSON.stringify(last.viernesBloques)),
+    test: {...(last.test||{dist:1000})},
+  });
   persist();
   planOpenIdx = DB.plan.length-1;
   startPlanDraft(planOpenIdx);
@@ -1466,22 +1653,78 @@ function planFieldCell(idx, dayKey, field, sub, value, lbl, type){
   const inputAttrs = type==='text' ? '' : 'type="number" inputmode="decimal"';
   return `<div class="pf-cell"><span class="pf-lbl">${lbl}</span><input class="f-input" ${inputAttrs} value="${value}" onchange="planUpdate(${idx},'${field}','${sub}',${parse});updatePlanNotacion(${idx},'${dayKey}')"></div>`;
 }
-function planDayBlock(idx, dayKey, dayLabel, tipoLabel, data){
-  let cells;
+function planBloqueCell(idx, dayKey, bi, prop, value, lbl, type){
+  if(type==='time'){
+    return `<div class="pf-cell"><span class="pf-lbl">${lbl}</span>
+      <input class="f-input time-field" value="${value||''}" inputmode="numeric"
+        oninput="onTimeInput(event)" onblur="onTimeBlur(event)"
+        onchange="planBloqueUpdate(${idx},'${dayKey}',${bi},'${prop}',this.value);updatePlanNotacion(${idx},'${dayKey}')"></div>`;
+  }
+  const parse = type==='int' ? 'parseInt(this.value,10)||0' : 'parseFloat(this.value)||0';
+  return `<div class="pf-cell"><span class="pf-lbl">${lbl}</span>
+    <input class="f-input" type="number" inputmode="decimal" value="${value}"
+      onchange="planBloqueUpdate(${idx},'${dayKey}',${bi},'${prop}',${parse});updatePlanNotacion(${idx},'${dayKey}')"></div>`;
+}
+function planBloqueRow(idx, dayKey, bi, b){
+  return `<div class="plan-bloque-row">
+    <div class="plan-bloque-hdr">
+      <input class="f-input pb-nombre" value="${b.nombre}" placeholder="Nombre"
+        onchange="planBloqueUpdate(${idx},'${dayKey}',${bi},'nombre',this.value)">
+      <button class="pb-del tap" onclick="planBloqueRemove(${idx},'${dayKey}',${bi})" aria-label="Eliminar bloque">✕</button>
+    </div>
+    <div class="pf-grid">
+      ${planBloqueCell(idx,dayKey,bi,'n',b.n,'SERIES','int')}
+      ${planBloqueCell(idx,dayKey,bi,'dist',b.dist,'DIST M','float')}
+      ${planBloqueCell(idx,dayKey,bi,'ritmo',b.ritmo,'RITMO /KM','time')}
+      ${planBloqueCell(idx,dayKey,bi,'rec',b.rec,'REC','time')}
+    </div>
+  </div>`;
+}
+function planDayBlock(idx, dayKey, dayLabel, data){
   if(dayKey==='rodaje'){
-    cells = planFieldCell(idx,dayKey,'rodaje','dur',data.dur,'MIN','float')
-          + planFieldCell(idx,dayKey,'rodaje','rectas',data.rectas,'RECTAS','int')
-          + '<div class="pf-cell"></div><div class="pf-cell"></div>';
-  } else {
-    cells = planFieldCell(idx,dayKey,dayKey,'n',data.n,'SERIES','int')
-          + planFieldCell(idx,dayKey,dayKey,'dist',data.dist,'DIST M','float')
-          + planFieldCell(idx,dayKey,dayKey,'ritmo',data.ritmo,'RITMO /KM','text')
-          + planFieldCell(idx,dayKey,dayKey,'rec',data.rec,'REC','text');
+    const cells = planFieldCell(idx,'rodaje','rodaje','dur',data.dur,'MIN','float')
+                + planFieldCell(idx,'rodaje','rodaje','rectas',data.rectas,'RECTAS','int')
+                + '<div class="pf-cell"></div><div class="pf-cell"></div>';
+    return `<div class="plan-day">
+      <div class="plan-day-title">${dayLabel} · RODAJE BASE</div>
+      <div class="pf-grid">${cells}</div>
+      <div class="plan-notacion" id="pn-${idx}-rodaje">${compactNotation({tipo:'rodaje', dur:data.dur, rectas:data.rectas})}</div>
+    </div>`;
+  }
+  const bloques = data.map((b,bi)=>planBloqueRow(idx,dayKey,bi,b)).join('');
+  const notDef = planDefForDayKey(dayKey, dayKey==='lunesBloques' ? {lunesBloques:data} : {viernesBloques:data});
+  return `<div class="plan-day">
+    <div class="plan-day-title">${dayLabel}</div>
+    ${bloques}
+    <button class="plan-add-bloque tap" onclick="planBloqueAdd(${idx},'${dayKey}')">+ Bloque</button>
+    <div class="plan-notacion" id="pn-${idx}-${dayKey}">${compactNotation(notDef)}</div>
+  </div>`;
+}
+function planViernesBlock(idx, data){
+  const tipo = data.viernesTipo;
+  const toggle = `<div class="toggle-row" style="margin-bottom:10px">
+    <button type="button" aria-pressed="${tipo==='velocidad'}" onclick="planSetViernesTipo(${idx},'velocidad')">Velocidad</button>
+    <button type="button" aria-pressed="${tipo==='test'}" onclick="planSetViernesTipo(${idx},'test')">Test 1.000</button>
+  </div>`;
+  if(tipo==='test'){
+    const dist = (data.test&&data.test.dist)||1000;
+    return `<div class="plan-day">
+      <div class="plan-day-title">VIERNES · TEST</div>
+      ${toggle}
+      <div class="pf-grid">
+        <div class="pf-cell"><span class="pf-lbl">DIST M</span><input class="f-input" type="number" value="${dist}"
+          onchange="planUpdate(${idx},'test','dist',parseFloat(this.value)||1000);updatePlanNotacion(${idx},'test')"></div>
+        <div class="pf-cell"></div><div class="pf-cell"></div><div class="pf-cell"></div>
+      </div>
+      <div class="plan-notacion" id="pn-${idx}-test">${compactNotation({tipo:'test', dist})}</div>
+    </div>`;
   }
   return `<div class="plan-day">
-    <div class="plan-day-title">${dayLabel} · ${tipoLabel}</div>
-    <div class="pf-grid">${cells}</div>
-    <div class="plan-notacion" id="pn-${idx}-${dayKey}">${compactNotation({tipo:dayKey, ...data})}</div>
+    <div class="plan-day-title">VIERNES</div>
+    ${toggle}
+    ${data.viernesBloques.map((b,bi)=>planBloqueRow(idx,'viernesBloques',bi,b)).join('')}
+    <button class="plan-add-bloque tap" onclick="planBloqueAdd(${idx},'viernesBloques')">+ Bloque</button>
+    <div class="plan-notacion" id="pn-${idx}-viernesBloques">${compactNotation({tipo:'velocidad', bloques:data.viernesBloques})}</div>
   </div>`;
 }
 function renderPlanificacion(){
@@ -1500,9 +1743,9 @@ function renderPlanificacion(){
         <div class="hist-controls"><button class="toggle-btn" id="arr-wk-${i}">${open?'⌄':'›'}</button></div>
       </div>
       <div class="hist-body ${open?'open':''}" id="hb-wk-${i}">
-        ${planDayBlock(i,'series','LUNES','SERIES DE RITMO',data.series)}
-        ${planDayBlock(i,'rodaje','MIÉRCOLES','RODAJE BASE',data.rodaje)}
-        ${planDayBlock(i,'velocidad','VIERNES','VELOCIDAD',data.velocidad)}
+        ${planDayBlock(i,'lunesBloques','LUNES',data.lunesBloques)}
+        ${planDayBlock(i,'rodaje','MIÉRCOLES',data.rodaje)}
+        ${planViernesBlock(i,data)}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
           <button class="plan-del-link" style="margin:0" onclick="removePlanWeekConfirm(${i})">Eliminar</button>
           <div class="plan-save-row" id="wk-footer-${i}" style="display:${dirty?'flex':'none'}">
@@ -1598,17 +1841,16 @@ function getPR(distLabel){
     DB.sesiones.filter(s=>s.tipo==='test' && s.tiempoTotal!=null).forEach(s=>{
       if(!best || s.tiempoTotal<best.valor) best={valor:s.tiempoTotal, fecha:s.fecha};
     });
-  } else if(distLabel===400){
-    DB.sesiones.filter(s=>s.tipo==='series' && s.tiempos && s.tiempos.length).forEach(s=>{
-      const m = Math.min(...s.tiempos);
-      if(!best || m<best.valor) best={valor:m, fecha:s.fecha};
-    });
-  } else if(distLabel===200){
-    DB.sesiones.filter(s=>s.tipo==='velocidad' && s.tiempos && s.tiempos.length).forEach(s=>{
-      const m = Math.min(...s.tiempos);
-      if(!best || m<best.valor) best={valor:m, fecha:s.fecha};
-    });
+    return best;
   }
+  DB.sesiones.forEach(s=>{
+    (s.bloques||[]).forEach(b=>{
+      if(b.dist===distLabel && b.tiempos && b.tiempos.length){
+        const m = Math.min(...b.tiempos);
+        if(!best || m<best.valor) best={valor:m, fecha:s.fecha};
+      }
+    });
+  });
   return best;
 }
 function renderPRGrid(){
@@ -1635,10 +1877,15 @@ function renderChartTest(){
       ${chart}
     </div>`;
 }
+function mainBloque(s){
+  const candidatos = (s.bloques||[]).filter(b=>b.ritmo && b.tiempos && b.tiempos.length>1);
+  if(!candidatos.length) return null;
+  return candidatos.reduce((a,b)=> b.tiempos.length>a.tiempos.length?b:a);
+}
 function renderChartCaida(){
-  const sesiones = DB.sesiones.filter(s=>s.tipo==='series' && s.tiempos && s.tiempos.length>1).sort((a,b)=>a.fecha<b.fecha?-1:1).slice(-6);
+  const sesiones = DB.sesiones.filter(s=>s.tipo==='series' && mainBloque(s)).sort((a,b)=>a.fecha<b.fecha?-1:1).slice(-6);
   if(!sesiones.length){ document.getElementById('chart-caida').innerHTML = `<div class="glass chart-wrap"><div class="chart-lbl">Caída de series</div><div class="empty-mini">Aparece con tu primera sesión de series</div></div>`; return; }
-  const vals = sesiones.map(s=>s.tiempos[0]-s.tiempos[s.tiempos.length-1]);
+  const vals = sesiones.map(s=>{ const b=mainBloque(s); return b.tiempos[0]-b.tiempos[b.tiempos.length-1]; });
   const max = Math.max(...vals, 1);
   const rows = sesiones.map((s,i)=>{
     const v = vals[i];
@@ -1669,8 +1916,11 @@ function renderChartRitmo130(){
     </div>`;
 }
 function renderChartVelocidad(){
-  const sesiones = DB.sesiones.filter(s=>s.tipo==='velocidad' && s.tiempos && s.tiempos.length).sort((a,b)=>a.fecha<b.fecha?-1:1);
-  const points = sesiones.map(s=>({y:Math.min(...s.tiempos), media:s.tiempos.reduce((a,b)=>a+b,0)/s.tiempos.length, label:fmtDateShort(s.fecha)}));
+  const sesiones = DB.sesiones.filter(s=>s.tipo==='velocidad' && (s.bloques||[]).some(b=>b.dist===200 && b.tiempos && b.tiempos.length)).sort((a,b)=>a.fecha<b.fecha?-1:1);
+  const points = sesiones.map(s=>{
+    const b = s.bloques.find(b=>b.dist===200 && b.tiempos && b.tiempos.length);
+    return {y:Math.min(...b.tiempos), media:b.tiempos.reduce((a,c)=>a+c,0)/b.tiempos.length, label:fmtDateShort(s.fecha)};
+  });
   const chart = adaptiveChart(points, {fmt:secToTime, betterLower:true, color:'#ff6b00', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s', emptyText:'Aparece con tu primera sesión de 200'});
   const list = points.slice(-5).reverse().map(p=>`<div class="detail-row"><span class="k">${p.label}</span><span class="v">mejor ${secToTime(p.y)} · media ${secToTime(p.media)}</span></div>`).join('');
   document.getElementById('chart-velocidad').innerHTML = `
@@ -1721,11 +1971,15 @@ function renderChartCarga(){
   const weeks = DB.plan.map(w=>({lunes:w.lunes, fin:addDays(w.lunes,6)}));
   const data = weeks.map(w=>{
     const s = DB.sesiones.find(x=>x.tipo==='series' && x.fecha>=w.lunes && x.fecha<=w.fin);
-    const volumen = s ? s.series*s.distancia : 0;
-    let densidad = null;
-    if(s && s.tiempos && s.tiempos.length && s.recuperacion){
-      const run = s.tiempos.reduce((a,b)=>a+b,0);
-      densidad = run/(s.series*s.recuperacion);
+    let volumen = 0, densidad = null;
+    if(s && s.bloques){
+      s.bloques.forEach(b=>{ volumen += (b.tiempos?b.tiempos.length:0)*(b.dist||0); });
+      const serieBloque = s.bloques.find(b=>b.rec && b.tiempos && b.tiempos.length);
+      if(serieBloque){
+        const run = serieBloque.tiempos.reduce((a,c)=>a+c,0);
+        const recSec = parseFlexTime(serieBloque.rec);
+        if(recSec) densidad = run/(serieBloque.tiempos.length*recSec);
+      }
     }
     return {lbl:fmtDateShort(w.lunes).split(' ')[0], volumen, densidad};
   });
@@ -1762,12 +2016,12 @@ function deltaBlock(curr, prev, betterLower, fmt){
 }
 function renderResumen(){
   const tests = DB.sesiones.filter(s=>s.tipo==='test' && s.tiempoTotal!=null).sort((a,b)=>a.fecha<b.fecha?-1:1);
-  const seriesS = DB.sesiones.filter(s=>s.tipo==='series' && s.tiempos && s.tiempos.length>1).sort((a,b)=>a.fecha<b.fecha?-1:1);
+  const seriesS = DB.sesiones.filter(s=>s.tipo==='series' && mainBloque(s)).sort((a,b)=>a.fecha<b.fecha?-1:1);
   const rodajes = DB.sesiones.filter(s=>s.tipo==='rodaje' && s.ritmo130!=null).sort((a,b)=>a.fecha<b.fecha?-1:1);
   const lastTest = tests[tests.length-1], prevTest = tests[tests.length-2];
   const lastSerie = seriesS[seriesS.length-1], prevSerie = seriesS[seriesS.length-2];
   const lastRodaje = rodajes[rodajes.length-1], prevRodaje = rodajes[rodajes.length-2];
-  const caida = s => s ? s.tiempos[0]-s.tiempos[s.tiempos.length-1] : null;
+  const caida = s => { if(!s) return null; const b=mainBloque(s); return b.tiempos[0]-b.tiempos[b.tiempos.length-1]; };
   document.getElementById('resumen').innerHTML = `
     <div class="resumen-item">${deltaBlock(lastTest?lastTest.tiempoTotal:null, prevTest?prevTest.tiempoTotal:null, true, secToTime)}<div class="resumen-lbl">Último test</div></div>
     <div class="resumen-item">${deltaBlock(caida(lastSerie), caida(prevSerie), true, v=>Math.round(v)+' s')}<div class="resumen-lbl">Caída series</div></div>
