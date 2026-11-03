@@ -769,8 +769,7 @@ function persist(){
   saveJSON('m1000_pref', DB.pref);
 }
 
-const APP_VERSION = 4;
-const APP_BUILD_DATE = '3 nov 2026';
+const APP_UPDATED_AT = '3 nov 2026 a las 11:48';
 
 const TIPOS = {
   series:{label:'Series de ritmo', color:'var(--c-series)', dot:'var(--blue)'},
@@ -2234,13 +2233,14 @@ function renderAjustes(){
     </div>
   `;
   const verEl = document.getElementById('app-version');
-  if(verEl) verEl.textContent = `v${APP_VERSION} · ${APP_BUILD_DATE}`;
+  if(verEl) verEl.textContent = `Actualizado el ${APP_UPDATED_AT}`;
 }
 function exportData(){
-  const blob = new Blob([JSON.stringify({sesiones:DB.sesiones, plan:DB.plan, fcmax:DB.fcmax, fcreposo:DB.fcreposo, peso:DB.peso, pref:DB.pref}, null, 2)], {type:'application/json'});
+  const data = {sesiones:DB.sesiones, plan:DB.plan, fcmax:DB.fcmax, fcreposo:DB.fcreposo, peso:DB.peso, pref:DB.pref, exportadoEn:new Date().toISOString()};
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `km-tracker-backup-${todayISO()}.json`;
+  a.download = 'kmtracker.json';
   a.click();
   URL.revokeObjectURL(a.href);
 }
