@@ -235,7 +235,13 @@ button{font-family:inherit;}
 .slot-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;}
 .slot-n{font-size:9px;color:var(--text-3);font-family:var(--font-mono);font-weight:700;}
 .slot-wrap .campo{text-align:center;padding:10px 4px;}
+.slot-input-row{display:flex;align-items:center;gap:2px;width:100%;}
+.slot-input-row .campo{min-width:0;}
+.slot-warn{display:none;color:var(--amber);font-size:13px;flex:none;}
 .bloque-avg{margin-top:8px;font-size:12px;color:var(--text-2);font-family:var(--font-mono);}
+.ritmo-tap{text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--text-3);cursor:pointer;}
+.avg-explain{margin-top:4px;font-size:11px;color:var(--text-3);}
+.bloque-warn{margin-top:6px;font-size:12px;color:var(--amber);font-family:var(--font-mono);}
 
 /* —— SEMANA-CARD (resumen, ported) —— */
 .semana-card{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:var(--r-sm);
@@ -656,16 +662,18 @@ function parseFlexTime(str){
   return isNaN(n) ? null : n;
 }
 function secToPace(sec){ if(sec==null||isNaN(sec)) return '—'; sec=Math.round(sec); const m=Math.floor(sec/60), s=sec%60; return `${m}:${pad2(s)}`; }
-function secToTime(sec){ if(sec==null||isNaN(sec)) return '—'; sec=Math.round(sec); if(sec<60) return `${sec} s`; const m=Math.floor(sec/60), s=sec%60; return `${m}:${pad2(s)}`; }
+function secToTime(sec){ if(sec==null||isNaN(sec)) return '—'; sec=Math.round(sec); const m=Math.floor(sec/60), s=sec%60; return `${m}:${pad2(s)}`; }
+function fmtDecimalEs(v){ return v.toFixed(1).replace('.',','); }
+function secToTimeDecimal(sec){
+  if(sec==null||isNaN(sec)) return '—';
+  const totalDeci = Math.round(sec*10);
+  const m = Math.floor(totalDeci/600);
+  const resto = totalDeci - m*600;
+  const s = Math.floor(resto/10), d = resto%10;
+  return `${m}:${pad2(s)}` + (d!==0 ? `,${d}` : '');
+}
 function ritmoFromRep(repSec, distM){ return repSec*1000/distM; }
 function repFromRitmo(ritmoSec, distM){ return ritmoSec*distM/1000; }
-function fmtRec(tipo, sec){
-  if(sec==null||isNaN(sec)) return '—';
-  sec = Math.round(sec);
-  if(tipo==='velocidad') return `${sec}"`;
-  if(sec%60===0) return `${sec/60}'`;
-  const m=Math.floor(sec/60), s=sec%60; return `${m}:${pad2(s)}`;
-}
 function parseISO(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
 function pad2s(n){ return String(n).padStart(2,'0'); }
 function toISO(d){ return `${d.getFullYear()}-${pad2s(d.getMonth()+1)}-${pad2s(d.getDate())}`; }
@@ -686,15 +694,13 @@ function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
    (de derecha a izquierda: últimos 2 dígitos = segundos, resto = minutos; <3 dígitos = segundos sueltos) */
 function formatTimeTyping(digits){
   if(digits==='') return '';
-  if(digits.length<=2) return digits;
-  const sec = digits.slice(-2);
-  const min = String(parseInt(digits.slice(0,-2),10));
+  const sec = digits.length<=2 ? digits.padStart(2,'0') : digits.slice(-2);
+  const min = digits.length<=2 ? '0' : String(parseInt(digits.slice(0,-2),10));
   return `${min}:${sec}`;
 }
 function timeFieldValue(sec){
   if(sec==null||isNaN(sec)) return '';
   sec = Math.round(sec);
-  if(sec<60) return String(sec);
   const m = Math.floor(sec/60), s = sec%60;
   return `${m}:${pad2(s)}`;
 }
@@ -763,8 +769,8 @@ function persist(){
   saveJSON('m1000_pref', DB.pref);
 }
 
-const APP_VERSION = 2;
-const APP_BUILD_DATE = '26 oct 2026';
+const APP_VERSION = 4;
+const APP_BUILD_DATE = '3 nov 2026';
 
 const TIPOS = {
   series:{label:'Series de ritmo', color:'var(--c-series)', dot:'var(--blue)'},
@@ -806,7 +812,7 @@ function bloqueNotation(b, mode, tipo){
   let val;
   if(mode==='pace') val = `@ ${b.ritmo}${tipo==='series'?'/km':''}`;
   else val = `· ${secToTime(repFromRitmo(paceSec, b.dist))}`;
-  return `${b.n} × ${b.dist} ${val} r${fmtRec(tipo, recSec)}`;
+  return `${b.n} × ${b.dist} ${val} r${secToTime(recSec)}`;
 }
 function compactNotation(def, mode){
   mode = mode || DB.pref.ritmo;
@@ -835,14 +841,18 @@ function bloqueGroupHTML(b, bi, idPrefix, savedBloque){
   const slots = vals.map((v,i)=>`
     <div class="slot-wrap">
       <span class="slot-n">${i+1}</span>
-      <input class="campo time-field slot-input" inputmode="numeric" id="${idPrefix}-t-${bi}-${i}"
-        data-prefix="${idPrefix}" data-bi="${bi}" data-i="${i}"
-        value="${v!=null?timeFieldValue(v):''}" oninput="onSlotInput(event)" onblur="onTimeBlur(event)">
+      <div class="slot-input-row">
+        <input class="campo time-field slot-input" inputmode="numeric" id="${idPrefix}-t-${bi}-${i}"
+          data-prefix="${idPrefix}" data-bi="${bi}" data-i="${i}"
+          value="${v!=null?timeFieldValue(v):''}" oninput="onSlotInput(event)" onblur="onTimeBlur(event)">
+        <span class="slot-warn" id="${idPrefix}-w-${bi}-${i}">⚠</span>
+      </div>
     </div>`).join('');
   return `<div class="bloque-group" data-dist="${b.dist}">
     <div class="bloque-hdr">${(b.nombre||'').toUpperCase()} · ${b.dist} m</div>
     <div class="bloque-grid">${slots}</div>
     <div class="bloque-avg" id="${idPrefix}-avg-${bi}" style="display:none"></div>
+    <div class="bloque-warn" id="${idPrefix}-warn-${bi}" style="display:none"></div>
   </div>`;
 }
 function bloquesFormHTML(def, fecha, idPrefix){
@@ -867,17 +877,41 @@ function updateBloqueAvg(prefix, bi){
   const inputs = group.querySelectorAll('.slot-input');
   const vals = [];
   inputs.forEach(inp=>{ const v = parseFlexTime(inp.value); if(v!=null) vals.push(v); });
-  if(vals.length<2){ avgEl.style.display='none'; return; }
+  if(vals.length<2){ avgEl.style.display='none'; avgEl.innerHTML=''; return; }
   const media = vals.reduce((a,b)=>a+b,0)/vals.length;
   const dist = parseFloat(group.dataset.dist)||100;
-  const s100 = media/dist*100;
+  const mediaTxt = secToTimeDecimal(media);
   avgEl.style.display='block';
-  avgEl.textContent = `media ${secToTime(media)} · ${s100.toFixed(1)} s/100`;
+  if(dist===100){
+    avgEl.innerHTML = `media ${mediaTxt}`;
+  } else {
+    const s100Txt = fmtDecimalEs(media/dist*100);
+    avgEl.innerHTML = `media ${mediaTxt} · <span class="ritmo-tap tap" onclick="const n=this.nextElementSibling;n.style.display=n.style.display==='block'?'none':'block'">${s100Txt} s/100</span>` +
+      `<div class="avg-explain" style="display:none">${s100Txt} s/100 — media ${mediaTxt} entre ${vals.length} tramos de ${dist} m</div>`;
+  }
+}
+function updateBloqueWarnings(prefix, bi){
+  const warnEl = document.getElementById(`${prefix}-warn-${bi}`);
+  if(!warnEl) return;
+  const group = warnEl.closest('.bloque-group');
+  const dist = parseFloat(group.dataset.dist)||0;
+  const inputs = group.querySelectorAll('.slot-input');
+  const mensajes = [];
+  inputs.forEach(inp=>{
+    const icon = document.getElementById(`${inp.dataset.prefix}-w-${inp.dataset.bi}-${inp.dataset.i}`);
+    const v = parseFlexTime(inp.value);
+    const w = dist ? paceWarning(dist, v) : null;
+    if(icon) icon.style.display = w ? 'inline' : 'none';
+    if(w) mensajes.push(`Serían ${fmtDecimalEs(w.nuevo)} s/100 · tu mejor es ${fmtDecimalEs(w.mejor)}`);
+  });
+  if(mensajes.length){ warnEl.style.display='block'; warnEl.textContent = mensajes[0]; }
+  else { warnEl.style.display='none'; warnEl.textContent=''; }
 }
 function onSlotInput(e){
   onTimeInput(e);
   const el = e.target;
   updateBloqueAvg(el.dataset.prefix, el.dataset.bi);
+  updateBloqueWarnings(el.dataset.prefix, el.dataset.bi);
   clearTimeout(el._advT);
   if(el.value!==''){
     el._advT = setTimeout(()=>{
@@ -1225,7 +1259,7 @@ function sesionResumenTexto(def, fecha){
     const todos = (s.bloques||[]).flatMap(b=>b.tiempos||[]);
     if(!todos.length) return TIPOS[def.tipo].label;
     const media = todos.reduce((a,b)=>a+b,0)/todos.length;
-    return `${todos.length} × ${secToTime(media)}`;
+    return `${todos.length} × ${secToTimeDecimal(media)}`;
   }
   if(def.tipo==='rodaje') return `${s.duracion||'—'} min`;
   if(def.tipo==='test') return secToTime(s.tiempoTotal);
@@ -1466,7 +1500,7 @@ function renderHistorialList(){
       const todos = (s.bloques||[]).flatMap(b=>b.tiempos||[]);
       if(todos.length){
         const media = todos.reduce((a,b)=>a+b,0)/todos.length;
-        sub = `${todos.length} tiempos   media ${secToTime(media)}`;
+        sub = `${todos.length} tiempos   media ${secToTimeDecimal(media)}`;
       } else sub = (s.bloques||[]).map(b=>`${b.dist} m`).join(' · ') || '—';
     } else if(s.tipo==='rodaje'){
       sub = `${s.duracion||'—'} min${s.ritmoMedio!=null?'   '+secToPace(s.ritmoMedio)+'/km':''}${s.fcMedia!=null?'   '+s.fcMedia+' ppm':''}`;
@@ -1500,7 +1534,8 @@ function openDetail(key){
           rows.push(['Caída', (caida>=0?'+':'')+Math.round(caida)+' s']);
         }
         const media = b.tiempos.reduce((a,c)=>a+c,0)/b.tiempos.length;
-        rows.push(['Media', secToTime(media)]);
+        const mediaTxt = secToTimeDecimal(media);
+        rows.push(['Media', b.dist===100 ? mediaTxt : `${mediaTxt} · ${fmtDecimalEs(media/b.dist*100)} s/100`]);
       }
     });
     if(s.fcMax) rows.push(['FC máxima', s.fcMax+' ppm']);
@@ -1853,6 +1888,15 @@ function getPR(distLabel){
   });
   return best;
 }
+function paceWarning(dist, tiempo){
+  if(tiempo==null || !dist) return null;
+  const pr = getPR(dist);
+  if(!pr) return null;
+  const mejor = pr.valor/dist*100;
+  const nuevo = tiempo/dist*100;
+  if(nuevo < mejor*0.9) return {nuevo, mejor};
+  return null;
+}
 function renderPRGrid(){
   const items = [[1000,'1.000 m'],[400,'400 m'],[200,'200 m']];
   document.getElementById('pr-grid').innerHTML = items.map(([d,l])=>{
@@ -1922,7 +1966,7 @@ function renderChartVelocidad(){
     return {y:Math.min(...b.tiempos), media:b.tiempos.reduce((a,c)=>a+c,0)/b.tiempos.length, label:fmtDateShort(s.fecha)};
   });
   const chart = adaptiveChart(points, {fmt:secToTime, betterLower:true, color:'#ff6b00', deltaFmt:d=>(d>0?'+':'')+Math.round(d)+' s', emptyText:'Aparece con tu primera sesión de 200'});
-  const list = points.slice(-5).reverse().map(p=>`<div class="detail-row"><span class="k">${p.label}</span><span class="v">mejor ${secToTime(p.y)} · media ${secToTime(p.media)}</span></div>`).join('');
+  const list = points.slice(-5).reverse().map(p=>`<div class="detail-row"><span class="k">${p.label}</span><span class="v">mejor ${secToTime(p.y)} · media ${secToTimeDecimal(p.media)}</span></div>`).join('');
   document.getElementById('chart-velocidad').innerHTML = `
     <div class="glass chart-wrap">
       <div class="chart-lbl">Velocidad <span class="chart-sub">· mejor 200 por sesión</span></div>
