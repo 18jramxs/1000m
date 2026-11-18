@@ -730,11 +730,11 @@ function bloqueRectas(n){ return {nombre:'Rectas', n, dist:100, ritmo:'', rec:'1
 function bloqueSeries(n,dist,ritmo,rec){ return {nombre:'Series', n, dist, ritmo, rec}; }
 
 const PLAN_DEFAULT = [
-  {lunes:'2026-11-02', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:32','2:00')], rodaje:{dur:35,rectas:4}, viernesTipo:'test', viernesBloques:[bloqueSeries(8,200,'3:20','1:30')], test:{dist:1000}},
-  {lunes:'2026-11-09', lunesBloques:[bloqueRectas(3), bloqueSeries(6,400,'3:30','2:00')], rodaje:{dur:38,rectas:4}, viernesTipo:'velocidad', viernesBloques:[bloqueSeries(8,200,'3:20','1:30')], test:{dist:1000}},
-  {lunes:'2026-11-16', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:23','2:00')], rodaje:{dur:40,rectas:6}, viernesTipo:'velocidad', viernesBloques:[bloqueSeries(10,200,'3:20','1:30')], test:{dist:1000}},
-  {lunes:'2026-11-23', lunesBloques:[bloqueRectas(3), bloqueSeries(6,400,'3:25','1:45')], rodaje:{dur:40,rectas:6}, viernesTipo:'velocidad', viernesBloques:[bloqueSeries(8,200,'3:10','1:30')], test:{dist:1000}},
-  {lunes:'2026-11-30', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:25','2:00')], rodaje:{dur:25,rectas:4}, viernesTipo:'test', viernesBloques:[bloqueSeries(8,200,'3:20','1:30')], test:{dist:1000}},
+  {lunes:'2026-11-02', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:32','2:00')], miercolesBloques:[bloqueSeries(8,200,'3:20','1:30')], rodaje:{dur:35,rectas:4}, viernesTipo:'test', test:{dist:1000}},
+  {lunes:'2026-11-09', lunesBloques:[bloqueRectas(3), bloqueSeries(6,400,'3:30','2:00')], miercolesBloques:[bloqueSeries(8,200,'3:20','1:30')], rodaje:{dur:38,rectas:4}, viernesTipo:'rodaje', test:{dist:1000}},
+  {lunes:'2026-11-16', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:23','2:00')], miercolesBloques:[bloqueSeries(8,200,'3:20','1:30')], rodaje:{dur:40,rectas:6}, viernesTipo:'rodaje', test:{dist:1000}},
+  {lunes:'2026-11-23', lunesBloques:[bloqueRectas(3), bloqueSeries(6,400,'3:25','1:45')], miercolesBloques:[bloqueSeries(10,200,'3:20','1:30')], rodaje:{dur:40,rectas:6}, viernesTipo:'rodaje', test:{dist:1000}},
+  {lunes:'2026-11-30', lunesBloques:[bloqueRectas(3), bloqueSeries(5,400,'3:25','2:00')], miercolesBloques:[bloqueSeries(8,200,'3:10','1:30')], rodaje:{dur:25,rectas:4}, viernesTipo:'test', test:{dist:1000}},
 ];
 
 const TESTS_DEFAULT = [
@@ -751,9 +751,15 @@ function loadJSON(key, fallback){
 }
 function saveJSON(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
 
+function loadPlan(){
+  const plan = loadJSON('m1000_plan', PLAN_DEFAULT);
+  if(plan.some(w=>!w.miercolesBloques)) return JSON.parse(JSON.stringify(PLAN_DEFAULT));
+  return plan;
+}
+
 const DB = {
   sesiones: loadJSON('m1000_sesiones', TESTS_DEFAULT),
-  plan: loadJSON('m1000_plan', PLAN_DEFAULT),
+  plan: loadPlan(),
   fcmax: loadJSON('m1000_fcmax', FCMAX_DEFAULT),
   fcreposo: loadJSON('m1000_fcreposo', FCREPOSO_DEFAULT),
   peso: loadJSON('m1000_peso', []),
@@ -769,7 +775,7 @@ function persist(){
   saveJSON('m1000_pref', DB.pref);
 }
 
-const APP_UPDATED_AT = '3 nov 2026 a las 11:48';
+const APP_UPDATED_AT = '18 nov 2026 a las 09:56';
 
 const TIPOS = {
   series:{label:'Series de ritmo', color:'var(--c-series)', dot:'var(--blue)'},
@@ -797,10 +803,10 @@ function getSessionDef(dateStr){
   const week = getWeekForDate(dateStr);
   if(!week) return {tipo:'descanso'};
   if(dow===1) return {tipo:'series', bloques:week.lunesBloques};
-  if(dow===3) return {tipo:'rodaje', dur:week.rodaje.dur, rectas:week.rodaje.rectas};
+  if(dow===3) return {tipo:'velocidad', bloques:week.miercolesBloques};
   if(dow===5){
     if(week.viernesTipo==='test') return {tipo:'test', dist:(week.test&&week.test.dist)||1000};
-    return {tipo:'velocidad', bloques:week.viernesBloques};
+    return {tipo:'rodaje', dur:week.rodaje.dur, rectas:week.rodaje.rectas};
   }
   return {tipo:'descanso'};
 }
@@ -1630,7 +1636,7 @@ function planSetViernesTipo(idx, val){
 }
 function planDefForDayKey(dayKey, data){
   if(dayKey==='lunesBloques') return {tipo:'series', bloques:data.lunesBloques};
-  if(dayKey==='viernesBloques') return {tipo:'velocidad', bloques:data.viernesBloques};
+  if(dayKey==='miercolesBloques') return {tipo:'velocidad', bloques:data.miercolesBloques};
   if(dayKey==='rodaje') return {tipo:'rodaje', dur:data.rodaje.dur, rectas:data.rodaje.rectas};
   if(dayKey==='test') return {tipo:'test', dist:(data.test&&data.test.dist)||1000};
   return null;
@@ -1664,9 +1670,9 @@ function addPlanWeek(){
   DB.plan.push({
     lunes: nuevoLunes,
     lunesBloques: JSON.parse(JSON.stringify(last.lunesBloques)),
+    miercolesBloques: JSON.parse(JSON.stringify(last.miercolesBloques)),
     rodaje: {...last.rodaje},
-    viernesTipo: isFirstFriday(parseISO(viernesDate)) ? 'test' : 'velocidad',
-    viernesBloques: JSON.parse(JSON.stringify(last.viernesBloques)),
+    viernesTipo: isFirstFriday(parseISO(viernesDate)) ? 'test' : 'rodaje',
     test: {...(last.test||{dist:1000})},
   });
   persist();
@@ -1715,18 +1721,8 @@ function planBloqueRow(idx, dayKey, bi, b){
   </div>`;
 }
 function planDayBlock(idx, dayKey, dayLabel, data){
-  if(dayKey==='rodaje'){
-    const cells = planFieldCell(idx,'rodaje','rodaje','dur',data.dur,'MIN','float')
-                + planFieldCell(idx,'rodaje','rodaje','rectas',data.rectas,'RECTAS','int')
-                + '<div class="pf-cell"></div><div class="pf-cell"></div>';
-    return `<div class="plan-day">
-      <div class="plan-day-title">${dayLabel} · RODAJE BASE</div>
-      <div class="pf-grid">${cells}</div>
-      <div class="plan-notacion" id="pn-${idx}-rodaje">${compactNotation({tipo:'rodaje', dur:data.dur, rectas:data.rectas})}</div>
-    </div>`;
-  }
   const bloques = data.map((b,bi)=>planBloqueRow(idx,dayKey,bi,b)).join('');
-  const notDef = planDefForDayKey(dayKey, dayKey==='lunesBloques' ? {lunesBloques:data} : {viernesBloques:data});
+  const notDef = planDefForDayKey(dayKey, dayKey==='lunesBloques' ? {lunesBloques:data} : {miercolesBloques:data});
   return `<div class="plan-day">
     <div class="plan-day-title">${dayLabel}</div>
     ${bloques}
@@ -1737,7 +1733,7 @@ function planDayBlock(idx, dayKey, dayLabel, data){
 function planViernesBlock(idx, data){
   const tipo = data.viernesTipo;
   const toggle = `<div class="toggle-row" style="margin-bottom:10px">
-    <button type="button" aria-pressed="${tipo==='velocidad'}" onclick="planSetViernesTipo(${idx},'velocidad')">Velocidad</button>
+    <button type="button" aria-pressed="${tipo==='rodaje'}" onclick="planSetViernesTipo(${idx},'rodaje')">Rodaje</button>
     <button type="button" aria-pressed="${tipo==='test'}" onclick="planSetViernesTipo(${idx},'test')">Test 1.000</button>
   </div>`;
   if(tipo==='test'){
@@ -1753,12 +1749,14 @@ function planViernesBlock(idx, data){
       <div class="plan-notacion" id="pn-${idx}-test">${compactNotation({tipo:'test', dist})}</div>
     </div>`;
   }
+  const cells = planFieldCell(idx,'rodaje','rodaje','dur',data.rodaje.dur,'MIN','float')
+              + planFieldCell(idx,'rodaje','rodaje','rectas',data.rodaje.rectas,'RECTAS','int')
+              + '<div class="pf-cell"></div><div class="pf-cell"></div>';
   return `<div class="plan-day">
-    <div class="plan-day-title">VIERNES</div>
+    <div class="plan-day-title">VIERNES · RODAJE</div>
     ${toggle}
-    ${data.viernesBloques.map((b,bi)=>planBloqueRow(idx,'viernesBloques',bi,b)).join('')}
-    <button class="plan-add-bloque tap" onclick="planBloqueAdd(${idx},'viernesBloques')">+ Bloque</button>
-    <div class="plan-notacion" id="pn-${idx}-viernesBloques">${compactNotation({tipo:'velocidad', bloques:data.viernesBloques})}</div>
+    <div class="pf-grid">${cells}</div>
+    <div class="plan-notacion" id="pn-${idx}-rodaje">${compactNotation({tipo:'rodaje', dur:data.rodaje.dur, rectas:data.rodaje.rectas})}</div>
   </div>`;
 }
 function renderPlanificacion(){
@@ -1778,7 +1776,7 @@ function renderPlanificacion(){
       </div>
       <div class="hist-body ${open?'open':''}" id="hb-wk-${i}">
         ${planDayBlock(i,'lunesBloques','LUNES',data.lunesBloques)}
-        ${planDayBlock(i,'rodaje','MIÉRCOLES',data.rodaje)}
+        ${planDayBlock(i,'miercolesBloques','MIÉRCOLES',data.miercolesBloques)}
         ${planViernesBlock(i,data)}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
           <button class="plan-del-link" style="margin:0" onclick="removePlanWeekConfirm(${i})">Eliminar</button>
